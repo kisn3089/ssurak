@@ -26,7 +26,7 @@ export function OrderDetailProvider({
   const { data: orders, isRefetching } = useSuspenseWithAuth<
     PublicOrderWithItem[]
   >(fetchUrl, {
-    queryOptions: { refetchOnMount: true, queryKey: [fetchUrl] },
+    queryOptions: { refetchOnMount: true },
   });
 
   const { updateOrderItem, removeOrderItem } = useOrderItem({
