@@ -1,30 +1,5 @@
 import { PublicMenu } from "@spaceorder/db/types";
 
-export type MenuOptionItem = Record<
-  string,
-  {
-    options: { key: string; price: number }[];
-    defaultKey: string;
-    trigger?: null | { group: string; in: string[] }[];
-  }
->;
-export type MenuOptionEntry = {
-  key: string;
-  value: {
-    options: {
-      key: string;
-      price: number;
-    }[];
-    defaultKey: string;
-    trigger?:
-      | null
-      | {
-          group: string;
-          in: string[];
-        }[];
-  };
-};
-
 export const MOCK_MENUS: PublicMenu[] = [
   {
     publicId: "1",
