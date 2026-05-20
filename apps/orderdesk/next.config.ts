@@ -13,7 +13,12 @@ const nextConfig: NextConfig = {
   experimental: {
     reactCompiler: true,
   },
-  transpilePackages: ["@spaceorder/ui"],
+  transpilePackages: [
+    "@spaceorder/ui",
+    "@spaceorder/api",
+    "@spaceorder/auth",
+    "@spaceorder/db",
+  ],
   async redirects() {
     return [
       {

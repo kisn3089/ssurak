@@ -2,9 +2,10 @@
 
 import { AxiosError } from "axios";
 import { AccessToken, httpAuth } from "@spaceorder/api";
-import parseCookieFromResponseHeader, {
+import parseCookieFromResponse, {
   setCookieFromResponseHeader,
-} from "@/utils/parseCookieFromResponseHeader";
+} from "@spaceorder/api/utils/parseCookieFromResponse";
+import { setServerCookie } from "@/app/common/servers/cookies";
 
 type ActionResponse =
   | {
@@ -43,10 +44,13 @@ export default async function signInAction(
 
     const cookieFromResponseHeader = createdAccessToken.headers["set-cookie"];
     if (cookieFromResponseHeader) {
-      const responseCookies = parseCookieFromResponseHeader(
-        cookieFromResponseHeader
+      const responseCookies = parseCookieFromResponse(cookieFromResponseHeader);
+      await setCookieFromResponseHeader(
+        responseCookies,
+        async ({ name, value, expires }) => {
+          await setServerCookie(name, value, { expires });
+        }
       );
-      await setCookieFromResponseHeader(responseCookies);
     }
 
     return {
