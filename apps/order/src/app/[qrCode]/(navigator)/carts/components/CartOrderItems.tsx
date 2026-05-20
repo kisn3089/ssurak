@@ -1,16 +1,13 @@
 "use client";
 
-import { Card } from "@spaceorder/ui/components/card";
-import CartItem from "./CartItem";
-import { Button } from "@spaceorder/ui/components/button";
-import Link from "next/link";
-import { PlusIcon } from "lucide-react";
-import { useState } from "react";
+// import { Card } from "@spaceorder/ui/components/card";
+// import CartItem from "./CartItem";
+// import { Button } from "@spaceorder/ui/components/button";
+// import Link from "next/link";
+// import { PlusIcon } from "lucide-react";
+// import { useState } from "react";
 import { useParams } from "next/navigation";
-import { MOCK_MENUS } from "@/app/(navigator)/components/MENU_DATA";
-import MenuCounter from "../../menus/components/MenuCounter";
-
-const MOCK_MENU_DATA = MOCK_MENUS.slice(0, 3);
+// import MenuCounter from "../../menus/components/MenuCounter";
 
 export interface CartOrderItem {
   menuPublicId: string;
@@ -23,53 +20,53 @@ export interface CartOrderItem {
   isAvailable: boolean;
 }
 
-const MOCK_ORDER_ITEMS: CartOrderItem[] = MOCK_MENU_DATA.map((menu) => {
-  const requiredOptions = menu.requiredOptions
-    ? Object.fromEntries(
-        Object.entries(menu.requiredOptions).map(([key, value]) => [
-          key,
-          value.defaultKey,
-        ])
-      )
-    : null;
+// const MOCK_ORDER_ITEMS: CartOrderItem[] = MOCK_MENU_DATA.map((menu) => {
+// const requiredOptions = menu.requiredOptions
+//   ? Object.fromEntries(
+//       Object.entries(menu.requiredOptions).map(([key, value]) => [
+//         key,
+//         value.defaultKey,
+//       ])
+//     )
+//   : null;
 
-  const customOptions = menu.customOptions
-    ? Object.fromEntries(
-        Object.entries(menu.customOptions).map(([key, value]) => [
-          key,
-          value.defaultKey,
-        ])
-      )
-    : null;
+// const customOptions = menu.customOptions
+//   ? Object.fromEntries(
+//       Object.entries(menu.customOptions).map(([key, value]) => [
+//         key,
+//         value.defaultKey,
+//       ])
+//     )
+//   : null;
 
-  return {
-    menuPublicId: menu.publicId,
-    menuName: menu.name,
-    image: menu.imageUrl,
-    quantity: 1,
-    price: menu.price, // option 가격을 포함한 가격으로 변경 필요
-    isAvailable: menu.isAvailable,
-    requiredOptions,
-    customOptions,
-  };
-});
+//   return {
+//     menuPublicId: menu.publicId,
+//     menuName: menu.name,
+//     image: menu.imageUrl,
+//     quantity: 1,
+//     price: menu.price, // option 가격을 포함한 가격으로 변경 필요
+//     isAvailable: menu.isAvailable,
+//     requiredOptions,
+//     customOptions,
+//   };
+// });
 
 export default function CartOrderItems() {
   // const {} = use;
   const { qrCode } = useParams<{ qrCode: string }>();
-  const [quantities, setQuantities] = useState<Record<string, number>>(
-    Object.fromEntries(
-      MOCK_ORDER_ITEMS.map((item) => [item.menuPublicId, item.quantity])
-    )
-  );
+  // const [quantities, setQuantities] = useState<Record<string, number>>(
+  //   Object.fromEntries(
+  //     MOCK_ORDER_ITEMS.map((item) => [item.menuPublicId, item.quantity])
+  //   )
+  // );
 
-  const changeQuantity = (menuPublicId: string, newQuantity: number) => {
-    setQuantities((prev) => ({ ...prev, [menuPublicId]: newQuantity }));
-  };
+  // const changeQuantity = (menuPublicId: string, newQuantity: number) => {
+  //   setQuantities((prev) => ({ ...prev, [menuPublicId]: newQuantity }));
+  // };
 
   return (
     <section className="p-4 flex flex-col gap-y-2 bg-white">
-      <Card className="divide-y divide-accent">
+      {/* <Card className="divide-y divide-accent">
         {MOCK_ORDER_ITEMS.map((menu) => (
           <CartItem key={menu.menuPublicId} cartItem={menu}>
             <MenuCounter
@@ -89,7 +86,7 @@ export default function CartOrderItems() {
             </Link>
           </Button>
         </div>
-      </Card>
+      </Card> */}
     </section>
   );
 }
