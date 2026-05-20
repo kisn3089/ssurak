@@ -1,6 +1,6 @@
 # syntax=docker.io/docker/dockerfile:1
 
-FROM node:20-alpine AS base
+FROM node:22-alpine AS base
 
 # 1. Install dependencies only when needed
 FROM base AS deps
@@ -15,6 +15,7 @@ COPY packages/ui/package.json ./packages/ui/package.json
 COPY packages/tsconfig/package.json ./packages/tsconfig/package.json
 COPY packages/lintconfig/package.json ./packages/lintconfig/package.json
 COPY packages/api/package.json ./packages/api/package.json
+COPY packages/auth/package.json ./packages/auth/package.json
 COPY packages/db/package.json ./packages/db/package.json
 
 # Install dependencies with pnpm

@@ -85,6 +85,7 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
+      - /app/apps/orderhub/node_modules
     env_file:
       - .env
 
@@ -106,6 +107,7 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
+      - /app/apps/orderdesk/node_modules
       - /app/.next
       - /app/apps/orderdesk/.next
     depends_on:
@@ -133,6 +135,7 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
+      - /app/apps/order/node_modules
       - /app/.next
       - /app/apps/order/.next
     depends_on:
