@@ -4,10 +4,10 @@ import { storeIdAndSessionTokenSchema } from "@spaceorder/api/schemas";
 import { ZodValidation } from "src/utils/guards/zod-validation.guard";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
 import { StoreAccessGuard } from "src/utils/guards/store-access.guard";
-import type { CartData } from "./cart.service";
-import { CartService } from "./cart.service";
+import { CartService } from "./carts.service";
 import { SessionAuth } from "src/utils/guards/table-session-auth.guard";
 import { DocsOwnerCartGet } from "src/docs/cart.docs";
+import { Cart } from "@spaceorder/db";
 
 @ApiTags("Owner Cart")
 @Controller(":storeId/sessions/:sessionToken/carts")
@@ -21,7 +21,7 @@ export class CartOwnerController {
   async getCart(
     @Param("storeId") storeId: string,
     @Param("sessionToken") sessionToken: string
-  ): Promise<CartData> {
+  ): Promise<Cart> {
     return this.cartService.getCartByStore(storeId, sessionToken);
   }
 }

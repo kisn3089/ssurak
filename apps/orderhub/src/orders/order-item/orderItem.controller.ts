@@ -35,6 +35,8 @@ import {
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
 import { OrderAccessGuard } from "src/utils/guards/order-access.guard";
 import { OrderItemAccessGuard } from "src/utils/guards/order-item-access.guard";
+import { Client } from "src/decorators/client.decorator";
+import type { Owner } from "@spaceorder/db";
 
 @ApiTags("Order Item")
 @ApiBearerAuth()
@@ -53,11 +55,13 @@ export class OrderItemController {
   )
   @DocsOrderItemCreate()
   async create(
+    @Client() client: Owner,
     @Param("orderId") orderId: string,
     @Body() createOrderItemPayload: CreateOrderItemPayloadDto
   ): Promise<PublicOrderItem<"Wide">> {
     return await this.orderItemService.createOrderItem(
       orderId,
+      client.id,
       createOrderItemPayload
     );
   }
@@ -66,10 +70,13 @@ export class OrderItemController {
   @UseGuards(OrderAccessGuard, ZodValidation({ params: orderIdParamsSchema }))
   @DocsOrderItemGetList()
   async list(
+    @Client() client: Owner,
     @Param("orderId") orderId: string
   ): Promise<PublicOrderItem<"Wide">[]> {
     return await this.orderItemService.getOrderItemList({
-      where: { order: { publicId: orderId } },
+      where: {
+        order: { publicId: orderId, store: { ownerId: client.id } },
+      },
       omit: this.orderItemService.omitPrivate,
     });
   }
@@ -81,10 +88,14 @@ export class OrderItemController {
   )
   @DocsOrderItemGetUnique()
   async getUnique(
+    @Client() client: Owner,
     @Param("orderItemId") orderItemId: string
   ): Promise<PublicOrderItem<"Wide">> {
     return await this.orderItemService.getOrderItemUnique({
-      where: { publicId: orderItemId },
+      where: {
+        publicId: orderItemId,
+        order: { store: { ownerId: client.id } },
+      },
       omit: this.orderItemService.omitPrivate,
     });
   }
@@ -99,11 +110,13 @@ export class OrderItemController {
   )
   @DocsOrderItemUpdate()
   async partialUpdate(
+    @Client() client: Owner,
     @Param("orderItemId") orderItemId: string,
     @Body() updateOrderItemDto: UpdateOrderItemPayloadDto
   ): Promise<PublicOrderItem<"Wide">> {
     return await this.orderItemService.partialUpdateOrderItem(
       orderItemId,
+      client.id,
       updateOrderItemDto
     );
   }
@@ -115,7 +128,10 @@ export class OrderItemController {
   )
   @HttpCode(204)
   @DocsOrderItemDelete()
-  async delete(@Param("orderItemId") orderItemId: string): Promise<void> {
-    return await this.orderItemService.deleteOrderItem(orderItemId);
+  async delete(
+    @Client() client: Owner,
+    @Param("orderItemId") orderItemId: string
+  ): Promise<void> {
+    return await this.orderItemService.deleteOrderItem(orderItemId, client.id);
   }
 }

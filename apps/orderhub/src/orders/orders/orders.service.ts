@@ -26,11 +26,11 @@ import { SessionIdentifier } from "src/internal/services/session-core.service";
 
 type CreateOrderParams = SessionIdentifier;
 type CancelParams =
-  | { orderId: string }
+  | { orderId: string; ownerId: bigint }
   | { tableSession: TableSession; orderId: string };
 
 @Injectable()
-export class OrderService {
+export class OrdersService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly sessionClient: SessionClient
@@ -49,7 +49,11 @@ export class OrderService {
       );
 
       const menus = await tx.menu.findMany({
-        where: { publicId: { in: menuPublicIds }, deletedAt: null },
+        where: {
+          publicId: { in: menuPublicIds },
+          deletedAt: null,
+          category: { storeId: session.table.storeId },
+        },
         select: MENU_VALIDATION_FIELDS_SELECT,
       });
 
@@ -120,9 +124,10 @@ export class OrderService {
 
   async partialUpdateOrder(
     orderId: string,
+    ownerId: bigint,
     updatePayload: UpdateOrderPayloadDto
   ): Promise<PublicOrderWithItem<"Wide">> {
-    return this.updateOrderWithValidation({ orderId }, updatePayload);
+    return this.updateOrderWithValidation({ orderId, ownerId }, updatePayload);
   }
 
   async cancelOrder(
@@ -137,10 +142,13 @@ export class OrderService {
     params: CancelParams,
     data: Prisma.OrderUpdateInput
   ): Promise<PublicOrderWithItem<"Wide">> {
-    const whereClause =
+    const whereClause: Prisma.OrderWhereInput =
       "tableSession" in params
         ? { publicId: params.orderId, tableSessionId: params.tableSession.id }
-        : { publicId: params.orderId };
+        : {
+            publicId: params.orderId,
+            store: { ownerId: params.ownerId },
+          };
 
     const order = await this.prismaService.order.findFirst({
       where: whereClause,

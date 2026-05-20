@@ -18,13 +18,14 @@ export class OrderItemService {
 
   async createOrderItem(
     orderId: string,
+    ownerId: bigint,
     createPayload: CreateOrderItemPayloadDto
   ): Promise<PublicOrderItem<"Wide">> {
     const { menuPublicId, requiredOptions, customOptions, quantity } =
       createPayload;
 
     const order = await this.prismaService.order.findFirstOrThrow({
-      where: { publicId: orderId },
+      where: { publicId: orderId, store: { ownerId } },
       include: { tableSession: true, store: { select: { publicId: true } } },
     });
 
@@ -64,7 +65,11 @@ export class OrderItemService {
       typeof menuId === "string" ? { publicId: menuId } : { id: menuId };
 
     return {
-      where: { ...menuIdField, store: { publicId: storeId }, deletedAt: null },
+      where: {
+        ...menuIdField,
+        category: { store: { publicId: storeId } },
+        deletedAt: null,
+      },
       select: MENU_VALIDATION_FIELDS_SELECT,
     };
   }
@@ -85,12 +90,17 @@ export class OrderItemService {
 
   async partialUpdateOrderItem(
     orderItemId: string,
+    ownerId: bigint,
     updatePayload: UpdateOrderItemPayloadDto
   ): Promise<PublicOrderItem<"Wide">> {
     const { menuPublicId, requiredOptions, customOptions, quantity } =
       updatePayload;
 
-    const whereCondition = { publicId: orderItemId } as const;
+    const whereCondition = {
+      publicId: orderItemId,
+      order: { store: { ownerId } },
+    } as const;
+    const updateWhereCondition = { publicId: orderItemId } as const;
 
     /** 메뉴에 관한 업데이트가 없을 때 */
     if (!menuPublicId && !requiredOptions && !customOptions) {
@@ -102,7 +112,7 @@ export class OrderItemService {
       validateOrderSessionToWrite(orderItem.order);
 
       return await this.prismaService.orderItem.update({
-        where: whereCondition,
+        where: updateWhereCondition,
         data: updatePayload,
         omit: this.omitPrivate,
       });
@@ -141,7 +151,7 @@ export class OrderItemService {
     );
 
     return await this.prismaService.orderItem.update({
-      where: whereCondition,
+      where: updateWhereCondition,
       data: {
         menu: { connect: { id: menu.id } },
         menuName: menu.name,
@@ -155,10 +165,13 @@ export class OrderItemService {
     });
   }
 
-  async deleteOrderItem(orderItemId: string): Promise<void> {
+  async deleteOrderItem(orderItemId: string, ownerId: bigint): Promise<void> {
     await this.prismaService.$transaction(async (tx) => {
       const parentOrder = await tx.order.findFirst({
-        where: { orderItems: { some: { publicId: orderItemId } } },
+        where: {
+          store: { ownerId },
+          orderItems: { some: { publicId: orderItemId } },
+        },
         include: {
           tableSession: true,
           _count: { select: { orderItems: true } },

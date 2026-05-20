@@ -34,6 +34,8 @@ import { CreateMenuPayloadDto, UpdateMenuPayloadDto } from "src/dto/menu.dto";
 import { StoreAccessGuard } from "src/utils/guards/store-access.guard";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
 
+// GET /stores/:storeId/categories
+
 @ApiTags("Menu")
 @ApiBearerAuth()
 @Controller(":storeId/menus")
@@ -65,7 +67,7 @@ export class MenuController {
   ): Promise<PublicMenu[]> {
     return await this.menuService.getMenuList({
       where: {
-        store: { publicId: storeId, owner: { id: client.id } },
+        category: { store: { publicId: storeId, owner: { id: client.id } } },
         deletedAt: null,
       },
       omit: this.menuService.omitPrivate,
@@ -76,9 +78,15 @@ export class MenuController {
   @UseGuards(ZodValidation({ params: storeIdAndMenuIdParamsSchema }))
   @UseInterceptors(ClassSerializerInterceptor)
   @DocsMenuGetUnique()
-  async unique(@Param("menuId") menuId: string): Promise<PublicMenuDto> {
+  async unique(
+    @Param("storeId") storeId: string,
+    @Param("menuId") menuId: string
+  ): Promise<PublicMenuDto> {
     const findMenu = await this.menuService.getMenuUnique({
-      where: { publicId: menuId },
+      where: {
+        publicId: menuId,
+        category: { store: { publicId: storeId } },
+      },
       omit: this.menuService.omitPrivate,
     });
 
@@ -94,17 +102,25 @@ export class MenuController {
   )
   @DocsMenuUpdate()
   async partialUpdate(
+    @Param("storeId") storeId: string,
     @Param("menuId") menuId: string,
     @Body() updateMenuPayload: UpdateMenuPayloadDto
   ): Promise<PublicMenu> {
-    return await this.menuService.partialUpdateMenu(menuId, updateMenuPayload);
+    return await this.menuService.partialUpdateMenu(
+      storeId,
+      menuId,
+      updateMenuPayload
+    );
   }
 
   @Delete(":menuId")
   @HttpCode(204)
   @UseGuards(ZodValidation({ params: storeIdAndMenuIdParamsSchema }))
   @DocsMenuDelete()
-  async delete(@Param("menuId") menuId: string): Promise<void> {
-    await this.menuService.softDeleteMenu(menuId);
+  async delete(
+    @Param("storeId") storeId: string,
+    @Param("menuId") menuId: string
+  ): Promise<void> {
+    await this.menuService.softDeleteMenu(storeId, menuId);
   }
 }

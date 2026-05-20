@@ -33,7 +33,7 @@ import type {
 } from "@spaceorder/db";
 import { Client } from "src/decorators/client.decorator";
 import { ZodValidation } from "src/utils/guards/zod-validation.guard";
-import { OrderService } from "./order.service";
+import { OrdersService } from "./orders.service";
 import { StoreAccessGuard } from "src/utils/guards/store-access.guard";
 import {
   CreateOrderPayloadDto,
@@ -48,8 +48,8 @@ import { ORDER_ITEMS_WITH_OMIT_PRIVATE } from "src/common/query/order-item-query
 @ApiBearerAuth()
 @Controller()
 @UseGuards(JwtAuthGuard)
-export class OrderController {
-  constructor(private readonly orderService: OrderService) {}
+export class OrdersController {
+  constructor(private readonly orderService: OrdersService) {}
 
   // ============================================================
   // Store Orders
@@ -71,10 +71,11 @@ export class OrderController {
   @UseGuards(StoreAccessGuard, ZodValidation({ params: storeIdParamsSchema }))
   @DocsOwnerOrderGetListByStore()
   async listByStore(
+    @Client() client: Owner,
     @Param("storeId") storeId: string
   ): Promise<PublicOrderWithItem<"Wide">[]> {
     return await this.orderService.getOrderList({
-      where: { store: { publicId: storeId } },
+      where: { store: { publicId: storeId, ownerId: client.id } },
       ...ORDER_ITEMS_WITH_OMIT_PRIVATE,
     });
   }
@@ -84,10 +85,11 @@ export class OrderController {
   @UseGuards(OrderAccessGuard, ZodValidation({ params: orderIdParamsSchema }))
   @DocsOwnerOrderGetUnique()
   async unique(
+    @Client() client: Owner,
     @Param("orderId") orderId: string
   ): Promise<PublicOrderWithItem<"Wide">> {
     return await this.orderService.getOrderUnique({
-      where: { publicId: orderId },
+      where: { publicId: orderId, store: { ownerId: client.id } },
       ...ORDER_ITEMS_WITH_OMIT_PRIVATE,
     });
   }
@@ -103,10 +105,15 @@ export class OrderController {
   )
   @DocsOwnerOrderUpdate()
   async partialUpdate(
+    @Client() client: Owner,
     @Param("orderId") orderId: string,
     @Body() updatePayload: UpdateOrderPayloadDto
   ): Promise<PublicOrderWithItem<"Wide">> {
-    return await this.orderService.partialUpdateOrder(orderId, updatePayload);
+    return await this.orderService.partialUpdateOrder(
+      orderId,
+      client.id,
+      updatePayload
+    );
   }
 
   /** 특정 주문 삭제(소프트) */
@@ -114,9 +121,13 @@ export class OrderController {
   @UseGuards(OrderAccessGuard, ZodValidation({ params: orderIdParamsSchema }))
   @DocsOwnerOrderCancel()
   async cancel(
+    @Client() client: Owner,
     @Param("orderId") orderId: string
   ): Promise<PublicOrderWithItem<"Wide">> {
-    return await this.orderService.cancelOrder({ orderId });
+    return await this.orderService.cancelOrder({
+      orderId,
+      ownerId: client.id,
+    });
   }
 
   // ============================================================
@@ -158,10 +169,13 @@ export class OrderController {
   @UseGuards(TableAccessGuard, ZodValidation({ params: tableIdParamsSchema }))
   @DocsOwnerOrderGetList()
   async listByTable(
+    @Client() client: Owner,
     @Param("tableId") tableId: string
   ): Promise<PublicOrderWithItem<"Wide">[]> {
     return await this.orderService.getOrderList({
-      where: { table: { publicId: tableId } },
+      where: {
+        table: { publicId: tableId, store: { ownerId: client.id } },
+      },
       ...ORDER_ITEMS_WITH_OMIT_PRIVATE,
     });
   }

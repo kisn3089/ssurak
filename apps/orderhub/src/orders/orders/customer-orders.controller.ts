@@ -12,8 +12,7 @@ import { SessionAuth } from "src/utils/guards/table-session-auth.guard";
 import type { PublicOrderWithItem, TableSession } from "@spaceorder/db";
 import {
   createOrderPayloadSchema,
-  sessionAndOrderIdParamsSchema,
-  sessionTokenParamsSchema,
+  orderIdParamsSchema,
 } from "@spaceorder/api/schemas";
 import { ZodValidation } from "src/utils/guards/zod-validation.guard";
 import { Session } from "src/decorators/session.decorator";
@@ -24,22 +23,17 @@ import {
   DocsCustomerOrderGetUnique,
 } from "src/docs/order.docs";
 import { CreateOrderPayloadDto } from "src/dto/order.dto";
-import { OrderService } from "./order.service";
+import { OrdersService } from "./orders.service";
 import { ORDER_ITEMS_WITH_OMIT_PRIVATE } from "src/common/query/order-item-query.const";
 
 @ApiTags("Customer Order")
-@Controller("sessions/:sessionToken/orders")
+@Controller("sessions/orders")
 @UseGuards(SessionAuth)
-export class CustomerOrderController {
-  constructor(private readonly orderService: OrderService) {}
+export class CustomerOrdersController {
+  constructor(private readonly orderService: OrdersService) {}
 
   @Post()
-  @UseGuards(
-    ZodValidation({
-      params: sessionTokenParamsSchema,
-      body: createOrderPayloadSchema,
-    })
-  )
+  @UseGuards(ZodValidation({ body: createOrderPayloadSchema }))
   @DocsCustomerOrderCreate()
   async create(
     @Session() tableSession: TableSession,
@@ -52,7 +46,6 @@ export class CustomerOrderController {
   }
 
   @Get()
-  @UseGuards(ZodValidation({ params: sessionTokenParamsSchema }))
   @DocsCustomerOrderGetList()
   async list(
     @Session() tableSession: TableSession
@@ -64,7 +57,7 @@ export class CustomerOrderController {
   }
 
   @Get(":orderId")
-  @UseGuards(ZodValidation({ params: sessionAndOrderIdParamsSchema }))
+  @UseGuards(ZodValidation({ params: orderIdParamsSchema }))
   @DocsCustomerOrderGetUnique()
   async unique(
     @Session() tableSession: TableSession,
@@ -77,7 +70,7 @@ export class CustomerOrderController {
   }
 
   @Delete(":orderId")
-  @UseGuards(ZodValidation({ params: sessionAndOrderIdParamsSchema }))
+  @UseGuards(ZodValidation({ params: orderIdParamsSchema }))
   @DocsCustomerOrderDelete()
   async delete(
     @Session() tableSession: TableSession,

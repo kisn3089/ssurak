@@ -1,6 +1,6 @@
+import type { Response } from "express";
 import {
   Controller,
-  Param,
   Get,
   UseGuards,
   Body,
@@ -8,6 +8,7 @@ import {
   UseInterceptors,
   ClassSerializerInterceptor,
   Post,
+  Res,
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import {
@@ -17,12 +18,15 @@ import {
   DocsSessionUpdateByCustomer,
 } from "src/docs/tableSession.docs";
 import {
-  updateSessionPayloadSchema,
   updateCustomerSessionPayloadSchema,
   createSessionSchema,
 } from "@spaceorder/api/schemas";
 import { ZodValidation } from "src/utils/guards/zod-validation.guard";
-import type { PublicSession, TableSession } from "@spaceorder/db";
+import {
+  COOKIE_TABLE,
+  type PublicSession,
+  type TableSession,
+} from "@spaceorder/db";
 import type { z } from "zod";
 import { SessionService } from "./session.service";
 import {
@@ -34,35 +38,45 @@ import { CreateSessionPayloadDto } from "src/dto/session.dto";
 import { Session } from "src/decorators/session.decorator";
 import { SessionAuth } from "src/utils/guards/table-session-auth.guard";
 import { plainToInstance } from "class-transformer";
+import { responseCookie } from "src/utils/cookies";
 
-export type UpdateTableSessionDto = z.infer<typeof updateSessionPayloadSchema>;
 export type UpdateCustomerTableSessionDto = z.infer<
   typeof updateCustomerSessionPayloadSchema
 >;
 
 @ApiTags("Customer Session")
-@Controller()
+@Controller("sessions")
 @UseInterceptors(ClassSerializerInterceptor)
 export class CustomerSessionController {
   constructor(private readonly sessionService: SessionService) {}
 
-  @Post("sessions")
+  @Post()
   @UseGuards(ZodValidation({ body: createSessionSchema }))
   @DocsSessionFindOrCreate()
   async findActivatedSessionOrCreate(
-    @Body() createSessionPayload: CreateSessionPayloadDto
+    @Body() createSessionPayload: CreateSessionPayloadDto,
+    @Res({ passthrough: true }) response: Response
   ): Promise<SessionTokenDto> {
     const findOrCreatedSession =
       await this.sessionService.findActivatedSessionOrCreate(
         createSessionPayload
       );
 
+    responseCookie.set(
+      response,
+      COOKIE_TABLE.SESSION_TOKEN,
+      findOrCreatedSession.sessionToken,
+      {
+        expires: findOrCreatedSession.expiresAt,
+      }
+    );
+
     return plainToInstance(SessionTokenDto, findOrCreatedSession, {
       excludeExtraneousValues: true,
     });
   }
 
-  @Get("sessions/:sessionToken")
+  @Get("me")
   @UseGuards(SessionAuth)
   @DocsSessionGetAlive()
   getAliveSession(
@@ -72,7 +86,7 @@ export class CustomerSessionController {
     return new PublicTableSessionDto(cachedSession);
   }
 
-  @Patch("sessions/:sessionToken")
+  @Patch("me")
   @UseGuards(
     SessionAuth,
     ZodValidation({ body: updateCustomerSessionPayloadSchema })
@@ -80,22 +94,37 @@ export class CustomerSessionController {
   @DocsSessionUpdateByCustomer()
   async partialUpdateByCustomer(
     @Session() tableSession: TableSession,
-    @Body() updateSessionPayload: UpdateCustomerTableSessionDto
+    @Body() updateSessionPayload: UpdateCustomerTableSessionDto,
+    @Res({ passthrough: true }) response: Response
   ): Promise<PublicSession> {
-    return await this.sessionService.txableUpdateSession(
+    const updatedSession = await this.sessionService.txableUpdateSession(
       tableSession,
       updateSessionPayload
     );
+
+    if (updateSessionPayload.status === "EXTEND_EXPIRES_AT") {
+      responseCookie.set(
+        response,
+        COOKIE_TABLE.SESSION_TOKEN,
+        updatedSession.sessionToken,
+        {
+          expires: updatedSession.expiresAt,
+        }
+      );
+    }
+
+    return updatedSession;
   }
 
-  @Get("sessions/:sessionToken/store-context")
+  @Get("me/store-context")
   @UseGuards(SessionAuth)
   @DocsSessionGetStoreContext()
   async getStoreContext(
-    @Param("sessionToken") sessionToken: string
+    @Session() tableSession: TableSession
   ): Promise<TableWithStoreContextDto> {
-    const storeUntilMenus =
-      await this.sessionService.getStoreContext(sessionToken);
+    const storeUntilMenus = await this.sessionService.getStoreContext(
+      tableSession.sessionToken
+    );
 
     return new TableWithStoreContextDto(storeUntilMenus);
   }

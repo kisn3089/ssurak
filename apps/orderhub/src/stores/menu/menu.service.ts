@@ -6,14 +6,17 @@ import { CreateMenuPayloadDto, UpdateMenuPayloadDto } from "src/dto/menu.dto";
 @Injectable()
 export class MenuService {
   constructor(private readonly prismaService: PrismaService) {}
-  omitPrivate = { id: true, storeId: true } as const;
+  omitPrivate = { id: true, categoryId: true } as const;
 
   async createMenu(
     storeId: string,
     createPayload: CreateMenuPayloadDto
   ): Promise<PublicMenu> {
+    const { categoryId, ...rest } = createPayload;
+    await this.assertCategoryBelongsToStore(categoryId, storeId);
+
     return await this.prismaService.menu.create({
-      data: { store: { connect: { publicId: storeId } }, ...createPayload },
+      data: { ...rest, category: { connect: { publicId: categoryId } } },
       omit: this.omitPrivate,
     });
   }
@@ -31,20 +34,49 @@ export class MenuService {
   }
 
   async partialUpdateMenu(
+    storeId: string,
     menuId: string,
     updatePayload: UpdateMenuPayloadDto
   ): Promise<PublicMenu> {
+    const { categoryId, ...rest } = updatePayload;
+    if (categoryId) {
+      await this.assertCategoryBelongsToStore(categoryId, storeId);
+    }
+
     return await this.prismaService.menu.update({
-      where: { publicId: menuId },
-      data: updatePayload,
+      where: this.whereMenuInStore(menuId, storeId),
+      data: {
+        ...rest,
+        ...(categoryId && { category: { connect: { publicId: categoryId } } }),
+      },
       omit: this.omitPrivate,
     });
   }
 
-  async softDeleteMenu(menuId: string): Promise<void> {
+  async softDeleteMenu(storeId: string, menuId: string): Promise<void> {
     await this.prismaService.menu.update({
-      where: { publicId: menuId },
+      where: this.whereMenuInStore(menuId, storeId),
       data: { deletedAt: new Date() },
+    });
+  }
+
+  private whereMenuInStore(
+    menuId: string,
+    storeId: string
+  ): Prisma.MenuWhereUniqueInput {
+    return {
+      publicId: menuId,
+      category: { store: { publicId: storeId } },
+    };
+  }
+
+  private async assertCategoryBelongsToStore(
+    categoryPublicId: string,
+    storePublicId: string
+  ): Promise<void> {
+    await this.prismaService.category.findFirstOrThrow({
+      where: { publicId: categoryPublicId, store: { publicId: storePublicId } },
+      select: { id: true },
     });
   }
 }

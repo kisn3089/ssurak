@@ -3,7 +3,7 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { Prisma, TokenPayload, User } from "@spaceorder/db";
 
 @Injectable()
-export class StoreService {
+export class StoresService {
   constructor(private readonly prismaService: PrismaService) {}
   omitPrivate = { id: true, ownerId: true } as const;
 

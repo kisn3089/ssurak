@@ -10,7 +10,7 @@ import {
   UseInterceptors,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { StoreService } from "./store.service";
+import { StoresService } from "./stores.service";
 import { Client } from "src/decorators/client.decorator";
 import type { PublicStore, TokenPayload, User } from "@spaceorder/db";
 import {
@@ -28,8 +28,8 @@ import { Jwt } from "src/decorators/jwt.decorator";
 @Controller()
 @UseGuards(JwtAuthGuard)
 @UseInterceptors(ClassSerializerInterceptor)
-export class StoreController {
-  constructor(private readonly storeService: StoreService) {}
+export class StoresController {
+  constructor(private readonly storeService: StoresService) {}
 
   @Post()
   @DocsStoreCreate()
