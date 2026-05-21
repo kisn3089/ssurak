@@ -126,13 +126,15 @@ export class CartService {
       id: createId(),
       menuPublicId: menu.publicId,
       menuName: menu.name,
+      menuImageUrl: menu.imageUrl,
       basePrice: menu.price,
-      image: menu.imageUrl,
       optionsPrice,
       unitPrice: menu.price + optionsPrice,
       quantity: payload.quantity,
-      requiredOptions: payload.requiredOptions || null,
-      customOptions: payload.customOptions || null,
+      ...(payload.requiredOptions && {
+        requiredOptions: payload.requiredOptions,
+      }),
+      ...(payload.customOptions && { customOptions: payload.customOptions }),
       addedAt: new Date().toISOString(),
     };
 
@@ -212,15 +214,20 @@ export class CartService {
       }
 
       const item = cart.menus[itemIndex];
+
+      const { requiredOptions, customOptions } = {
+        requiredOptions: payload.requiredOptions ?? item.requiredOptions,
+        customOptions: payload.customOptions ?? item.customOptions,
+      };
+
       cart.menus[itemIndex] = {
         ...item,
         basePrice: menu.price,
         optionsPrice,
         unitPrice: menu.price + optionsPrice,
         quantity: payload.quantity ?? item.quantity,
-        requiredOptions:
-          payload.requiredOptions ?? item.requiredOptions ?? null,
-        customOptions: payload.customOptions ?? item.customOptions ?? null,
+        ...(requiredOptions && { requiredOptions }),
+        ...(customOptions && { customOptions }),
       };
 
       return this.writeCart(session, cart);

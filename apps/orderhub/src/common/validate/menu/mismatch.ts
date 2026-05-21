@@ -8,6 +8,7 @@ export type MenuValidationFields = Pick<
   | "publicId"
   | "name"
   | "price"
+  | "imageUrl"
   | "requiredOptions"
   | "customOptions"
   | "isAvailable"

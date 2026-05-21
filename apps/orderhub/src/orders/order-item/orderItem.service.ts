@@ -49,6 +49,7 @@ export class OrderItemService {
       data: {
         menuId: menu.id,
         menuName: menu.name,
+        menuImageUrl: menu.imageUrl,
         basePrice: menu.price,
         unitPrice: menu.price + optionsPrice,
         optionsPrice,
@@ -155,6 +156,7 @@ export class OrderItemService {
       data: {
         menu: { connect: { id: menu.id } },
         menuName: menu.name,
+        menuImageUrl: menu.imageUrl,
         basePrice: menu.price,
         unitPrice: menu.price + optionsPrice,
         optionsPrice,
