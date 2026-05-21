@@ -17,13 +17,13 @@ export const cartItemSchema = z.object({
   id: z.string(),
   menuPublicId: z.string(),
   menuName: z.string(),
+  menuImageUrl: z.string().nullable(),
   basePrice: z.number(),
   optionsPrice: z.number(),
   unitPrice: z.number(),
-  image: z.string().nullable(),
   quantity: z.number().int().min(1),
-  requiredOptions: optionItemSchema.nullable(),
-  customOptions: optionItemSchema.nullable(),
+  requiredOptions: optionItemSchema.optional(),
+  customOptions: optionItemSchema.optional(),
   addedAt: z.string(),
 });
 
