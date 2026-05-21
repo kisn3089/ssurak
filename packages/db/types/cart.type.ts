@@ -3,9 +3,8 @@ import { PublicOrderItem } from "./publicModel.type";
 export type PublicCartItem = Omit<PublicOrderItem, "publicId" | "createdAt"> & {
   id: string;
   menuPublicId: string;
-  image: string | null;
-  requiredOptions: Record<string, string> | null;
-  customOptions: Record<string, string> | null;
+  requiredOptions?: Record<string, string>;
+  customOptions?: Record<string, string>;
   addedAt: string;
 };
 

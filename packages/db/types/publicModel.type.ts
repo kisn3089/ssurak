@@ -41,7 +41,11 @@ export type PublicMenu = Omit<Menu, "id" | "categoryId">;
 
 export type PublicStore = Omit<Store, "id" | "ownerId">;
 
-export type PublicOrderWithItem<Option extends "Narrow" | "Wide" = "Narrow"> =
-  PublicOrder & {
-    orderItems: PublicOrderItem<Option>[];
-  };
+export type PublicOrderWithItem<
+  Option extends "Narrow" | "Wide" = "Narrow",
+  Session extends Partial<PublicSession> | undefined = undefined,
+> = PublicOrder & {
+  orderItems: PublicOrderItem<Option>[];
+} & (Session extends Partial<PublicSession>
+    ? { tableSession: Session }
+    : unknown);
