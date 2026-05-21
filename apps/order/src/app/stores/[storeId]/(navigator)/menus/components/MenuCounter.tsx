@@ -6,11 +6,11 @@ import {
 import { MinusIcon, PlusIcon } from "lucide-react";
 
 export default function MenuCounter({
-  isAvailable,
+  isAvailable = true,
   quantity,
   changeQuantity,
 }: {
-  isAvailable: boolean;
+  isAvailable?: boolean;
   quantity: number;
   changeQuantity: (newQuantity: number) => void;
 }) {

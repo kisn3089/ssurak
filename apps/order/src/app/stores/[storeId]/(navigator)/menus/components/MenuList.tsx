@@ -1,4 +1,4 @@
-import MenuCard from "@/app/[qrCode]/(navigator)/menus/components/MenuCard";
+import MenuCard from "@/app/stores/[storeId]/(navigator)/menus/components/MenuCard";
 import { PublicMenu } from "@spaceorder/db/types";
 import { useState } from "react";
 

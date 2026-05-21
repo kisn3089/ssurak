@@ -8,9 +8,13 @@ import {
 import { pathToQueryKey } from "@spaceorder/api/utils/pathToQueryKey";
 import NavLogoLink from "./components/NavLogoLink";
 import NavTableNumber from "./components/NavTableNumber";
+import { StoreContext } from "@spaceorder/db/types/session.type";
+import { Cart } from "@spaceorder/db/types/cart.type";
+import { PublicOrderWithItem } from "@spaceorder/db/types/publicModel.type";
 
 const STORE_CONTEXT_PATH = "/stores/v1/sessions/me/store-context";
 const CART_LIST_PATH = "/carts/v1/sessions/carts";
+const ORDER_HISTORY = "/orders/v1/sessions/orders";
 const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 
 export default async function NavigatorLayout({
@@ -27,15 +31,27 @@ export default async function NavigatorLayout({
       queryClient.prefetchQuery({
         queryKey: pathToQueryKey(STORE_CONTEXT_PATH),
         queryFn: async () =>
-          fetchWithSessionToken(STORE_CONTEXT_PATH, sessionToken),
+          fetchWithSessionToken<StoreContext>(STORE_CONTEXT_PATH, sessionToken),
         staleTime: 60 * 1000,
       }),
       queryClient.prefetchQuery({
         queryKey: pathToQueryKey(CART_LIST_PATH),
         queryFn: async () =>
-          fetchWithSessionToken(CART_LIST_PATH, sessionToken, {
+          fetchWithSessionToken<Cart[]>(CART_LIST_PATH, sessionToken, {
             throwError: false,
           }),
+        staleTime: 60 * 1000,
+      }),
+      queryClient.prefetchQuery({
+        queryKey: pathToQueryKey(ORDER_HISTORY),
+        queryFn: async () =>
+          fetchWithSessionToken<PublicOrderWithItem<"Wide">[]>(
+            ORDER_HISTORY,
+            sessionToken,
+            {
+              throwError: false,
+            }
+          ),
         staleTime: 60 * 1000,
       }),
     ]);
@@ -54,11 +70,11 @@ export default async function NavigatorLayout({
   );
 }
 
-async function fetchWithSessionToken(
+async function fetchWithSessionToken<ResponseType>(
   url: string,
   sessionToken: string,
   option?: { throwError: boolean }
-) {
+): Promise<ResponseType> {
   const response = await fetch(`${baseUrl}${url}`, {
     headers: {
       Cookie: `${COOKIE_TABLE.SESSION_TOKEN}=${sessionToken}`,

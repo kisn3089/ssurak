@@ -2,6 +2,7 @@
 
 import { createContext, useContext } from "react";
 import type { MenuOptionEntry, PublicMenu } from "@spaceorder/db/types";
+import { useCartMutations } from "@spaceorder/api/core/cart/useCart.mutate";
 
 export type SelectedOptions = {
   required: Map<string, string>;
@@ -18,13 +19,15 @@ export interface MenuDetailActions {
   setQuantity: (next: number) => void;
   selectRequiredOption: (groupKey: string, optionKey: string) => void;
   selectCustomOption: (groupKey: string, optionKey: string) => void;
+  addCart: () => void;
 }
 
 export interface MenuDetailMeta {
   requiredOptions: MenuOptionEntry[];
   customOptions: MenuOptionEntry[];
-  allOptions: MenuOptionEntry[];
   allSelectedOptions: Map<string, string>;
+  price: number;
+  addCartMutate: ReturnType<typeof useCartMutations>["add"];
 }
 
 export interface MenuDetailContextValue {
