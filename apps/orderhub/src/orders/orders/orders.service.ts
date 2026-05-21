@@ -39,7 +39,9 @@ export class OrdersService {
   async createOrder(
     params: CreateOrderParams,
     createOrderPayload: CreateOrderPayloadDto
-  ): Promise<PublicOrderWithItem<"Wide">> {
+  ): Promise<
+    PublicOrderWithItem<"Wide", { sessionToken: string; expiresAt: Date }>
+  > {
     return await this.prismaService.$transaction(async (tx) => {
       const session: SessionWithTable =
         await this.sessionClient.txGetOrCreateSession(tx, params);
@@ -79,7 +81,11 @@ export class OrdersService {
           orderItems: { create: orderItemsData },
           memo: createOrderPayload.memo,
         },
-        ...ORDER_ITEMS_WITH_OMIT_PRIVATE,
+        include: {
+          ...ORDER_ITEMS_WITH_OMIT_PRIVATE.include,
+          tableSession: { select: { sessionToken: true, expiresAt: true } },
+        },
+        omit: ORDER_ITEMS_WITH_OMIT_PRIVATE.omit,
       });
     });
   }
