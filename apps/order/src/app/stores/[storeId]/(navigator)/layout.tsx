@@ -1,5 +1,4 @@
 import { COOKIE_TABLE } from "@spaceorder/db/constants/cookieTable.const";
-import { cookies } from "next/dist/server/request/cookies";
 import {
   dehydrate,
   HydrationBoundary,
@@ -11,6 +10,7 @@ import NavTableNumber from "./components/NavTableNumber";
 import { StoreContext } from "@spaceorder/db/types/session.type";
 import { Cart } from "@spaceorder/db/types/cart.type";
 import { PublicOrderWithItem } from "@spaceorder/db/types/publicModel.type";
+import { cookies } from "next/headers";
 
 const STORE_CONTEXT_PATH = "/stores/v1/sessions/me/store-context";
 const CART_LIST_PATH = "/carts/v1/sessions/carts";
@@ -37,7 +37,7 @@ export default async function NavigatorLayout({
       queryClient.prefetchQuery({
         queryKey: pathToQueryKey(CART_LIST_PATH),
         queryFn: async () =>
-          fetchWithSessionToken<Cart[]>(CART_LIST_PATH, sessionToken, {
+          fetchWithSessionToken<Cart>(CART_LIST_PATH, sessionToken, {
             throwError: false,
           }),
         staleTime: 60 * 1000,
