@@ -11,6 +11,10 @@ export class PublicOrderItemDto {
   @Expose()
   menuName: string;
 
+  @ApiProperty({ description: "메뉴 이미지 URL", nullable: true })
+  @Expose()
+  menuImageUrl: string | null;
+
   @ApiProperty({ description: "기본 가격" })
   @Expose()
   basePrice: number;

@@ -1,11 +1,11 @@
 "use server";
 
-import parseCookieFromResponseHeader, {
-  setCookieFromResponseHeader,
-} from "@/utils/parseCookieFromResponseHeader";
 import { AccessToken, httpAuth } from "@spaceorder/api";
 import { COOKIE_TABLE } from "@spaceorder/db/constants";
-import { getServerCookie } from "./cookies";
+import { getServerCookie, setServerCookie } from "./cookies";
+import parseCookieFromResponse, {
+  setCookieFromResponseHeader,
+} from "@spaceorder/api/utils/parseCookieFromResponse";
 
 type RefreshAccessTokenResponse = AccessToken;
 
@@ -28,10 +28,13 @@ export async function refreshAccessToken(): Promise<RefreshAccessTokenResponse> 
   const cookieFromResponseHeader =
     accessTokenByRefreshToken.headers["set-cookie"];
   if (cookieFromResponseHeader) {
-    const responseCookies = parseCookieFromResponseHeader(
-      cookieFromResponseHeader
+    const responseCookies = parseCookieFromResponse(cookieFromResponseHeader);
+    await setCookieFromResponseHeader(
+      responseCookies,
+      async ({ name, value, expires }) => {
+        await setServerCookie(name, value, { expires });
+      }
     );
-    await setCookieFromResponseHeader(responseCookies);
   }
 
   return accessTokenByRefreshToken.data;

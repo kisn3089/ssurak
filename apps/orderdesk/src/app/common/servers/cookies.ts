@@ -5,10 +5,6 @@ import type { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import { cookies } from "next/headers";
 
 type CookieKey = (typeof COOKIE_TABLE)[keyof typeof COOKIE_TABLE];
-export type NextCookie = {
-  name: CookieKey;
-  value: string;
-} & Pick<ResponseCookie, "path" | "maxAge" | "expires">;
 
 export async function getServerCookie(name: CookieKey) {
   const cookieStore = await cookies();

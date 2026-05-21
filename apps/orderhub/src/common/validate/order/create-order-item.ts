@@ -35,6 +35,7 @@ export function createOrderItemsWithValidMenu(
       return {
         menu: { connect: { publicId: orderItem.menuPublicId } },
         menuName: menu.name,
+        menuImageUrl: menu.imageUrl,
         basePrice: menu.price,
         unitPrice: menu.price + optionsPrice,
         optionsPrice,

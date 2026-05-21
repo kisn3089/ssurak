@@ -1,6 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "@spaceorder/ui/globals.css";
+import TanstackProvider from "@spaceorder/api/core/TanstackProvider";
+import { Toaster } from "@spaceorder/ui/components/sonner";
+import { NextThemeProviders } from "@spaceorder/ui/components/theme/ThemeProviders";
 
 const inter = Inter({
   variable: "--font-geist-sans",
@@ -32,7 +35,14 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${jetbrainsMono.variable} antialiased max-w-2xl min-h-dvh mx-auto`}
       >
-        {children}
+        <NextThemeProviders>
+          <TanstackProvider>{children}</TanstackProvider>
+          <Toaster
+            mobileOffset={{ left: "60px", right: "60px" }}
+            position="top-center"
+            richColors
+          />
+        </NextThemeProviders>
       </body>
     </html>
   );

@@ -37,19 +37,15 @@ export type PublicOrderItem<Option extends "Narrow" | "Wide" = "Narrow"> =
       }
     : PublicizeOrderItem;
 
-export type PublicMenu = Omit<Menu, "id" | "storeId">;
+export type PublicMenu = Omit<Menu, "id" | "categoryId">;
 
 export type PublicStore = Omit<Store, "id" | "ownerId">;
 
-export type PublicOrderWithItem<Option extends "Narrow" | "Wide" = "Narrow"> =
-  PublicOrder & {
-    orderItems: PublicOrderItem<Option>[];
-  };
-
-export type PublicCartItem = Omit<PublicOrderItem, "publicId" | "createdAt"> & {
-  id: string;
-  menuPublicId: string;
-  requiredOptions: Record<string, string> | null;
-  customOptions: Record<string, string> | null;
-  addedAt: string;
-};
+export type PublicOrderWithItem<
+  Option extends "Narrow" | "Wide" = "Narrow",
+  Session extends Partial<PublicSession> | undefined = undefined,
+> = PublicOrder & {
+  orderItems: PublicOrderItem<Option>[];
+} & (Session extends Partial<PublicSession>
+    ? { tableSession: Session }
+    : unknown);

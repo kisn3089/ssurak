@@ -2,9 +2,9 @@ import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
-import { StoreModule } from "../store/store.module";
-import { OrderModule } from "../order/order.module";
-import { CartModule } from "../cart/cart.module";
+import { StoreModule } from "../stores/stores.module";
+import { OrderModule } from "../orders/orders.module";
+import { CartModule } from "../carts/carts.module";
 import { PrismaModule } from "src/prisma/prisma.module";
 import { APP_FILTER, RouterModule } from "@nestjs/core";
 import { GlobalExceptionFilter } from "src/common/filters/exception.filter";
@@ -31,7 +31,7 @@ import { InternalModule } from "src/internal/internal.module";
       { path: "identity/v1", module: IdentityModule },
       { path: "stores/v1", module: StoreModule },
       { path: "orders/v1", module: OrderModule },
-      { path: "cart/v1", module: CartModule },
+      { path: "carts/v1", module: CartModule },
     ]),
   ],
   controllers: [AppController],
