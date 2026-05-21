@@ -171,19 +171,20 @@ async function main() {
       customOptions: {
         카페인: {
           options: [
-            { key: "진하게", price: 1000 },
             { key: "연하게", price: 0 },
+            { key: "진하게", price: 1000 },
           ],
           trigger: [{ group: "원두", in: ["케냐", "코스타리코"] }],
           defaultKey: "연하게",
         },
         얼음: {
           options: [
+            { key: "보통", price: 0 },
             { key: "많이", price: 0 },
             { key: "적게", price: 0 },
           ],
           trigger: [{ group: "종류", in: ["아이스"] }],
-          defaultKey: "많이",
+          defaultKey: "보통",
         },
       },
     },
@@ -219,6 +220,17 @@ async function main() {
       sortOrder: 50,
       imageUrl:
         "https://images.unsplash.com/photo-1674038135897-3c22cc49a15e?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      customOptions: {
+        휘핑: {
+          options: [
+            { key: "보통", price: 0 },
+            { key: "없이", price: 0 },
+            { key: "많이", price: 300 },
+          ],
+          trigger: null,
+          defaultKey: "보통",
+        },
+      },
     },
     {
       publicId: "lwhdq1qwcmckm3k4nni89b1",
@@ -243,17 +255,6 @@ async function main() {
         "https://images.unsplash.com/photo-1533134242443-d4fd215305ad?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     },
     {
-      publicId: "gyi72p9yncptb62pb2pcc34g",
-      name: "초코 크로플",
-      price: 4000,
-      description: "부드러운 초콜릿이 듬뿍 들어간 크로플",
-      category: "디저트",
-      isAvailable: true,
-      sortOrder: 30,
-      imageUrl:
-        "https://images.unsplash.com/photo-1737700087938-ebdf93f15b50?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    },
-    {
       publicId: "bun98dtbprj7lyessgn1i8f5",
       name: "플레인 크로플",
       price: 3500,
@@ -263,6 +264,17 @@ async function main() {
       sortOrder: 30,
       imageUrl:
         "https://images.unsplash.com/photo-1558584724-0e4d32ca55a4?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      customOptions: {
+        "메뉴 추가": {
+          options: [
+            { key: "없이", price: 0 },
+            { key: "딸기잼", price: 500 },
+            { key: "크림치즈28g", price: 1000 },
+          ],
+          trigger: null,
+          defaultKey: "보통",
+        },
+      },
     },
     {
       publicId: "gyi72p9yncptb62pb2pcc34g",
@@ -343,8 +355,9 @@ async function main() {
       customOptions: {
         얼음: {
           options: [
-            { key: "많이", price: 500 },
-            { key: "적게", price: 500 },
+            { key: "보통", price: 0 },
+            { key: "많이", price: 0 },
+            { key: "적게", price: 0 },
           ],
           defaultKey: "많이",
         },

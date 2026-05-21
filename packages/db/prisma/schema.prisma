@@ -269,6 +269,7 @@ model OrderItem {
   orderId         BigInt   @map("order_id")
   menuId          BigInt   @map("menu_id")
   menuName        String   @map("menu_name")
+  menuImageUrl    String?  @map("menu_image_url") @db.VarChar(500)
   basePrice       Int      @map("base_price")
   optionsPrice    Int      @default(0) @map("options_price")
   unitPrice       Int      @map("unit_price")
