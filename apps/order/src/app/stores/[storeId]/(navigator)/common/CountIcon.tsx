@@ -23,7 +23,7 @@ export default function CountIcon({
 }: CountIconProps) {
   return (
     <div
-      className={`absolute ${sizeStyle[size] ?? ""} grid place-content-center ${colorStyle[color] ?? ""} rounded-full text-[0.6rem] font-semibold ${className ?? ""}`}
+      className={`absolute ${sizeStyle[size] ?? "text-[0.6rem]"} grid place-content-center ${colorStyle[color] ?? ""} rounded-full  font-semibold ${className ?? ""}`}
     >
       {count}
     </div>

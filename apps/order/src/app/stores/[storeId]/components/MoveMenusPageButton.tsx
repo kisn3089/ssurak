@@ -8,10 +8,14 @@ export default function MoveMenusPageButton() {
   const { storeId } = useParams<{ storeId: string }>();
 
   return (
-    <Link href={`/stores/${storeId}/menus`} className="w-full">
-      <Button size={"lg"} className="w-full h-12 font-semibold rounded-3xl">
+    <Button
+      asChild
+      size={"lg"}
+      className="w-full h-12 font-semibold rounded-3xl"
+    >
+      <Link href={`/stores/${storeId}/menus`} className="w-full">
         주문하러 가기
-      </Button>
-    </Link>
+      </Link>
+    </Button>
   );
 }
