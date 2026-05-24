@@ -1,6 +1,6 @@
 import { aliveSessionFilter } from "./session-query.const";
 
-export const ORDER_SITUATION_PAYLOAD = {
+export const orderSituationPayload = () => ({
   tableSessions: {
     ...aliveSessionFilter(),
     select: {
@@ -11,14 +11,10 @@ export const ORDER_SITUATION_PAYLOAD = {
           publicId: true,
           status: true,
           orderItems: {
-            select: {
-              publicId: true,
-              menuName: true,
-              quantity: true,
-            },
+            select: { publicId: true, menuName: true, quantity: true },
           },
         },
       },
     },
   },
-} as const;
+});
