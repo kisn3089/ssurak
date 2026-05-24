@@ -11,7 +11,7 @@ import {
 } from "@spaceorder/db";
 import { SessionClient } from "src/internal/clients/session.client";
 import { PrismaService } from "src/prisma/prisma.service";
-import { ORDER_SITUATION_PAYLOAD } from "src/common/query/order-query.const";
+import { orderSituationPayload } from "src/common/query/order-query.const";
 import { ORDER_ITEMS_WITH_OMIT_PRIVATE } from "src/common/query/order-item-query.const";
 import {
   CreateOrderPayloadDto,
@@ -96,7 +96,7 @@ export class OrdersService {
   ): Promise<SummarizedOrdersByStore> {
     return await this.prismaService.table.findMany({
       where: { store: { ownerId: client.id, publicId: storeId } },
-      include: ORDER_SITUATION_PAYLOAD,
+      include: orderSituationPayload(),
       omit: TABLE_OMIT,
     });
   }
