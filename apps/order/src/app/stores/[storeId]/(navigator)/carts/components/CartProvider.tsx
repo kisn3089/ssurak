@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import useSuspenseWithSession from "@spaceorder/api/hooks/useSuspenseWithSession";
 import { CreateOrderRequest, useCartMutations } from "@spaceorder/api/core";
 import type { Cart, PublicCartItem } from "@spaceorder/db/types/cart.type";
@@ -59,11 +59,7 @@ export default function CartProvider({
     { queryOptions: { select: (carts) => carts.menus } }
   );
 
-  useEffect(() => {
-    return () => {
-      // 수량 변경된 부분이 있을 경우 redis cart에 반영
-    };
-  }, []);
+  // TODO: 수량 변경할 때마다 바로 redis cart에 반영하도록 변경
 
   const cartMutate = useCartMutations();
   const createOrderMutate = useOrderByCustomer().createOrderByCustomer;
