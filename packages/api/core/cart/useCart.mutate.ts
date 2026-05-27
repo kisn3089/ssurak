@@ -18,6 +18,7 @@ export function useCartMutations() {
   const add = useMutation({
     mutationKey: ["cart", "add"],
     mutationFn: (payload: AddCartItemPayload) => httpCart.addCartItem(payload),
+    onSuccess: invalidate,
   });
 
   const update = useMutation({
@@ -60,11 +61,13 @@ export function useCartMutations() {
   const remove = useMutation({
     mutationKey: ["cart", "remove"],
     mutationFn: (cartItemId: string) => httpCart.removeCartItem(cartItemId),
+    onSuccess: invalidate,
   });
 
   const clearCart = useMutation({
     mutationKey: ["cart", "clear"],
     mutationFn: () => httpCart.clearCart(),
+    onSuccess: invalidate,
   });
 
   return { add, update, remove, clearCart };

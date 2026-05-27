@@ -1,6 +1,11 @@
-import { useMutation, UseMutationResult } from "@tanstack/react-query";
+import {
+  useMutation,
+  UseMutationResult,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { httpOrderItems, UpdateOrderItemPayload } from "./httpOrderItem";
 import { PublicOrderItem } from "@spaceorder/db/types/publicModel.type";
+import { pathToQueryKey } from "../../../utils/pathToQueryKey";
 
 type UseOrderItemReturn = {
   update: UseMutationResult<
@@ -13,7 +18,30 @@ type UseOrderItemReturn = {
   >;
   remove: UseMutationResult<void, Error, { orderItemId: string }>;
 };
-export default function useOrderItem(): UseOrderItemReturn {
+
+type Params = { storeId?: string; tableId?: string };
+
+export default function useOrderItem({
+  storeId,
+  tableId,
+}: Params = {}): UseOrderItemReturn {
+  const queryClient = useQueryClient();
+
+  const invalidate = () => {
+    if (storeId) {
+      queryClient.invalidateQueries({
+        queryKey: pathToQueryKey(`/orders/v1/stores/${storeId}/orders/summary`),
+      });
+    }
+    if (tableId) {
+      queryClient.invalidateQueries({
+        queryKey: pathToQueryKey(
+          `/orders/v1/tables/${tableId}/active-session/orders`
+        ),
+      });
+    }
+  };
+
   const update = useMutation({
     mutationKey: ["order-item", "update"],
     mutationFn: ({
@@ -23,12 +51,14 @@ export default function useOrderItem(): UseOrderItemReturn {
       orderItemId: string;
       updateOrderItemPayload: UpdateOrderItemPayload;
     }) => httpOrderItems.updateOrderItem(orderItemId, updateOrderItemPayload),
+    onSuccess: invalidate,
   });
 
   const remove = useMutation({
     mutationKey: ["order-item", "remove"],
     mutationFn: ({ orderItemId }: { orderItemId: string }) =>
       httpOrderItems.removeOrderItem(orderItemId),
+    onSuccess: invalidate,
   });
 
   return { update, remove };
