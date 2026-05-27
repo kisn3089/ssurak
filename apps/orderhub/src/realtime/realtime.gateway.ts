@@ -9,7 +9,7 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from "@nestjs/websockets";
-import { Namespace, Socket } from "socket.io";
+import { DefaultEventsMap, Namespace, Socket } from "socket.io";
 import { isAdmin } from "src/utils/isAdmin";
 import {
   getRealtimeOriginKindMap,
@@ -23,9 +23,16 @@ import { parseCookies, RealtimePrincipal, WsAuthService } from "./ws-auth";
 
 type SocketData = { principal: RealtimePrincipal };
 type AppSocket = Socket<
-  Record<string, unknown>,
-  Record<string, unknown>,
-  Record<string, unknown>,
+  DefaultEventsMap,
+  DefaultEventsMap,
+  DefaultEventsMap,
+  SocketData
+>;
+
+type AppNamespace = Namespace<
+  DefaultEventsMap,
+  DefaultEventsMap,
+  DefaultEventsMap,
   SocketData
 >;
 
@@ -34,13 +41,13 @@ type AppSocket = Socket<
   path: REALTIME_PATH,
 })
 export class RealtimeGateway
-  implements OnGatewayInit<Namespace>, OnGatewayConnection
+  implements OnGatewayInit<AppNamespace>, OnGatewayConnection
 {
   private readonly logger = new Logger(RealtimeGateway.name);
   private readonly originKindMap: Record<string, OriginKind>;
 
   @WebSocketServer()
-  server!: Namespace;
+  server!: AppNamespace;
 
   constructor(
     private readonly wsAuth: WsAuthService,
@@ -49,12 +56,12 @@ export class RealtimeGateway
     this.originKindMap = getRealtimeOriginKindMap(this.config);
   }
 
-  afterInit(namespace: Namespace): void {
+  afterInit(namespace: AppNamespace): void {
     namespace.use((socket, next) => {
       void this.authenticate(socket).then(
         (principal) => {
           if (principal) {
-            (socket.data as SocketData).principal = principal;
+            socket.data.principal = principal;
             next();
           } else {
             this.logger.warn(
@@ -69,7 +76,7 @@ export class RealtimeGateway
   }
 
   private async authenticate(
-    socket: Socket
+    socket: AppSocket
   ): Promise<RealtimePrincipal | null> {
     const origin = socket.handshake.headers.origin;
     const kind = origin ? this.originKindMap[origin] : undefined;
@@ -93,15 +100,11 @@ export class RealtimeGateway
         principal.tablePublicId
       );
       await client.join(room);
-      this.logger.log(
-        `ws connect ${client.id} as customer room=${room} sessionId=${principal.session.id}`
-      );
+      this.logger.log(`ws connect ${client.id} as customer room=${room}`);
       return;
     }
 
-    this.logger.log(
-      `ws connect ${client.id} as admin user=${principal.userId} role=${principal.role}`
-    );
+    this.logger.log(`ws connect ${client.id} as admin role=${principal.role}`);
   }
 
   @SubscribeMessage(REALTIME_EVENT.SUBSCRIBE_ADMIN)
@@ -128,7 +131,7 @@ export class RealtimeGateway
       (await this.wsAuth.ownsStore(principal.userId, storeId));
     if (!allowed) {
       this.logger.warn(
-        `subscribe:admin from ${client.id} rejected: ${principal.userId} not allowed for store=${storeId}`
+        `subscribe:admin from ${client.id} not allowed for store=${storeId}`
       );
       return { ok: false };
     }
