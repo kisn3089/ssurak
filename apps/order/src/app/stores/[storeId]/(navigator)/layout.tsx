@@ -11,7 +11,6 @@ import { StoreContext } from "@spaceorder/db/types/session.type";
 import { Cart } from "@spaceorder/db/types/cart.type";
 import { PublicOrderWithItem } from "@spaceorder/db/types/publicModel.type";
 import { cookies } from "next/headers";
-import TableOrderSyncDaemon from "./components/daemon/TableOrderSyncDaemon";
 import SyncDaemon from "./components/daemon/SyncDaemon";
 
 const STORE_CONTEXT_PATH = "/stores/v1/sessions/me/store-context";

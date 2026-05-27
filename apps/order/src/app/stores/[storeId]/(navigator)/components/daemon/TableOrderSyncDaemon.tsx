@@ -9,9 +9,9 @@ import { useQueryClient } from "@tanstack/react-query";
 export default function TableOrderSyncDaemon() {
   const queryClient = useQueryClient();
 
-  const synchroize = ({ notice }: OrderSyncEvent) => {
+  const synchronize = ({ notice }: OrderSyncEvent) => {
     void queryClient.invalidateQueries({
-      queryKey: pathToQueryKey("orders/v1/sessions/orders"),
+      queryKey: pathToQueryKey("/orders/v1/sessions/orders"),
     });
 
     const { level, message } = notice || {};
@@ -21,9 +21,9 @@ export default function TableOrderSyncDaemon() {
   };
 
   useTableOrderSyncDaemon({
-    onCreatedAction: synchroize,
-    onUpdatedAction: synchroize,
-    onCancelledAction: synchroize,
+    onCreatedAction: synchronize,
+    onUpdatedAction: synchronize,
+    onCancelledAction: synchronize,
   });
 
   return null;

@@ -11,7 +11,7 @@ export default function CartSyncDaemon() {
 
   const synchronize = ({ notice }: CartSyncEvent) => {
     void queryClient.invalidateQueries({
-      queryKey: pathToQueryKey("carts/v1/sessions/carts"),
+      queryKey: pathToQueryKey("/carts/v1/sessions/carts"),
     });
 
     const { level, message } = notice || {};

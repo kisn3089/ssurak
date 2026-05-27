@@ -84,6 +84,7 @@ export function MenuDetailProvider({
 
     try {
       await addCartMutate.mutateAsync(cartItem);
+      toast.success(`${menu.name} 메뉴가 장바구니에 추가되었습니다.`);
     } catch (error: unknown) {
       let message = "장바구니에 담는 중 오류가 발생했습니다.";
       if (error instanceof AxiosError) {

@@ -91,6 +91,7 @@ export default function CartProvider({
 
     try {
       await createOrderMutate.mutateAsync(payload);
+      toast.success("주문이 완료되었습니다 🎉");
       router.push(`/stores/${storeId}`);
     } catch (error) {
       console.error("Error creating order:", error);
