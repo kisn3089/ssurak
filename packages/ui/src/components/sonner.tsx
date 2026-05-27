@@ -8,13 +8,13 @@ import {
   TriangleAlert,
 } from "lucide-react";
 import { useTheme } from "next-themes";
-import { Toaster as Sonner, toast } from "sonner";
+import { ExternalToast, Toaster as Sonner, toast } from "sonner";
 
 type ToastLevel = "info" | "success" | "error";
 export const toastByLevel = (
   level: ToastLevel,
-  message: string,
-  options?: ToasterProps
+  message: Parameters<typeof toast.info>[0],
+  options?: ExternalToast
 ) => toast[level](message, options);
 
 export type ToasterProps = React.ComponentProps<typeof Sonner>;
