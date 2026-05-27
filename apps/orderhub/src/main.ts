@@ -14,8 +14,12 @@ BigInt.prototype.toJSON = function (this: bigint) {
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const configService = app.get(ConfigService);
   app.enableCors({
-    origin: ["http://localhost:3000", "http://localhost:3001"],
+    origin: [
+      configService.getOrThrow<string>("ORDER_APP_URL"),
+      configService.getOrThrow<string>("ORDERDESK_APP_URL"),
+    ],
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
     credentials: true,
   });
@@ -59,7 +63,6 @@ async function bootstrap() {
     },
   });
 
-  const configService = app.get(ConfigService);
   const port = configService.get<number>("PORT", 9090);
 
   await app.listen(port);

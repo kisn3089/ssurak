@@ -1,4 +1,5 @@
 import { Logger } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import {
   ConnectedSocket,
   MessageBody,
@@ -11,10 +12,10 @@ import {
 import { Namespace, Socket } from "socket.io";
 import { isAdmin } from "src/utils/isAdmin";
 import {
-  REALTIME_CORS_ORIGINS,
+  getRealtimeOriginKindMap,
+  OriginKind,
   REALTIME_EVENT,
   REALTIME_NAMESPACE,
-  REALTIME_ORIGIN_KIND,
   REALTIME_PATH,
   realtimeRoom,
 } from "./realtime.constants";
@@ -31,20 +32,22 @@ type AppSocket = Socket<
 @WebSocketGateway({
   namespace: REALTIME_NAMESPACE,
   path: REALTIME_PATH,
-  cors: {
-    origin: REALTIME_CORS_ORIGINS,
-    credentials: true,
-  },
 })
 export class RealtimeGateway
   implements OnGatewayInit<Namespace>, OnGatewayConnection
 {
   private readonly logger = new Logger(RealtimeGateway.name);
+  private readonly originKindMap: Record<string, OriginKind>;
 
   @WebSocketServer()
   server!: Namespace;
 
-  constructor(private readonly wsAuth: WsAuthService) {}
+  constructor(
+    private readonly wsAuth: WsAuthService,
+    private readonly config: ConfigService
+  ) {
+    this.originKindMap = getRealtimeOriginKindMap(this.config);
+  }
 
   afterInit(namespace: Namespace): void {
     namespace.use((socket, next) => {
@@ -69,7 +72,7 @@ export class RealtimeGateway
     socket: Socket
   ): Promise<RealtimePrincipal | null> {
     const origin = socket.handshake.headers.origin;
-    const kind = origin ? REALTIME_ORIGIN_KIND[origin] : undefined;
+    const kind = origin ? this.originKindMap[origin] : undefined;
     if (!kind) {
       this.logger.warn(`ws auth: unrecognized origin=${origin ?? "(none)"}`);
       return null;

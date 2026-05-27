@@ -1,3 +1,5 @@
+import { ConfigService } from "@nestjs/config";
+
 export type MetaInfo<Meta = unknown> = unknown extends Meta
   ? { meta?: Meta }
   : { meta: Meta };
@@ -5,12 +7,19 @@ export type MetaInfo<Meta = unknown> = unknown extends Meta
 export const REALTIME_NAMESPACE = "/events";
 export const REALTIME_PATH = "/ws/";
 
-export const REALTIME_ORIGIN_KIND: Record<string, "admin" | "customer"> = {
-  "http://localhost:3000": "customer",
-  "http://localhost:3001": "admin",
-};
+export type OriginKind = "admin" | "customer";
 
-export const REALTIME_CORS_ORIGINS = Object.keys(REALTIME_ORIGIN_KIND);
+export const getRealtimeOriginKindMap = (
+  config: ConfigService
+): Record<string, OriginKind> => ({
+  [config.getOrThrow<string>("ORDER_APP_URL")]: "customer",
+  [config.getOrThrow<string>("ORDERDESK_APP_URL")]: "admin",
+});
+
+export const getRealtimeCorsOrigins = (config: ConfigService): string[] => [
+  config.getOrThrow<string>("ORDER_APP_URL"),
+  config.getOrThrow<string>("ORDERDESK_APP_URL"),
+];
 
 export const REALTIME_EVENT = {
   ORDER_CREATED: "order.created",
