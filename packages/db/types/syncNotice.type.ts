@@ -17,5 +17,5 @@ export type OrderSyncEvent = {
 
 export type CartSyncEvent = {
   notice?: SyncNotice;
-  updatedAt: Date;
+  updatedAt: string;
 };

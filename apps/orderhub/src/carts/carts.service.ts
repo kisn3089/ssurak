@@ -2,10 +2,8 @@ import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 import { createId } from "@paralleldrive/cuid2";
 import type {
   Cart,
-  CartSyncEvent,
   PublicCartItem,
   SessionWithTable,
-  SyncNotice,
   TableSession,
 } from "@spaceorder/db";
 import type Redis from "ioredis";
@@ -22,11 +20,6 @@ import {
 } from "src/dto/cart.dto";
 import { CartSubscriber } from "src/realtime/cart-events.service";
 import { MetaInfo } from "src/realtime/realtime.constants";
-
-type CartBroadcast = {
-  subscriber: CartSubscriber;
-  payload: CartSyncEvent;
-};
 
 type ReturnCart<Meta = unknown> = {
   cart: Cart;
@@ -58,6 +51,26 @@ export class CartService {
       storePublicId: session.table.store.publicId,
       tablePublicId: session.table.publicId,
     };
+  }
+
+  private async withCartLock<T>(
+    sessionToken: string,
+    fn: () => Promise<T>
+  ): Promise<T> {
+    const lock = await this.redlock
+      .acquire([this.cartLockKey(sessionToken)], 3000)
+      .catch(() => {
+        throw new HttpException(
+          exceptionContentsIs("CART_LOCK_FAILED"),
+          HttpStatus.SERVICE_UNAVAILABLE
+        );
+      });
+
+    try {
+      return await fn();
+    } finally {
+      await lock.release();
+    }
   }
 
   private async readCart(sessionToken: string): Promise<Cart> {
@@ -164,16 +177,7 @@ export class CartService {
       addedAt: new Date().toISOString(),
     };
 
-    const lock = await this.redlock
-      .acquire([this.cartLockKey(sessionWithTable.sessionToken)], 3000)
-      .catch(() => {
-        throw new HttpException(
-          exceptionContentsIs("CART_LOCK_FAILED"),
-          HttpStatus.SERVICE_UNAVAILABLE
-        );
-      });
-
-    try {
+    return this.withCartLock(sessionWithTable.sessionToken, async () => {
       const cart = await this.readCart(sessionWithTable.sessionToken);
       cart.menus.push(item);
       const updated = await this.writeCart(sessionWithTable, cart);
@@ -183,9 +187,7 @@ export class CartService {
         subscriber: this.subscriberOf(sessionWithTable),
         meta: { menuName: menu.name },
       };
-    } finally {
-      await lock.release();
-    }
+    });
   }
 
   async updateItem(
@@ -213,16 +215,7 @@ export class CartService {
       }
     );
 
-    const lock = await this.redlock
-      .acquire([this.cartLockKey(sessionWithTable.sessionToken)], 3000)
-      .catch(() => {
-        throw new HttpException(
-          exceptionContentsIs("CART_LOCK_FAILED"),
-          HttpStatus.SERVICE_UNAVAILABLE
-        );
-      });
-
-    try {
+    return this.withCartLock(sessionWithTable.sessionToken, async () => {
       const cart = await this.readCart(sessionWithTable.sessionToken);
       const itemIndex = cart.menus.findIndex((i) => i.id === cartItemId);
       if (itemIndex === -1) {
@@ -252,25 +245,14 @@ export class CartService {
       const updated = await this.writeCart(sessionWithTable, cart);
 
       return { cart: updated, subscriber: this.subscriberOf(sessionWithTable) };
-    } finally {
-      await lock.release();
-    }
+    });
   }
 
   async removeItem(
     sessionWithTable: SessionWithTable,
     cartItemId: string
   ): Promise<ReturnCart<{ menuName: string }>> {
-    const lock = await this.redlock
-      .acquire([this.cartLockKey(sessionWithTable.sessionToken)], 3000)
-      .catch(() => {
-        throw new HttpException(
-          exceptionContentsIs("CART_LOCK_FAILED"),
-          HttpStatus.SERVICE_UNAVAILABLE
-        );
-      });
-
-    try {
+    return this.withCartLock(sessionWithTable.sessionToken, async () => {
       const cart = await this.readCart(sessionWithTable.sessionToken);
       const removed = cart.menus.find((i) => i.id === cartItemId);
       if (!removed) {
@@ -288,14 +270,14 @@ export class CartService {
         subscriber: this.subscriberOf(sessionWithTable),
         meta: { menuName: removed.menuName },
       };
-    } finally {
-      await lock.release();
-    }
+    });
   }
 
   async clearCart(sessionWithTable: SessionWithTable): Promise<CartSubscriber> {
-    await this.redis.del(this.cartKey(sessionWithTable.sessionToken));
-    return this.subscriberOf(sessionWithTable);
+    return this.withCartLock(sessionWithTable.sessionToken, async () => {
+      await this.redis.del(this.cartKey(sessionWithTable.sessionToken));
+      return this.subscriberOf(sessionWithTable);
+    });
   }
 
   async getCartByStore(storeId: string, sessionToken: string): Promise<Cart> {

@@ -70,7 +70,7 @@ export class CartController {
 
     this.cartEvents.emitCartAdd({
       subscriber: subscriber,
-      payload: { notice, updatedAt: new Date(cart.updatedAt) },
+      payload: { notice, updatedAt: new Date(cart.updatedAt).toISOString() },
       excludeSocketId: socketId,
     });
 
@@ -99,7 +99,7 @@ export class CartController {
 
     this.cartEvents.emitCartUpdated({
       subscriber,
-      payload: { updatedAt: new Date(cart.updatedAt) },
+      payload: { updatedAt: new Date(cart.updatedAt).toISOString() },
       excludeSocketId: socketId,
     });
     return cart;
@@ -127,7 +127,7 @@ export class CartController {
 
     this.cartEvents.emitCartDeleted({
       subscriber,
-      payload: { notice, updatedAt: new Date(cart.updatedAt) },
+      payload: { notice, updatedAt: new Date(cart.updatedAt).toISOString() },
       excludeSocketId: socketId,
     });
     return cart;
@@ -142,7 +142,7 @@ export class CartController {
     const subscriber = await this.cartService.clearCart(session);
     this.cartEvents.emitCartCleared({
       subscriber,
-      payload: { updatedAt: new Date() },
+      payload: { updatedAt: new Date().toISOString() },
       excludeSocketId: socketId,
     });
   }
