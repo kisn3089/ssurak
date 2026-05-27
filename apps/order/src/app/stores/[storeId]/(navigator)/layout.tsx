@@ -11,7 +11,8 @@ import { StoreContext } from "@spaceorder/db/types/session.type";
 import { Cart } from "@spaceorder/db/types/cart.type";
 import { PublicOrderWithItem } from "@spaceorder/db/types/publicModel.type";
 import { cookies } from "next/headers";
-import TableOrderRealtimeDaemon from "../components/TableOrderRealtimeDaemon";
+import TableOrderSyncDaemon from "./components/daemon/TableOrderSyncDaemon";
+import SyncDaemon from "./components/daemon/SyncDaemon";
 
 const STORE_CONTEXT_PATH = "/stores/v1/sessions/me/store-context";
 const CART_LIST_PATH = "/carts/v1/sessions/carts";
@@ -67,7 +68,8 @@ export default async function NavigatorLayout({
         </nav>
       </header>
       <main>
-        <TableOrderRealtimeDaemon>{children}</TableOrderRealtimeDaemon>
+        <SyncDaemon />
+        {children}
       </main>
     </HydrationBoundary>
   );
