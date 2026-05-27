@@ -4,6 +4,7 @@ import {
   Get,
   Post,
   Body,
+  Headers,
   Param,
   Delete,
   UseGuards,
@@ -52,7 +53,8 @@ export class CustomerOrdersController {
   async create(
     @Session() tableSession: TableSession,
     @Body() createOrderPayload: CreateOrderPayloadDto,
-    @Res({ passthrough: true }) response: Response
+    @Res({ passthrough: true }) response: Response,
+    @Headers("x-socket-id") socketId?: string
   ): Promise<
     PublicOrderWithItem<"Wide", { sessionToken: string; expiresAt: Date }>
   > {
@@ -78,7 +80,11 @@ export class CustomerOrdersController {
       },
     };
 
-    this.orderEvents.emitOrderCreated(subscriber, notice);
+    this.orderEvents.emitOrderCreated({
+      subscriber,
+      payload: { notice },
+      excludeSocketId: socketId,
+    });
 
     return order;
   }
@@ -112,11 +118,13 @@ export class CustomerOrdersController {
   @DocsCustomerOrderDelete()
   async delete(
     @Session() tableSession: TableSession,
-    @Param("orderId") orderId: string
+    @Param("orderId") orderId: string,
+    @Headers("x-socket-id") socketId?: string
   ): Promise<PublicOrderWithItem<"Wide">> {
     const { order, subscriber } = await this.orderService.cancelOrder({
-      tableSession,
+      kind: "customer",
       orderId,
+      tableSession,
     });
 
     const notice: SyncNotice = {
@@ -124,7 +132,11 @@ export class CustomerOrdersController {
       message: ORDER_STATUS_MESSAGE_MAP[OrderStatus.CANCELLED],
     };
 
-    this.orderEvents.emitOrderCancelled(subscriber, notice);
+    this.orderEvents.emitOrderCancelled({
+      subscriber,
+      payload: { notice },
+      excludeSocketId: socketId,
+    });
     return order;
   }
 }

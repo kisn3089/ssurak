@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Headers,
   HttpCode,
   Param,
   Patch,
@@ -116,7 +117,8 @@ export class OrderItemController {
   async partialUpdate(
     @Client() client: Owner,
     @Param("orderItemId") orderItemId: string,
-    @Body() updateOrderItemDto: UpdateOrderItemPayloadDto
+    @Body() updateOrderItemDto: UpdateOrderItemPayloadDto,
+    @Headers("x-socket-id") socketId?: string
   ): Promise<PublicOrderItem<"Wide">> {
     const { orderItem, subscriber, meta } =
       await this.orderItemService.partialUpdateOrderItem(
@@ -133,7 +135,11 @@ export class OrderItemController {
       },
     };
 
-    this.orderEvents.emitOrderItemUpdated(subscriber, notice);
+    this.orderEvents.emitOrderItemUpdated({
+      subscriber,
+      payload: { notice },
+      excludeSocketId: socketId,
+    });
 
     return orderItem;
   }
@@ -147,12 +153,30 @@ export class OrderItemController {
   @DocsOrderItemDelete()
   async delete(
     @Client() client: Owner,
-    @Param("orderItemId") orderItemId: string
+    @Param("orderItemId") orderItemId: string,
+    @Headers("x-socket-id") socketId?: string
   ): Promise<void> {
     const { subscriber, meta } = await this.orderItemService.deleteOrderItem(
       orderItemId,
       client.id
     );
+
+    const emitOrderItem = { subscriber, excludeSocketId: socketId };
+
+    if (meta.orderAutoCancelled) {
+      const notice: SyncNotice = {
+        level: "info",
+        message: {
+          owner: `${meta.tableNumber}테이블 ${meta.menuName} 메뉴 제외로 주문이 자동 취소되었습니다.`,
+          customer: `매장에서 ${meta.menuName} 메뉴 제외로 주문이 자동 취소되었습니다.`,
+        },
+      };
+      this.orderEvents.emitOrderCancelled({
+        ...emitOrderItem,
+        payload: { notice },
+      });
+      return;
+    }
 
     const notice: SyncNotice = {
       level: "info",
@@ -162,6 +186,9 @@ export class OrderItemController {
       },
     };
 
-    this.orderEvents.emitOrderItemRemoved(subscriber, notice);
+    this.orderEvents.emitOrderItemRemoved({
+      ...emitOrderItem,
+      payload: { notice },
+    });
   }
 }

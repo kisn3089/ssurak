@@ -1,5 +1,5 @@
 import { Injectable, Logger } from "@nestjs/common";
-import { OrderSyncEvent, SyncNotice } from "@spaceorder/db";
+import { OrderSyncEvent } from "@spaceorder/db";
 import { REALTIME_EVENT, realtimeRoom } from "./realtime.constants";
 import { RealtimeGateway } from "./realtime.gateway";
 
@@ -8,42 +8,53 @@ export type OrderSubscriber = {
   tablePublicId: string;
 };
 
+type EmitOrder = {
+  subscriber: OrderSubscriber;
+  payload: OrderSyncEvent;
+  excludeSocketId?: string;
+};
+
 @Injectable()
 export class OrderEventsService {
   private readonly logger = new Logger(OrderEventsService.name);
 
   constructor(private readonly gateway: RealtimeGateway) {}
 
-  emitOrderCreated(subscriber: OrderSubscriber, notice: SyncNotice): void {
-    this.broadcast(REALTIME_EVENT.ORDER_CREATED, subscriber, { notice });
+  emitOrderCreated(emitOrder: EmitOrder): void {
+    this.broadcast(REALTIME_EVENT.ORDER_CREATED, emitOrder);
   }
 
-  emitOrderUpdated(subscriber: OrderSubscriber, notice: SyncNotice): void {
-    this.broadcast(REALTIME_EVENT.ORDER_UPDATED, subscriber, { notice });
+  emitOrderUpdated(emitOrder: EmitOrder): void {
+    this.broadcast(REALTIME_EVENT.ORDER_UPDATED, emitOrder);
   }
 
-  emitOrderCancelled(subscriber: OrderSubscriber, notice: SyncNotice): void {
-    this.broadcast(REALTIME_EVENT.ORDER_CANCELLED, subscriber, { notice });
+  emitOrderCancelled(emitOrder: EmitOrder): void {
+    this.broadcast(REALTIME_EVENT.ORDER_CANCELLED, emitOrder);
   }
 
   /** OrderItem Events */
-  emitOrderItemUpdated(subscriber: OrderSubscriber, notice: SyncNotice): void {
-    this.broadcast(REALTIME_EVENT.ORDER_ITEM_UPDATED, subscriber, { notice });
+  emitOrderItemUpdated(emitOrder: EmitOrder): void {
+    this.broadcast(REALTIME_EVENT.ORDER_ITEM_UPDATED, emitOrder);
   }
 
-  emitOrderItemRemoved(subscriber: OrderSubscriber, notice: SyncNotice): void {
-    this.broadcast(REALTIME_EVENT.ORDER_ITEM_DELETED, subscriber, { notice });
+  emitOrderItemRemoved(emitOrder: EmitOrder): void {
+    this.broadcast(REALTIME_EVENT.ORDER_ITEM_DELETED, emitOrder);
   }
 
   private broadcast(
     event: string,
-    { storePublicId, tablePublicId }: OrderSubscriber,
-    payload: OrderSyncEvent
+    { payload, subscriber, excludeSocketId }: EmitOrder
   ): void {
+    const { storePublicId, tablePublicId } = subscriber;
     const { server } = this.gateway;
     const adminsRoom = realtimeRoom.admins(storePublicId);
     const tableRoom = realtimeRoom.table(storePublicId, tablePublicId);
-    server.to([adminsRoom, tableRoom]).emit(event, payload);
-    this.logger.log(`emit ${event} → ${adminsRoom}, ${tableRoom}`);
+    const scope = excludeSocketId
+      ? server.to([adminsRoom, tableRoom]).except(excludeSocketId)
+      : server.to([adminsRoom, tableRoom]);
+    scope.emit(event, payload);
+    this.logger.log(
+      `emit ${event} → ${adminsRoom}, ${tableRoom}${excludeSocketId ? ` (except ${excludeSocketId})` : ""}`
+    );
   }
 }

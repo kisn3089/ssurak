@@ -3,9 +3,15 @@ import { RealtimeGateway } from "./realtime.gateway";
 import { REALTIME_EVENT, realtimeRoom } from "./realtime.constants";
 import { CartSyncEvent } from "@spaceorder/db";
 
-type Subscriber = {
+export type CartSubscriber = {
   storePublicId: string;
   tablePublicId: string;
+};
+
+type EmitCart = {
+  subscriber: CartSubscriber;
+  payload: CartSyncEvent;
+  excludeSocketId?: string;
 };
 
 @Injectable()
@@ -14,39 +20,31 @@ export class CartEventsService {
 
   constructor(private readonly gateway: RealtimeGateway) {}
 
-  emitCartAdd(subscriber: Subscriber, cart: CartSyncEvent): void {
-    this.broadcast(REALTIME_EVENT.CART_CREATED, subscriber, cart);
+  emitCartAdd(emitCart: EmitCart): void {
+    this.broadcast(REALTIME_EVENT.CART_CREATED, emitCart);
   }
 
-  emitCartUpdated(
-    subscriber: Subscriber,
-    cart: CartSyncEvent,
-    excludeSocketId?: string
-  ): void {
-    this.broadcast(
-      REALTIME_EVENT.CART_UPDATED,
-      subscriber,
-      cart,
-      excludeSocketId
-    );
+  emitCartUpdated(emitCart: EmitCart): void {
+    this.broadcast(REALTIME_EVENT.CART_UPDATED, emitCart);
   }
 
-  emitCartDeleted(subscriber: Subscriber, cart: CartSyncEvent): void {
-    this.broadcast(REALTIME_EVENT.CART_DELETED, subscriber, cart);
+  emitCartDeleted(emitCart: EmitCart): void {
+    this.broadcast(REALTIME_EVENT.CART_DELETED, emitCart);
   }
 
-  emitCartCleared(subscriber: Subscriber, cart: CartSyncEvent): void {
-    this.broadcast(REALTIME_EVENT.CART_CLEARED, subscriber, cart);
+  emitCartCleared(emitCart: EmitCart): void {
+    this.broadcast(REALTIME_EVENT.CART_CLEARED, emitCart);
   }
 
   private broadcast(
     event: string,
-    { storePublicId, tablePublicId }: Subscriber,
-    payload: CartSyncEvent,
-    excludeSocketId?: string
+    { payload, subscriber, excludeSocketId }: EmitCart
   ): void {
     const { server } = this.gateway;
-    const tableRoom = realtimeRoom.table(storePublicId, tablePublicId);
+    const tableRoom = realtimeRoom.table(
+      subscriber.storePublicId,
+      subscriber.tablePublicId
+    );
     const scope = excludeSocketId
       ? server.to(tableRoom).except(excludeSocketId)
       : server.to(tableRoom);

@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import type { Cart, SessionWithTable } from "@spaceorder/db";
+import type { Cart, SessionWithTable, SyncNotice } from "@spaceorder/db";
 import {
   addCartItemPayloadSchema,
   cartItemIdSchema,
@@ -53,13 +53,27 @@ export class CartController {
   @DocsCustomerCartAddItem()
   async addItem(
     @Session() session: SessionWithTable,
-    @Body() addCartItemPayload: CreateCartItemPayloadDto
+    @Body() addCartItemPayload: CreateCartItemPayloadDto,
+    @Headers("x-socket-id") socketId?: string
   ): Promise<Cart> {
-    const { cart, broadcast } = await this.cartService.addItem(
+    const { cart, subscriber, meta } = await this.cartService.addItem(
       session,
       addCartItemPayload
     );
-    this.cartEvents.emitCartAdd(broadcast.subscriber, broadcast.payload);
+
+    const notice: SyncNotice = {
+      level: "info",
+      message: {
+        customer: `${meta.menuName} 메뉴가 장바구니에 추가되었습니다.`,
+      },
+    };
+
+    this.cartEvents.emitCartAdd({
+      subscriber: subscriber,
+      payload: { notice, updatedAt: new Date(cart.updatedAt) },
+      excludeSocketId: socketId,
+    });
+
     return cart;
   }
 
@@ -77,16 +91,17 @@ export class CartController {
     @Body() updateCartItemPayload: UpdateCartItemPayloadDto,
     @Headers("x-socket-id") socketId?: string
   ): Promise<Cart> {
-    const { cart, broadcast } = await this.cartService.updateItem(
+    const { cart, subscriber } = await this.cartService.updateItem(
       session,
       cartItemId,
       updateCartItemPayload
     );
-    this.cartEvents.emitCartUpdated(
-      broadcast.subscriber,
-      broadcast.payload,
-      socketId
-    );
+
+    this.cartEvents.emitCartUpdated({
+      subscriber,
+      payload: { updatedAt: new Date(cart.updatedAt) },
+      excludeSocketId: socketId,
+    });
     return cart;
   }
 
@@ -95,20 +110,40 @@ export class CartController {
   @DocsCustomerCartRemoveItem()
   async removeItem(
     @Session() session: SessionWithTable,
-    @Param("cartItemId") cartItemId: string
+    @Param("cartItemId") cartItemId: string,
+    @Headers("x-socket-id") socketId?: string
   ): Promise<Cart> {
-    const { cart, broadcast } = await this.cartService.removeItem(
+    const { cart, subscriber, meta } = await this.cartService.removeItem(
       session,
       cartItemId
     );
-    this.cartEvents.emitCartDeleted(broadcast.subscriber, broadcast.payload);
+
+    const notice: SyncNotice = {
+      level: "info",
+      message: {
+        customer: `${meta.menuName} 메뉴가 장바구니에서 제거되었습니다.`,
+      },
+    };
+
+    this.cartEvents.emitCartDeleted({
+      subscriber,
+      payload: { notice, updatedAt: new Date(cart.updatedAt) },
+      excludeSocketId: socketId,
+    });
     return cart;
   }
 
   @Delete()
   @DocsCustomerCartClear()
-  async clearCart(@Session() session: SessionWithTable): Promise<void> {
-    const { broadcast } = await this.cartService.clearCart(session);
-    this.cartEvents.emitCartCleared(broadcast.subscriber, broadcast.payload);
+  async clearCart(
+    @Session() session: SessionWithTable,
+    @Headers("x-socket-id") socketId?: string
+  ): Promise<void> {
+    const subscriber = await this.cartService.clearCart(session);
+    this.cartEvents.emitCartCleared({
+      subscriber,
+      payload: { updatedAt: new Date() },
+      excludeSocketId: socketId,
+    });
   }
 }

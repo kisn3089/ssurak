@@ -199,7 +199,13 @@ export class OrderItemService {
   async deleteOrderItem(
     orderItemId: string,
     ownerId: bigint
-  ): Promise<DeletedOrderItem<{ tableNumber: number; menuName: string }>> {
+  ): Promise<
+    DeletedOrderItem<{
+      tableNumber: number;
+      menuName: string;
+      orderAutoCancelled: boolean;
+    }>
+  > {
     return await this.prismaService.$transaction(async (tx) => {
       const parentOrder = await tx.order.findFirst({
         where: {
@@ -220,7 +226,8 @@ export class OrderItemService {
         where: { publicId: orderItemId },
       });
 
-      if (validatedOrder._count.orderItems === 1) {
+      const orderAutoCancelled = validatedOrder._count.orderItems === 1;
+      if (orderAutoCancelled) {
         await tx.order.update({
           where: { id: validatedOrder.id },
           data: { status: OrderStatus.CANCELLED },
@@ -235,6 +242,7 @@ export class OrderItemService {
         meta: {
           tableNumber: validatedOrder.table.tableNumber,
           menuName,
+          orderAutoCancelled,
         },
       };
     });

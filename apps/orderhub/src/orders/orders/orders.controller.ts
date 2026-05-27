@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Headers,
   Param,
   Patch,
   Post,
@@ -114,7 +115,8 @@ export class OrdersController {
   async partialUpdate(
     @Client() client: Owner,
     @Param("orderId") orderId: string,
-    @Body() updatePayload: UpdateOrderPayloadDto
+    @Body() updatePayload: UpdateOrderPayloadDto,
+    @Headers("x-socket-id") socketId?: string
   ): Promise<PublicOrderWithItem<"Wide">> {
     const { order, subscriber, meta } =
       await this.orderService.partialUpdateOrder(
@@ -128,7 +130,11 @@ export class OrdersController {
       message: ORDER_STATUS_MESSAGE_MAP[meta.orderStatus],
     };
 
-    this.orderEvents.emitOrderUpdated(subscriber, notice);
+    this.orderEvents.emitOrderUpdated({
+      subscriber,
+      payload: { notice },
+      excludeSocketId: socketId,
+    });
     return order;
   }
 
@@ -138,9 +144,11 @@ export class OrdersController {
   @DocsOwnerOrderCancel()
   async cancel(
     @Client() client: Owner,
-    @Param("orderId") orderId: string
+    @Param("orderId") orderId: string,
+    @Headers("x-socket-id") socketId?: string
   ): Promise<PublicOrderWithItem<"Wide">> {
     const { order, subscriber } = await this.orderService.cancelOrder({
+      kind: "owner",
       orderId,
       ownerId: client.id,
     });
@@ -150,7 +158,11 @@ export class OrdersController {
       message: ORDER_STATUS_MESSAGE_MAP[OrderStatus.CANCELLED],
     };
 
-    this.orderEvents.emitOrderCancelled(subscriber, notice);
+    this.orderEvents.emitOrderCancelled({
+      subscriber,
+      payload: { notice },
+      excludeSocketId: socketId,
+    });
     return order;
   }
 
@@ -180,7 +192,8 @@ export class OrdersController {
   @DocsOwnerOrderCreate()
   async create(
     @Param("tableId") tableId: string,
-    @Body() createPayload: CreateOrderPayloadDto
+    @Body() createPayload: CreateOrderPayloadDto,
+    @Headers("x-socket-id") socketId?: string
   ): Promise<PublicOrderWithItem<"Wide">> {
     const { order, subscriber, meta } = await this.orderService.createOrder(
       { publicId: tableId },
@@ -195,7 +208,11 @@ export class OrdersController {
       },
     };
 
-    this.orderEvents.emitOrderCreated(subscriber, notice);
+    this.orderEvents.emitOrderCreated({
+      subscriber,
+      payload: { notice },
+      excludeSocketId: socketId,
+    });
     return order;
   }
 

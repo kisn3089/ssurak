@@ -20,16 +20,18 @@ import {
   CreateCartItemPayloadDto,
   UpdateCartItemPayloadDto,
 } from "src/dto/cart.dto";
+import { CartSubscriber } from "src/realtime/cart-events.service";
+import { MetaInfo } from "src/realtime/realtime.constants";
 
-export type CartSubscriber = {
-  storePublicId: string;
-  tablePublicId: string;
-};
-
-export type CartBroadcast = {
+type CartBroadcast = {
   subscriber: CartSubscriber;
   payload: CartSyncEvent;
 };
+
+type ReturnCart<Meta = unknown> = {
+  cart: Cart;
+  subscriber: CartSubscriber;
+} & MetaInfo<Meta>;
 
 @Injectable()
 export class CartService {
@@ -136,7 +138,7 @@ export class CartService {
   async addItem(
     sessionWithTable: SessionWithTable,
     payload: CreateCartItemPayloadDto
-  ): Promise<{ cart: Cart; broadcast: CartBroadcast }> {
+  ): Promise<ReturnCart<{ menuName: string }>> {
     const { optionsPrice, menu } = await this.getOptionsPriceWithValidate(
       sessionWithTable,
       payload.menuPublicId,
@@ -176,21 +178,10 @@ export class CartService {
       cart.menus.push(item);
       const updated = await this.writeCart(sessionWithTable, cart);
 
-      const notice: SyncNotice = {
-        level: "info",
-        message: { customer: `${menu.name} 메뉴가 장바구니에 추가되었습니다.` },
-      };
-
       return {
         cart: updated,
-        broadcast: {
-          subscriber: this.subscriberOf(sessionWithTable),
-          payload: {
-            sessionToken: sessionWithTable.sessionToken,
-            notice,
-            updatedAt: new Date(updated.updatedAt),
-          },
-        },
+        subscriber: this.subscriberOf(sessionWithTable),
+        meta: { menuName: menu.name },
       };
     } finally {
       await lock.release();
@@ -201,7 +192,7 @@ export class CartService {
     sessionWithTable: SessionWithTable,
     cartItemId: string,
     payload: UpdateCartItemPayloadDto
-  ): Promise<{ cart: Cart; broadcast: CartBroadcast }> {
+  ): Promise<ReturnCart> {
     const preCart = await this.readCart(sessionWithTable.sessionToken);
     const preItem = preCart.menus.find((i) => i.id === cartItemId);
     if (!preItem) {
@@ -260,16 +251,7 @@ export class CartService {
 
       const updated = await this.writeCart(sessionWithTable, cart);
 
-      return {
-        cart: updated,
-        broadcast: {
-          subscriber: this.subscriberOf(sessionWithTable),
-          payload: {
-            sessionToken: sessionWithTable.sessionToken,
-            updatedAt: new Date(updated.updatedAt),
-          },
-        },
-      };
+      return { cart: updated, subscriber: this.subscriberOf(sessionWithTable) };
     } finally {
       await lock.release();
     }
@@ -278,7 +260,7 @@ export class CartService {
   async removeItem(
     sessionWithTable: SessionWithTable,
     cartItemId: string
-  ): Promise<{ cart: Cart; broadcast: CartBroadcast }> {
+  ): Promise<ReturnCart<{ menuName: string }>> {
     const lock = await this.redlock
       .acquire([this.cartLockKey(sessionWithTable.sessionToken)], 3000)
       .catch(() => {
@@ -301,43 +283,19 @@ export class CartService {
       cart.menus = cart.menus.filter((i) => i.id !== cartItemId);
       const updated = await this.writeCart(sessionWithTable, cart);
 
-      const notice: SyncNotice = {
-        level: "info",
-        message: {
-          customer: `${removed.menuName} 메뉴가 장바구니에서 제거되었습니다.`,
-        },
-      };
-
       return {
         cart: updated,
-        broadcast: {
-          subscriber: this.subscriberOf(sessionWithTable),
-          payload: {
-            sessionToken: sessionWithTable.sessionToken,
-            notice,
-            updatedAt: new Date(updated.updatedAt),
-          },
-        },
+        subscriber: this.subscriberOf(sessionWithTable),
+        meta: { menuName: removed.menuName },
       };
     } finally {
       await lock.release();
     }
   }
 
-  async clearCart(
-    sessionWithTable: SessionWithTable
-  ): Promise<{ broadcast: CartBroadcast }> {
+  async clearCart(sessionWithTable: SessionWithTable): Promise<CartSubscriber> {
     await this.redis.del(this.cartKey(sessionWithTable.sessionToken));
-
-    return {
-      broadcast: {
-        subscriber: this.subscriberOf(sessionWithTable),
-        payload: {
-          sessionToken: sessionWithTable.sessionToken,
-          updatedAt: new Date(),
-        },
-      },
-    };
+    return this.subscriberOf(sessionWithTable);
   }
 
   async getCartByStore(storeId: string, sessionToken: string): Promise<Cart> {

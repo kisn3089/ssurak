@@ -28,8 +28,8 @@ import { MetaInfo } from "src/realtime/realtime.constants";
 
 type CreateOrderParams = SessionIdentifier;
 type CancelParams =
-  | { orderId: string; ownerId: bigint }
-  | { tableSession: TableSession; orderId: string };
+  | { kind: "owner"; orderId: string; ownerId: bigint }
+  | { kind: "customer"; orderId: string; tableSession: TableSession };
 
 type CreatedOrder = PublicOrderWithItem<
   "Wide",
@@ -158,7 +158,7 @@ export class OrdersService {
     updatePayload: UpdateOrderPayloadDto
   ): Promise<ReturnOrder<UpdatedOrder, { orderStatus: OrderStatus }>> {
     const { order, subscriber } = await this.updateOrderWithValidation(
-      { orderId, ownerId },
+      { kind: "owner", orderId, ownerId },
       updatePayload
     );
 
@@ -178,7 +178,7 @@ export class OrdersService {
     data: Prisma.OrderUpdateInput
   ): Promise<ReturnOrder<UpdatedOrder>> {
     const whereClause: Prisma.OrderWhereInput =
-      "tableSession" in params
+      params.kind === "customer"
         ? { publicId: params.orderId, tableSessionId: params.tableSession.id }
         : {
             publicId: params.orderId,
