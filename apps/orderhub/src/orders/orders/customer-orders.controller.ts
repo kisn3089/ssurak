@@ -13,6 +13,8 @@ import { ApiTags } from "@nestjs/swagger";
 import { SessionAuth } from "src/utils/guards/table-session-auth.guard";
 import {
   COOKIE_TABLE,
+  OrderStatus,
+  SyncNotice,
   type PublicOrderWithItem,
   type TableSession,
 } from "@spaceorder/db";
@@ -32,12 +34,17 @@ import { CreateOrderPayloadDto } from "src/dto/order.dto";
 import { OrdersService } from "./orders.service";
 import { ORDER_ITEMS_WITH_OMIT_PRIVATE } from "src/common/query/order-item-query.const";
 import { responseCookie } from "src/utils/cookies";
+import { OrderEventsService } from "src/realtime/order-events.service";
+import { ORDER_STATUS_MESSAGE_MAP } from "./orders-status-notice-message.const";
 
 @ApiTags("Customer Order")
 @Controller("sessions/orders")
 @UseGuards(SessionAuth)
 export class CustomerOrdersController {
-  constructor(private readonly orderService: OrdersService) {}
+  constructor(
+    private readonly orderService: OrdersService,
+    private readonly orderEvents: OrderEventsService
+  ) {}
 
   @Post()
   @UseGuards(ZodValidation({ body: createOrderPayloadSchema }))
@@ -49,7 +56,7 @@ export class CustomerOrdersController {
   ): Promise<
     PublicOrderWithItem<"Wide", { sessionToken: string; expiresAt: Date }>
   > {
-    const createdOrder = await this.orderService.createOrder(
+    const { order, subscriber, meta } = await this.orderService.createOrder(
       { id: tableSession.id },
       createOrderPayload
     );
@@ -57,13 +64,23 @@ export class CustomerOrdersController {
     responseCookie.set(
       response,
       COOKIE_TABLE.SESSION_TOKEN,
-      createdOrder.tableSession.sessionToken,
+      order.tableSession.sessionToken,
       {
-        expires: createdOrder.tableSession.expiresAt,
+        expires: order.tableSession.expiresAt,
       }
     );
 
-    return createdOrder;
+    const notice: SyncNotice = {
+      level: "success",
+      message: {
+        owner: `${meta?.tableNumber}번 테이블에서 새 주문이 들어왔습니다.`,
+        customer: "주문이 완료되었습니다 🎉",
+      },
+    };
+
+    this.orderEvents.emitOrderCreated(subscriber, notice);
+
+    return order;
   }
 
   @Get()
@@ -97,6 +114,17 @@ export class CustomerOrdersController {
     @Session() tableSession: TableSession,
     @Param("orderId") orderId: string
   ): Promise<PublicOrderWithItem<"Wide">> {
-    return await this.orderService.cancelOrder({ tableSession, orderId });
+    const { order, subscriber } = await this.orderService.cancelOrder({
+      tableSession,
+      orderId,
+    });
+
+    const notice: SyncNotice = {
+      level: "error",
+      message: ORDER_STATUS_MESSAGE_MAP[OrderStatus.CANCELLED],
+    };
+
+    this.orderEvents.emitOrderCancelled(subscriber, notice);
+    return order;
   }
 }

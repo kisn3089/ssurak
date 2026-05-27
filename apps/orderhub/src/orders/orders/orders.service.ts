@@ -1,7 +1,5 @@
 import { Injectable } from "@nestjs/common";
 import {
-  OrderCreateNoticeMessage,
-  OrderRealtimeEvent,
   OrderStatus,
   Owner,
   Prisma,
@@ -25,28 +23,36 @@ import { validateOrderSessionToWrite } from "src/common/validate/order/order-ses
 import { MENU_VALIDATION_FIELDS_SELECT } from "src/common/query/menu-query.const";
 import { TABLE_OMIT } from "src/common/query/table-query.const";
 import { SessionIdentifier } from "src/internal/services/session-core.service";
-import { OrderEventsService } from "src/realtime/order-events.service";
+import { OrderSubscriber } from "src/realtime/order-events.service";
+import { MetaInfo } from "src/realtime/realtime.constants";
 
 type CreateOrderParams = SessionIdentifier;
 type CancelParams =
   | { orderId: string; ownerId: bigint }
   | { tableSession: TableSession; orderId: string };
-type UpdateEventKind = "updated" | "cancelled";
+
+type CreatedOrder = PublicOrderWithItem<
+  "Wide",
+  { sessionToken: string; expiresAt: Date }
+>;
+type UpdatedOrder = PublicOrderWithItem<"Wide">;
+
+type ReturnOrder<Order extends CreatedOrder | UpdatedOrder, Meta = unknown> = {
+  order: Order;
+  subscriber: OrderSubscriber;
+} & MetaInfo<Meta>;
 
 @Injectable()
 export class OrdersService {
   constructor(
     private readonly prismaService: PrismaService,
-    private readonly sessionClient: SessionClient,
-    private readonly orderEvents: OrderEventsService
+    private readonly sessionClient: SessionClient
   ) {}
 
   async createOrder(
     params: CreateOrderParams,
     createOrderPayload: CreateOrderPayloadDto
-  ): Promise<
-    PublicOrderWithItem<"Wide", { sessionToken: string; expiresAt: Date }>
-  > {
+  ): Promise<ReturnOrder<CreatedOrder, { tableNumber: number }>> {
     const { order, session } = await this.prismaService.$transaction(
       async (tx) => {
         const session: SessionWithTable =
@@ -98,27 +104,14 @@ export class OrdersService {
       }
     );
 
-    const noticeMessage: OrderCreateNoticeMessage = {
-      owner: `${session.table.tableNumber}번 테이블에서 새 주문이 들어왔습니다.`,
-      ...("publicId" in params && {
-        customer: `매장에서 주문을 생성하였습니다.`,
-      }),
-    };
-
-    const notice: OrderRealtimeEvent["notice"] = {
-      level: "info",
-      message: noticeMessage,
-    };
-
-    this.orderEvents.emitOrderCreated(
-      {
+    return {
+      order,
+      subscriber: {
         storePublicId: session.table.store.publicId,
         tablePublicId: session.table.publicId,
       },
-      notice
-    );
-
-    return order;
+      meta: { tableNumber: session.table.tableNumber },
+    };
   }
 
   async getOrdersSummary(
@@ -163,29 +156,27 @@ export class OrdersService {
     orderId: string,
     ownerId: bigint,
     updatePayload: UpdateOrderPayloadDto
-  ): Promise<PublicOrderWithItem<"Wide">> {
-    return this.updateOrderWithValidation(
+  ): Promise<ReturnOrder<UpdatedOrder, { orderStatus: OrderStatus }>> {
+    const { order, subscriber } = await this.updateOrderWithValidation(
       { orderId, ownerId },
-      updatePayload,
-      "updated"
+      updatePayload
     );
+
+    return { order, subscriber, meta: { orderStatus: order.status } };
   }
 
-  async cancelOrder(
-    params: CancelParams
-  ): Promise<PublicOrderWithItem<"Wide">> {
-    return this.updateOrderWithValidation(
-      params,
-      { status: OrderStatus.CANCELLED },
-      "cancelled"
-    );
+  async cancelOrder(params: CancelParams): Promise<ReturnOrder<UpdatedOrder>> {
+    const { order, subscriber } = await this.updateOrderWithValidation(params, {
+      status: OrderStatus.CANCELLED,
+    });
+
+    return { order, subscriber };
   }
 
   private async updateOrderWithValidation(
     params: CancelParams,
-    data: Prisma.OrderUpdateInput,
-    eventKind: UpdateEventKind
-  ): Promise<PublicOrderWithItem<"Wide">> {
+    data: Prisma.OrderUpdateInput
+  ): Promise<ReturnOrder<UpdatedOrder>> {
     const whereClause: Prisma.OrderWhereInput =
       "tableSession" in params
         ? { publicId: params.orderId, tableSessionId: params.tableSession.id }
@@ -211,47 +202,12 @@ export class OrdersService {
       ...ORDER_ITEMS_WITH_OMIT_PRIVATE,
     });
 
-    const target = {
-      storePublicId: validOrder.store.publicId,
-      tablePublicId: validOrder.table.publicId,
+    return {
+      order: updated,
+      subscriber: {
+        storePublicId: validOrder.store.publicId,
+        tablePublicId: validOrder.table.publicId,
+      },
     };
-
-    if (eventKind === "cancelled") {
-      // 현재는 주문 업데이트는 관리자만 가능하므로, 주문 취소 이벤트는 무조건 관리자가 트리거한 것으로 간주
-      // const triggeredByCustomer = "tableSession" in params;
-      const cancelNotice: OrderRealtimeEvent["notice"] = {
-        level: "error",
-        message: ORDER_STATUS_MESSAGE_MAP[OrderStatus.CANCELLED],
-      };
-      this.orderEvents.emitOrderCancelled(target, cancelNotice);
-    } else {
-      const updateNotice: OrderRealtimeEvent["notice"] = {
-        level: "info",
-        message: ORDER_STATUS_MESSAGE_MAP[updated.status],
-      };
-      this.orderEvents.emitOrderUpdated(target, updateNotice);
-    }
-
-    return updated;
   }
 }
-
-const ORDER_STATUS_MESSAGE_MAP: Record<OrderStatus, OrderCreateNoticeMessage> =
-  {
-    [OrderStatus.PENDING]: {
-      owner: "주문 수락 대기 중입니다.",
-    },
-    [OrderStatus.ACCEPTED]: {
-      customer: "주문이 수락되었습니다.",
-    },
-    [OrderStatus.PREPARING]: {
-      customer: "음식이 준비 중입니다.",
-    },
-    [OrderStatus.COMPLETED]: {
-      customer: "음식이 제공되었습니다. 맛있게 드세요 🥂",
-    },
-    [OrderStatus.CANCELLED]: {
-      owner: "관리자가 주문을 취소하였습니다.",
-      customer: "주문이 취소되었습니다.",
-    },
-  };

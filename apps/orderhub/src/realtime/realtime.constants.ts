@@ -1,3 +1,7 @@
+export type MetaInfo<Meta = unknown> = unknown extends Meta
+  ? { meta?: Meta }
+  : { meta: Meta };
+
 export const REALTIME_NAMESPACE = "/events";
 export const REALTIME_PATH = "/ws/";
 
@@ -12,8 +16,14 @@ export const REALTIME_EVENT = {
   ORDER_CREATED: "order.created",
   ORDER_UPDATED: "order.updated",
   ORDER_CANCELLED: "order.cancelled",
+  ORDER_ITEM_UPDATED: "order.item.updated",
+  ORDER_ITEM_DELETED: "order.item.deleted",
   SUBSCRIBE_ADMIN: "subscribe:admin",
   UNSUBSCRIBE_ADMIN: "unsubscribe:admin",
+  CART_CREATED: "cart.created",
+  CART_UPDATED: "cart.updated",
+  CART_DELETED: "cart.deleted",
+  CART_CLEARED: "cart.cleared",
 } as const;
 
 export const realtimeRoom = {
