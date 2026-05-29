@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import { AppModule } from "./app/app.module";
 import { COOKIE_TABLE } from "@spaceorder/db/constants/cookieTable.const";
 import { RedisIoAdapter } from "./realtime/redis-io.adapter";
+import { PRIVATE_HOST_ORIGIN } from "./realtime/realtime.constants";
 
 // BigInt serialization for JSON responses
 BigInt.prototype.toJSON = function (this: bigint) {
@@ -23,12 +24,7 @@ async function bootstrap() {
           callback: (err: Error | null, allow?: boolean) => void
         ) => {
           // 개발 환경: localhost 및 사설 IP(모바일 테스트)에서 오는 요청 허용
-          if (
-            !origin ||
-            /^https?:\/\/(localhost|127\.0\.0\.1|(\d{1,3}\.){3}\d{1,3})(:\d+)?$/.test(
-              origin
-            )
-          ) {
+          if (!origin || PRIVATE_HOST_ORIGIN.test(origin)) {
             callback(null, true);
           } else {
             callback(new Error("CORS blocked"));

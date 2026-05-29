@@ -9,8 +9,8 @@ export const REALTIME_PATH = "/ws/";
 
 export type OriginKind = "admin" | "customer";
 
-const PRIVATE_HOST_ORIGIN =
-  /^https?:\/\/(localhost|127\.0\.0\.1|(\d{1,3}\.){3}\d{1,3})(:\d+)?$/;
+export const PRIVATE_HOST_ORIGIN =
+  /^https?:\/\/(localhost|127\.0\.0\.1|10(\.\d{1,3}){3}|192\.168(\.\d{1,3}){2}|172\.(1[6-9]|2\d|3[01])(\.\d{1,3}){2})(:\d+)?$/;
 
 const isDev = (config: ConfigService): boolean =>
   config.get("NODE_ENV") !== "production";
