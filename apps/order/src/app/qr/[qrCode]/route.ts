@@ -27,9 +27,19 @@ export async function GET(
     return NextResponse.redirect(`${origin}/error`);
   }
 
-  const redirectUrl = location.startsWith("http")
-    ? location
-    : `${origin}${location.startsWith("/") ? location : `/${location}`}`;
+  const redirectUrl = (() => {
+    if (!location.startsWith("http")) {
+      return `${origin}${location.startsWith("/") ? location : `/${location}`}`;
+    }
+
+    try {
+      const parsed = new URL(location);
+      return `${origin}${parsed.pathname}${parsed.search}${parsed.hash}`;
+    } catch {
+      return `${origin}/error`;
+    }
+  })();
+
   const response = NextResponse.redirect(redirectUrl);
 
   const setCookie = apiResponse.headers.get("set-cookie");
