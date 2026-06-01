@@ -9,7 +9,7 @@ import { PublicOrderWithItem } from "@spaceorder/db/types/publicModel.type";
 import { UseMutationResult } from "@tanstack/react-query";
 import { toast, toastByLevel } from "@spaceorder/ui/components/sonner";
 import { useParams, useRouter } from "next/navigation";
-import { AxiosError } from "axios";
+import { AxiosError, isAxiosError } from "axios";
 
 type CartState = {
   menus: PublicCartItem[];
@@ -78,26 +78,19 @@ export default function CartProvider({
   };
 
   const createOrderRequest = async () => {
-    const payload: CreateOrderRequest = {
-      orderItems: cart.menus.map((menu) => ({
-        menuPublicId: menu.menuPublicId,
-        quantity: menu.quantity,
-        menuName: menu.menuName,
-        ...(menu.requiredOptions
-          ? { requiredOptions: menu.requiredOptions }
-          : undefined),
-        ...(menu.customOptions
-          ? { customOptions: menu.customOptions }
-          : undefined),
-      })),
-    };
-
     try {
-      await createOrderMutate.mutateAsync(payload);
+      await createOrderMutate.mutateAsync({});
       toast.success("주문이 완료되었습니다 🎉");
       router.push(`/stores/${storeId}`);
-    } catch (error) {
-      console.error("Error creating order:", error);
+    } catch (error: unknown) {
+      if (
+        isAxiosError(error) &&
+        error.response?.data?.code === "CART_IS_EMPTY"
+      ) {
+        // silent fail: 주문이 이미 완료된 경우 websocket notice를 통해 사용자에게 알려진다. 성공으로 간주
+        router.push(`/stores/${storeId}`);
+        return;
+      }
       toast.error("주문 생성에 실패했습니다.");
       throw error;
     }

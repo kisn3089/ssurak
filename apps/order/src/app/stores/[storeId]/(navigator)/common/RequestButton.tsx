@@ -47,5 +47,9 @@ export default function RequestButton<Response, Payload>({
     }
   };
 
-  return <Button {...props}>{buttonMessage()}</Button>;
+  return (
+    <Button {...props} disabled={props.disabled || mutate.isPending}>
+      {buttonMessage()}
+    </Button>
+  );
 }
