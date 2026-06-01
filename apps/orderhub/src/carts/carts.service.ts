@@ -21,16 +21,18 @@ import {
 import { CartSubscriber } from "src/realtime/cart-events.service";
 import { MetaInfo } from "src/realtime/realtime.constants";
 
-type ReturnCart<Meta = unknown> = {
+type ReturnCart<MetaKeys extends keyof MetaInfoList = never> = {
   cart: Cart;
   subscriber: CartSubscriber;
-} & MetaInfo<Meta>;
+} & MetaInfo<MetaInfoList, MetaKeys>;
 
 type CartItemFingerprint = {
   menuPublicId: string;
   requiredOptions?: Record<string, string>;
   customOptions?: Record<string, string>;
 };
+
+type MetaInfoList = { menuName: string; isMerged?: boolean };
 
 @Injectable()
 export class CartService {
@@ -172,7 +174,7 @@ export class CartService {
   async addItem(
     sessionWithTable: SessionWithTable,
     payload: CreateCartItemPayloadDto
-  ): Promise<ReturnCart<{ menuName: string; isMerged?: boolean }>> {
+  ): Promise<ReturnCart<"menuName" | "isMerged">> {
     const { optionsPrice, menu } = await this.getOptionsPriceWithValidate(
       sessionWithTable,
       payload.menuPublicId,
@@ -232,7 +234,7 @@ export class CartService {
     sessionWithTable: SessionWithTable,
     cartItemId: string,
     payload: UpdateCartItemPayloadDto
-  ): Promise<ReturnCart<{ menuName: string; isMerged?: boolean }>> {
+  ): Promise<ReturnCart<"menuName" | "isMerged">> {
     const preCart = await this.readCart(sessionWithTable.sessionToken);
     const preItem = preCart.menus.find((i) => i.id === cartItemId);
     if (!preItem) {
@@ -312,7 +314,7 @@ export class CartService {
   async removeItem(
     sessionWithTable: SessionWithTable,
     cartItemId: string
-  ): Promise<ReturnCart<{ menuName: string }>> {
+  ): Promise<ReturnCart<"menuName">> {
     return this.withCartLock(sessionWithTable.sessionToken, async () => {
       const cart = await this.readCart(sessionWithTable.sessionToken);
       const removed = cart.menus.find((i) => i.id === cartItemId);

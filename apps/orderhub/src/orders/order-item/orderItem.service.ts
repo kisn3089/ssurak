@@ -14,14 +14,20 @@ import { OrderSubscriber } from "src/realtime/order-events.service";
 import { MetaInfo } from "src/realtime/realtime.constants";
 import { withOrderLock } from "src/utils/helper/withOrderLock";
 
-type UpdatedOrderItem<Meta = unknown> = {
+type UpdatedOrderItem<MetaKeys extends keyof MetaInfoList = never> = {
   orderItem: PublicOrderItem<"Wide">;
   subscriber: OrderSubscriber;
-} & MetaInfo<Meta>;
+} & MetaInfo<MetaInfoList, MetaKeys>;
 
-type DeletedOrderItem<Meta = unknown> = {
+type DeletedOrderItem<MetaKeys extends keyof MetaInfoList = never> = {
   subscriber: OrderSubscriber;
-} & MetaInfo<Meta>;
+} & MetaInfo<MetaInfoList, MetaKeys>;
+
+type MetaInfoList = {
+  tableNumber: number;
+  menuName: string;
+  orderAutoCancelled: boolean;
+};
 
 @Injectable()
 export class OrderItemService {
@@ -105,7 +111,7 @@ export class OrderItemService {
     orderItemId: string,
     ownerId: bigint,
     updatePayload: UpdateOrderItemPayloadDto
-  ): Promise<UpdatedOrderItem<{ tableNumber: number }>> {
+  ): Promise<UpdatedOrderItem<"tableNumber">> {
     const { menuPublicId, requiredOptions, customOptions, quantity } =
       updatePayload;
 
@@ -201,11 +207,7 @@ export class OrderItemService {
     orderItemId: string,
     ownerId: bigint
   ): Promise<
-    DeletedOrderItem<{
-      tableNumber: number;
-      menuName: string;
-      orderAutoCancelled: boolean;
-    }>
+    DeletedOrderItem<"tableNumber" | "menuName" | "orderAutoCancelled">
   > {
     return await this.prismaService.$transaction(async (tx) => {
       const parentOrder = await tx.order.findFirst({
