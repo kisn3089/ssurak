@@ -7,9 +7,10 @@ import { OrdersController } from "./orders/orders.controller";
 import { OrdersService } from "./orders/orders.service";
 import { CustomerOrdersController } from "./orders/customer-orders.controller";
 import { RealtimeModule } from "src/realtime/realtime.module";
+import { CartModule } from "src/carts/carts.module";
 
 @Module({
-  imports: [PassportModule, JwtModule, RealtimeModule],
+  imports: [PassportModule, JwtModule, RealtimeModule, CartModule],
   controllers: [
     OrderItemController,
     OrdersController,

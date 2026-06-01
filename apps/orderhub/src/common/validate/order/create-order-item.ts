@@ -5,11 +5,17 @@ import {
 import { Prisma } from "@spaceorder/db";
 import { getValidatedMenuOptionsSnapshot } from "../menu/options";
 import { ExtendedMap } from "src/utils/helper/extendMap";
-import { CreateOrderPayloadDto } from "src/dto/order.dto";
 import { validateMenuAvailableOrThrow } from "../menu/available";
 
+export type ValidatableOrderItem = {
+  menuPublicId: string;
+  quantity: number;
+  requiredOptions?: Record<string, string>;
+  customOptions?: Record<string, string>;
+};
+
 export function createOrderItemsWithValidMenu(
-  createOrderDto: CreateOrderPayloadDto,
+  orderItems: ValidatableOrderItem[],
   findMenuList: MenuValidationFields[],
   menuPublicIds: string[]
 ): Prisma.OrderItemCreateWithoutOrderInput[] {
@@ -21,7 +27,7 @@ export function createOrderItemsWithValidMenu(
   validateMenuMismatchOrThrow(findMenuList, menuPublicIds);
 
   const bulkCreateOrderItems: Prisma.OrderItemCreateNestedManyWithoutOrderInput["create"] =
-    createOrderDto.orderItems.map((orderItem) => {
+    orderItems.map((orderItem) => {
       const menu = menuMap.getOrThrow(orderItem.menuPublicId);
       validateMenuAvailableOrThrow(menu);
       const { optionsPrice, optionsSnapshot } = getValidatedMenuOptionsSnapshot(
