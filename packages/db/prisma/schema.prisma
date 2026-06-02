@@ -231,6 +231,11 @@ enum OrderStatus {
 model Order {
   id              BigInt      @id @default(autoincrement())
   publicId        String      @unique @default(cuid(2)) @map("public_id")
+  /**
+   * 고객 주문 멱등성 키. 세션과 장바구니 업데이트 시점으로 기준으로 같은 장바구니로 동시에 여러 주문이 들어오는 것을 방지한다.
+   * 관리자 주문은 사용하지 않으므로 nullable.
+   */
+  idempotencyKey  String?     @unique @map("idempotency_key")
   storeId         BigInt      @map("store_id")
   tableId         BigInt      @map("table_id")
   tableSessionId  BigInt      @map("table_session_id")

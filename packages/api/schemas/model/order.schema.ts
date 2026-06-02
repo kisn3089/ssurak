@@ -21,6 +21,15 @@ export const createOrderPayloadSchema = z.object({
   memo: z.string().max(50, "메모는 최대 50자까지 가능합니다.").optional(),
 });
 
+/**
+ * 고객 주문 생성 Body Schema.
+ * orderItems는 보내지 않는다 — 서버가 redis cart(SSOT)를 읽고,
+ * cart 버전(session:updatedAt)으로 멱등성을 보장한다.
+ */
+export const createCustomerOrderPayloadSchema = z.object({
+  memo: z.string().max(50, "메모는 최대 50자까지 가능합니다.").optional(),
+});
+
 export const updateOrderPayloadSchema = createOrderPayloadSchema
   .omit({ orderItems: true })
   .extend({

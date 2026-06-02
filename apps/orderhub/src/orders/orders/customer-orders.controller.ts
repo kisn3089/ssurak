@@ -17,10 +17,11 @@ import {
   OrderStatus,
   SyncNotice,
   type PublicOrderWithItem,
+  type SessionWithTable,
   type TableSession,
 } from "@spaceorder/db";
 import {
-  createOrderPayloadSchema,
+  createCustomerOrderPayloadSchema,
   orderIdParamsSchema,
 } from "@spaceorder/api/schemas";
 import { ZodValidation } from "src/utils/guards/zod-validation.guard";
@@ -31,7 +32,7 @@ import {
   DocsCustomerOrderGetList,
   DocsCustomerOrderGetUnique,
 } from "src/docs/order.docs";
-import { CreateOrderPayloadDto } from "src/dto/order.dto";
+import { CreateCustomerOrderPayloadDto } from "src/dto/order.dto";
 import { OrdersService } from "./orders.service";
 import { ORDER_ITEMS_WITH_OMIT_PRIVATE } from "src/common/query/order-item-query.const";
 import { responseCookie } from "src/utils/cookies";
@@ -48,20 +49,21 @@ export class CustomerOrdersController {
   ) {}
 
   @Post()
-  @UseGuards(ZodValidation({ body: createOrderPayloadSchema }))
+  @UseGuards(ZodValidation({ body: createCustomerOrderPayloadSchema }))
   @DocsCustomerOrderCreate()
   async create(
-    @Session() tableSession: TableSession,
-    @Body() createOrderPayload: CreateOrderPayloadDto,
+    @Session() session: SessionWithTable,
+    @Body() createOrderPayload: CreateCustomerOrderPayloadDto,
     @Res({ passthrough: true }) response: Response,
     @Headers("socket-id") socketId?: string
   ): Promise<
     PublicOrderWithItem<"Wide", { sessionToken: string; expiresAt: Date }>
   > {
-    const { order, subscriber, meta } = await this.orderService.createOrder(
-      { id: tableSession.id },
-      createOrderPayload
-    );
+    const { order, subscriber, meta } =
+      await this.orderService.createOrderByCustomer(
+        session,
+        createOrderPayload
+      );
 
     responseCookie.set(
       response,
@@ -80,11 +82,13 @@ export class CustomerOrdersController {
       },
     };
 
-    this.orderEvents.emitOrderCreated({
-      subscriber,
-      payload: { notice },
-      excludeSocketId: socketId,
-    });
+    if (!meta.deduplicated) {
+      this.orderEvents.emitOrderCreated({
+        subscriber,
+        payload: { notice },
+        excludeSocketId: socketId,
+      });
+    }
 
     return order;
   }

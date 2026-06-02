@@ -195,10 +195,11 @@ export class OrdersController {
     @Body() createPayload: CreateOrderPayloadDto,
     @Headers("socket-id") socketId?: string
   ): Promise<PublicOrderWithItem<"Wide">> {
-    const { order, subscriber, meta } = await this.orderService.createOrder(
-      { publicId: tableId },
-      createPayload
-    );
+    const { order, subscriber, meta } =
+      await this.orderService.createOrderByOwner(
+        { publicId: tableId },
+        createPayload
+      );
 
     const notice: SyncNotice = {
       level: "success",

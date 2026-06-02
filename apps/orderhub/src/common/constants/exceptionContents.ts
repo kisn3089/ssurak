@@ -109,6 +109,10 @@ const EXCEPTION_CONTENTS = {
     code: "CART_LOCK_FAILED",
     message: "장바구니 잠금에 실패했습니다. 잠시 후 다시 시도해주세요.",
   },
+  CART_IS_EMPTY: {
+    code: "CART_IS_EMPTY",
+    message: "장바구니가 비어 있습니다.",
+  },
   /** ---ZOD--- */
   ZOD_PARAMS_FAILED: {
     code: "ZOD_PARAMS_FAILED",

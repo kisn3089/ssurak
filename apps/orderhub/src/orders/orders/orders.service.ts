@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 import {
   OrderStatus,
   Owner,
@@ -6,112 +6,249 @@ import {
   PublicOrderWithItem,
   SessionWithTable,
   SummarizedOrdersByStore,
-  TableSession,
   TableSessionStatus,
 } from "@spaceorder/db";
+import type Redlock from "redlock";
+import type { Lock } from "redlock";
 import { SessionClient } from "src/internal/clients/session.client";
 import { PrismaService } from "src/prisma/prisma.service";
+import { CartService } from "src/carts/carts.service";
+import { REDLOCK_CLIENT } from "src/redis/redis.provider";
+import { exceptionContentsIs } from "src/common/constants/exceptionContents";
 import { orderSituationPayload } from "src/common/query/order-query.const";
 import { ORDER_ITEMS_WITH_OMIT_PRIVATE } from "src/common/query/order-item-query.const";
 import {
+  CreateCustomerOrderPayloadDto,
   CreateOrderPayloadDto,
   UpdateOrderPayloadDto,
 } from "src/dto/order.dto";
-import { createOrderItemsWithValidMenu } from "src/common/validate/order/create-order-item";
+import {
+  ValidatableOrderItem,
+  createOrderItemsWithValidMenu,
+} from "src/common/validate/order/create-order-item";
 import { ALIVE_SESSION_STATUSES } from "src/common/query/session-query.const";
 import { validateOrderSessionToWrite } from "src/common/validate/order/order-session-to-write";
 import { MENU_VALIDATION_FIELDS_SELECT } from "src/common/query/menu-query.const";
 import { TABLE_OMIT } from "src/common/query/table-query.const";
-import { SessionIdentifier } from "src/internal/services/session-core.service";
-import { OrderSubscriber } from "src/realtime/order-events.service";
-import { MetaInfo } from "src/realtime/realtime.constants";
-
-type CreateOrderParams = SessionIdentifier;
-type CancelParams =
-  | { kind: "owner"; orderId: string; ownerId: bigint }
-  | { kind: "customer"; orderId: string; tableSession: TableSession };
-
-type CreatedOrder = PublicOrderWithItem<
-  "Wide",
-  { sessionToken: string; expiresAt: Date }
->;
-type UpdatedOrder = PublicOrderWithItem<"Wide">;
-
-type ReturnOrder<Order extends CreatedOrder | UpdatedOrder, Meta = unknown> = {
-  order: Order;
-  subscriber: OrderSubscriber;
-} & MetaInfo<Meta>;
+import {
+  CancelParams,
+  CreatedOrder,
+  CreateOrderParams,
+  CreateOrderPayload,
+  ReturnOrder,
+  UpdatedOrder,
+} from "./orders.service.type";
 
 @Injectable()
 export class OrdersService {
   constructor(
     private readonly prismaService: PrismaService,
-    private readonly sessionClient: SessionClient
+    private readonly sessionClient: SessionClient,
+    private readonly cartService: CartService,
+    @Inject(REDLOCK_CLIENT) private readonly redlock: Redlock
   ) {}
 
-  async createOrder(
+  async createOrderByOwner(
     params: CreateOrderParams,
     createOrderPayload: CreateOrderPayloadDto
-  ): Promise<ReturnOrder<CreatedOrder, { tableNumber: number }>> {
-    const { order, session } = await this.prismaService.$transaction(
-      async (tx) => {
-        const session: SessionWithTable =
-          await this.sessionClient.txGetOrCreateSession(tx, params);
+  ): Promise<ReturnOrder<CreatedOrder, "tableNumber">> {
+    return await this.createOrderCore(params, {
+      orderItems: createOrderPayload.orderItems,
+      memo: createOrderPayload.memo,
+    });
+  }
 
-        const menuPublicIds = createOrderPayload.orderItems.map(
-          (item) => item.menuPublicId
+  async createOrderByCustomer(
+    session: SessionWithTable,
+    createOrderPayload: CreateCustomerOrderPayloadDto
+  ): Promise<ReturnOrder<CreatedOrder, "tableNumber" | "deduplicated">> {
+    const cart = await this.cartService.getCartList(session.sessionToken);
+
+    if (cart.menus.length === 0) {
+      throw new HttpException(
+        exceptionContentsIs("CART_IS_EMPTY"),
+        HttpStatus.BAD_REQUEST
+      );
+    }
+
+    const orderItems: ValidatableOrderItem[] = cart.menus.map((item) => ({
+      menuPublicId: item.menuPublicId,
+      quantity: item.quantity,
+      requiredOptions: item.requiredOptions,
+      customOptions: item.customOptions,
+    }));
+
+    const idempotencyKey = `${session.id}:${cart.updatedAt}`;
+
+    const createdOrder = await this.withIdempotencyLock(
+      session.sessionToken,
+      async () => {
+        const existing = await this.findOrderByIdempotencyKey(
+          idempotencyKey,
+          session.id
         );
+        if (existing) return existing;
 
-        const menus = await tx.menu.findMany({
-          where: {
-            publicId: { in: menuPublicIds },
-            deletedAt: null,
-            category: { storeId: session.table.storeId },
-          },
-          select: MENU_VALIDATION_FIELDS_SELECT,
-        });
-
-        const orderItemsData = createOrderItemsWithValidMenu(
-          createOrderPayload,
-          menus,
-          menuPublicIds
-        );
-
-        if (session.status !== TableSessionStatus.ACTIVE) {
-          await this.sessionClient.updateSessionStatus(
-            tx,
-            session,
-            TableSessionStatus.ACTIVE
-          );
-        }
-
-        const order = await tx.order.create({
-          data: {
-            storeId: session.table.storeId,
-            tableId: session.table.id,
-            tableSessionId: session.id,
-            orderItems: { create: orderItemsData },
+        return await this.createOrderCore(
+          { id: session.id },
+          {
+            orderItems,
             memo: createOrderPayload.memo,
-          },
-          include: {
-            ...ORDER_ITEMS_WITH_OMIT_PRIVATE.include,
-            tableSession: { select: { sessionToken: true, expiresAt: true } },
-          },
-          omit: ORDER_ITEMS_WITH_OMIT_PRIVATE.omit,
-        });
-
-        return { order, session };
+            idempotencyKey,
+            tableSessionId: session.id,
+          }
+        );
       }
     );
+
+    await this.cartService.clearCart(session);
+
+    return createdOrder;
+  }
+
+  /** 메뉴 검증 → 세션 활성화 → 주문 생성을 한 트랜잭션으로 처리한다. */
+  private async createOrderCore(
+    params: CreateOrderParams,
+    payload: CreateOrderPayload
+  ): Promise<ReturnOrder<CreatedOrder, "tableNumber" | "deduplicated">> {
+    try {
+      const { order, session } = await this.prismaService.$transaction(
+        async (tx) => {
+          const session: SessionWithTable =
+            await this.sessionClient.txGetOrCreateSession(tx, params);
+
+          const menuPublicIds = payload.orderItems.map(
+            (item) => item.menuPublicId
+          );
+
+          const menus = await tx.menu.findMany({
+            where: {
+              publicId: { in: menuPublicIds },
+              deletedAt: null,
+              category: { storeId: session.table.storeId },
+            },
+            select: MENU_VALIDATION_FIELDS_SELECT,
+          });
+
+          const orderItemsData = createOrderItemsWithValidMenu(
+            payload.orderItems,
+            menus,
+            menuPublicIds
+          );
+
+          if (session.status !== TableSessionStatus.ACTIVE) {
+            await this.sessionClient.updateSessionStatus(
+              tx,
+              session,
+              TableSessionStatus.ACTIVE
+            );
+          }
+
+          const order = await tx.order.create({
+            data: {
+              storeId: session.table.storeId,
+              tableId: session.table.id,
+              tableSessionId: session.id,
+              orderItems: { create: orderItemsData },
+              memo: payload.memo,
+              idempotencyKey: payload.idempotencyKey,
+            },
+            include: {
+              ...ORDER_ITEMS_WITH_OMIT_PRIVATE.include,
+              tableSession: { select: { sessionToken: true, expiresAt: true } },
+            },
+            omit: ORDER_ITEMS_WITH_OMIT_PRIVATE.omit,
+          });
+
+          return { order, session };
+        }
+      );
+
+      return {
+        order,
+        subscriber: {
+          storePublicId: session.table.store.publicId,
+          tablePublicId: session.table.publicId,
+        },
+        meta: { tableNumber: session.table.tableNumber, deduplicated: false },
+      };
+    } catch (error) {
+      if (
+        payload.idempotencyKey &&
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === "P2002" &&
+        this.isIdempotencyKeyConflict(error)
+      ) {
+        const existing = await this.findOrderByIdempotencyKey(
+          payload.idempotencyKey,
+          payload.tableSessionId
+        );
+        if (existing) return existing;
+      }
+      throw error;
+    }
+  }
+
+  private async findOrderByIdempotencyKey(
+    idempotencyKey: string,
+    tableSessionId?: bigint
+  ): Promise<ReturnOrder<CreatedOrder, "tableNumber" | "deduplicated"> | null> {
+    const order = await this.prismaService.order.findFirst({
+      where: { idempotencyKey, ...(tableSessionId ? { tableSessionId } : {}) },
+      include: {
+        ...ORDER_ITEMS_WITH_OMIT_PRIVATE.include,
+        tableSession: { select: { sessionToken: true, expiresAt: true } },
+        table: {
+          select: {
+            publicId: true,
+            tableNumber: true,
+            store: { select: { publicId: true } },
+          },
+        },
+      },
+      omit: ORDER_ITEMS_WITH_OMIT_PRIVATE.omit,
+    });
+
+    if (!order) return null;
 
     return {
       order,
       subscriber: {
-        storePublicId: session.table.store.publicId,
-        tablePublicId: session.table.publicId,
+        storePublicId: order.table.store.publicId,
+        tablePublicId: order.table.publicId,
       },
-      meta: { tableNumber: session.table.tableNumber },
+      meta: { tableNumber: order.table.tableNumber, deduplicated: true },
     };
+  }
+
+  private isIdempotencyKeyConflict(
+    error: Prisma.PrismaClientKnownRequestError
+  ): boolean {
+    const target = error.meta?.target;
+    const targetText = Array.isArray(target)
+      ? target.join(",")
+      : typeof target === "string"
+        ? target
+        : "";
+    return targetText.includes("idempotency");
+  }
+
+  private async withIdempotencyLock<T>(
+    lockKey: string,
+    fn: () => Promise<T>
+  ): Promise<T> {
+    // best-effort 락. 정확성은 idempotencyKey @unique(P2002 backstop)가 보장하므로,
+    // 락 획득에 실패해도 fn()을 그대로 실행한다(중복은 DB unique에서 1건으로 수렴).
+    // 단, 락 비활성은 Redis 장애 신호일 수 있어 관찰을 위해 로깅으로 대응
+    const lock: Lock | null = await this.redlock
+      .acquire([`idem:lock:${lockKey}`], 5000)
+      .catch(() => null);
+
+    try {
+      return await fn();
+    } finally {
+      await lock?.release().catch(() => null);
+    }
   }
 
   async getOrdersSummary(
@@ -156,7 +293,7 @@ export class OrdersService {
     orderId: string,
     ownerId: bigint,
     updatePayload: UpdateOrderPayloadDto
-  ): Promise<ReturnOrder<UpdatedOrder, { orderStatus: OrderStatus }>> {
+  ): Promise<ReturnOrder<UpdatedOrder, "orderStatus">> {
     const { order, subscriber } = await this.updateOrderWithValidation(
       { kind: "owner", orderId, ownerId },
       updatePayload

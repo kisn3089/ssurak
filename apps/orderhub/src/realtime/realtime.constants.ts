@@ -1,8 +1,9 @@
 import { ConfigService } from "@nestjs/config";
 
-export type MetaInfo<Meta = unknown> = unknown extends Meta
-  ? { meta?: Meta }
-  : { meta: Meta };
+export type MetaInfo<
+  Source = unknown,
+  Keys extends keyof Source = keyof Source,
+> = [Keys] extends [never] ? { meta?: never } : { meta: Pick<Source, Keys> };
 
 export const REALTIME_NAMESPACE = "/events";
 export const REALTIME_PATH = "/ws/";

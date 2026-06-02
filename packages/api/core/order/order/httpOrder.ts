@@ -50,19 +50,11 @@ async function updateOrderByTable(
 }
 
 /**
- * customer 주문 API
+ * 고객 주문 생성 요청.
+ * orderItems는 보내지 않는다 — 서버가 인증된 세션의 redis cart(SSOT)를 읽고
+ * cart 버전으로 멱등성을 보장한다.
  */
-
-export type CreateOrderItem = {
-  menuPublicId: string;
-  quantity: number;
-  menuName: string;
-  requiredOptions?: Record<string, string>;
-  customOptions?: Record<string, string>;
-};
-
 export type CreateOrderRequest = {
-  orderItems: CreateOrderItem[];
   memo?: string;
 };
 
