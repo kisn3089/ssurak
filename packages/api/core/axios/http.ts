@@ -18,6 +18,7 @@ export const http = axios.create({
   withCredentials: true,
 });
 
+/** 서버 사이드에서 실행하지 말것 */
 export function updateAxiosAuthorizationHeader(token: string) {
   http.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 }
@@ -32,6 +33,7 @@ type AuthCallbacks = {
   refreshAccessToken: () => Promise<{ accessToken: string }>;
   setAuthInfo: (authInfo: { accessToken: string }) => void;
   signOut: () => void;
+  forbiddenNotice: () => void;
 };
 
 let authCallbacks: AuthCallbacks | null = null;
@@ -40,13 +42,26 @@ export function setupAuthInterceptor(callbacks: AuthCallbacks) {
   authCallbacks = callbacks;
 }
 
+let refreshPromise: Promise<{ accessToken: string }> | null = null;
+
+function refreshAccessTokenOnce(
+  callbacks: AuthCallbacks
+): Promise<{ accessToken: string }> {
+  if (!refreshPromise) {
+    refreshPromise = callbacks.refreshAccessToken().finally(() => {
+      refreshPromise = null;
+    });
+  }
+  return refreshPromise;
+}
+
 http.interceptors.response.use(
   undefined,
   async (error: AxiosError<AxiosCustomError, AxiosRequestConfig>) => {
     if (error instanceof AxiosError && error.config) {
       if (error.response?.status === 419 && authCallbacks) {
         try {
-          const newAccessToken = await authCallbacks.refreshAccessToken();
+          const newAccessToken = await refreshAccessTokenOnce(authCallbacks);
 
           authCallbacks.setAuthInfo({
             accessToken: newAccessToken.accessToken,
@@ -63,10 +78,10 @@ http.interceptors.response.use(
 
       if (
         error.response?.status === 403 &&
-        !error.config.url?.includes("/token/refresh") &&
+        !error.config.url?.includes("/refresh") &&
         authCallbacks
       ) {
-        authCallbacks.signOut();
+        authCallbacks.forbiddenNotice();
       }
     }
 

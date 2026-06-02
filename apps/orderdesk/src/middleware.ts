@@ -1,4 +1,5 @@
 import { httpAuth } from "@spaceorder/api/core/auth/httpAuth";
+import parseCookieFromResponse from "@spaceorder/api/utils/parseCookieFromResponse";
 import { isExpired } from "@spaceorder/auth";
 import { COOKIE_TABLE } from "@spaceorder/db/constants";
 import { NextRequest, NextResponse } from "next/server";
@@ -15,22 +16,23 @@ export async function middleware(req: NextRequest) {
   if (!accessToken || isExpired(accessToken?.value)) {
     console.log("[middleware] refresh access token...");
     try {
-      const newAccessToken = await httpAuth.refreshAccessToken(
-        refreshToken.value
-      );
+      const refreshed = await httpAuth.refreshAccessToken(refreshToken.value);
       const res = NextResponse.next();
 
-      res.cookies.set(
-        COOKIE_TABLE.ACCESS_TOKEN,
-        newAccessToken.data.accessToken,
-        {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
-          sameSite: "lax",
-          path: "/",
-          expires: new Date(newAccessToken.data.expiresAt),
+      const setCookieHeader = refreshed.headers["set-cookie"];
+      if (setCookieHeader) {
+        for (const { name, value, expires } of parseCookieFromResponse(
+          setCookieHeader
+        )) {
+          res.cookies.set(name, value, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            path: "/",
+            expires,
+          });
         }
-      );
+      }
 
       return res;
     } catch {
