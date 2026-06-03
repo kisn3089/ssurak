@@ -1,8 +1,8 @@
-import { http, resolveOrderhubBaseURL } from "@spaceorder/api";
+import { http, resolveSsurakBaseURL } from "@spaceorder/api";
 import { toast } from "@spaceorder/ui/components/sonner";
 import { io, Socket } from "socket.io-client";
 
-const REALTIME_URL = `${resolveOrderhubBaseURL()}/events`;
+const REALTIME_URL = `${resolveSsurakBaseURL()}/events`;
 const REALTIME_PATH = "/ws/";
 
 export const REALTIME_EVENT = {

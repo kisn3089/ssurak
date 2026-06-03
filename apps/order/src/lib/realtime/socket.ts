@@ -1,7 +1,7 @@
-import { http, resolveOrderhubBaseURL } from "@spaceorder/api";
+import { http, resolveSsurakBaseURL } from "@spaceorder/api";
 import { io, Socket } from "socket.io-client";
 
-const REALTIME_URL = `${resolveOrderhubBaseURL()}/events`;
+const REALTIME_URL = `${resolveSsurakBaseURL()}/events`;
 const REALTIME_PATH = "/ws/";
 
 let socket: Socket | null = null;
