@@ -55,9 +55,9 @@ git show <commit-hash> --no-stat -p
 
 **Scope 규칙 (선택사항):**
 
-- `apps/orderdesk/` 변경 → `orderdesk/`
+- `apps/console/` 변경 → `console/`
 - `apps/order/` 변경 → `order/`
-- `apps/orderhub/` 변경 → `orderhub/`
+- `apps/ssurak/` 변경 → `ssurak/`
 - `packages/ui/` 변경 → `ui/`
 - `packages/db/` 변경 → `db/`
 
@@ -73,12 +73,12 @@ git show <commit-hash> --no-stat -p
 
 **좋은 커밋 메시지 예시:**
 
-| 변경 내용        | 나쁜 예              | 좋은 예                                                                         |
-| ---------------- | -------------------- | ------------------------------------------------------------------------------- |
-| Link 태그로 변경 | `fix: 수정`          | `orderdesk/fix: 테이블 클릭 시 상세 페이지 이동을 button → Link 태그로 변경`    |
-| 타입 추가        | `feat: 타입 추가`    | `orderdesk/feat: OrderTable 컴포넌트 props에 orderStatus 타입 추가`             |
-| 컴포넌트 분리    | `refactor: 리팩토링` | `orderdesk/refactor: TableOrderList → TableOrderCard compound component로 분리` |
-| 접근성 개선      | `fix: 접근성`        | `orderdesk/fix: click event 요소에 tabIndex, disabled 추가로 웹 접근성 향상`    |
+| 변경 내용        | 나쁜 예              | 좋은 예                                                                       |
+| ---------------- | -------------------- | ----------------------------------------------------------------------------- |
+| Link 태그로 변경 | `fix: 수정`          | `console/fix: 테이블 클릭 시 상세 페이지 이동을 button → Link 태그로 변경`    |
+| 타입 추가        | `feat: 타입 추가`    | `console/feat: OrderTable 컴포넌트 props에 orderStatus 타입 추가`             |
+| 컴포넌트 분리    | `refactor: 리팩토링` | `console/refactor: TableOrderList → TableOrderCard compound component로 분리` |
+| 접근성 개선      | `fix: 접근성`        | `console/fix: click event 요소에 tabIndex, disabled 추가로 웹 접근성 향상`    |
 
 ### 4. 개선이 필요한 커밋 필터링
 
@@ -87,7 +87,7 @@ git show <commit-hash> --no-stat -p
 다음 조건 중 하나라도 해당하면 개선 대상:
 
 - 설명이 너무 짧거나 모호함 (예: `fix: 수정`, `feat: 추가`, `refactor: 변경`)
-- scope가 없음 (예: `fix: 버그 수정` → `orderdesk/fix: ...`)
+- scope가 없음 (예: `fix: 버그 수정` → `console/fix: ...`)
 - diff 내용과 메시지가 불일치
 - 구체적인 변경 내용이 드러나지 않음
 
@@ -99,7 +99,7 @@ git show <commit-hash> --no-stat -p
 - 변경 내용이 구체적으로 명시됨
 - diff와 메시지가 일치함
 
-예: `orderdesk/fix: 테이블 클릭 시 상세 페이지 이동을 button → Link 태그로 변경` → 스킵
+예: `console/fix: 테이블 클릭 시 상세 페이지 이동을 button → Link 태그로 변경` → 스킵
 
 ### 5. 출력 형식
 
@@ -112,8 +112,8 @@ git show <commit-hash> --no-stat -p
 
 | #   | 커밋      | 현재 메시지 | 개선된 메시지                                                     |
 | --- | --------- | ----------- | ----------------------------------------------------------------- |
-| 1   | `abc1234` | fix: 수정   | `orderdesk/fix: 테이블 클릭 시 Link 태그로 변경하여 웹 표준 준수` |
-| 2   | `def5678` | feat: 추가  | `orderdesk/feat: OrderTableProps에 orderStatus 필드 추가`         |
+| 1   | `abc1234` | fix: 수정   | `console/fix: 테이블 클릭 시 Link 태그로 변경하여 웹 표준 준수` |
+| 2   | `def5678` | feat: 추가  | `console/feat: OrderTableProps에 orderStatus 필드 추가`         |
 ```
 
 **모든 커밋이 양호한 경우:**

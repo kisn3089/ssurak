@@ -4,7 +4,7 @@ services:
     build:
       context: .
       dockerfile: packages/db/Dockerfile
-    container_name: orderhub-dev-mysql
+    container_name: ssurak-dev-mysql
     restart: unless-stopped
     command:
       - --skip-log-bin
@@ -26,7 +26,7 @@ services:
     volumes:
       - mysql_dev_data:/var/lib/mysql
     networks:
-      - spaceorder-network
+      - ssurak-network
     healthcheck:
       test:
         [
@@ -48,7 +48,7 @@ services:
   # Redis Cache
   redis:
     image: redis:7.0-alpine
-    container_name: spaceorder-redis
+    container_name: ssurak-redis
     command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
     restart: unless-stopped
     volumes:
@@ -56,16 +56,16 @@ services:
     ports:
       - "6379:6379"
     networks:
-      - spaceorder-network
+      - ssurak-network
 
-  # NestJS Backend (orderhub app) - Development
-  orderhub:
-    image: orderhub-order-backend
+  # NestJS Backend (ssurak app) - Development
+  ssurak:
+    image: ssurak-api-dev
     build:
       context: .
-      dockerfile: apps/orderhub/Dockerfile
+      dockerfile: apps/ssurak/Dockerfile
       target: development
-    container_name: orderhub-dev-backend
+    container_name: ssurak-api-dev
     restart: unless-stopped
     environment:
       NODE_ENV: development
@@ -81,55 +81,55 @@ services:
       redis:
         condition: service_started
     networks:
-      - spaceorder-network
+      - ssurak-network
     volumes:
       - .:/app
       - /app/node_modules
-      - /app/apps/orderhub/node_modules
+      - /app/apps/ssurak/node_modules
     env_file:
       - .env
 
-  # Next.js Frontend (orderdesk app) - Development
-  orderdesk:
-    image: space-orderdesk-frontend
+  # Next.js Frontend (console app) - Development
+  console:
+    image: console-fe-dev
     build:
       context: .
-      dockerfile: apps/orderdesk/Dockerfile
+      dockerfile: apps/console/Dockerfile
       target: development
-    container_name: space-orderdesk-frontend-dev
+    container_name: console-fe-dev
     restart: unless-stopped
     environment:
       NODE_ENV: development
       PORT: 3001
-      ORDERHUB_INTERNAL_URL: http://orderhub:8080
+      ORDERHUB_INTERNAL_URL: http://ssurak:8080
     ports:
       - "3001:3001"
     volumes:
       - .:/app
       - /app/node_modules
-      - /app/apps/orderdesk/node_modules
+      - /app/apps/console/node_modules
       - /app/.next
-      - /app/apps/orderdesk/.next
+      - /app/apps/console/.next
     depends_on:
-      - orderhub
+      - ssurak
     networks:
-      - spaceorder-network
+      - ssurak-network
     env_file:
       - .env
 
   # Next.js Frontend (order app) - Development
   order:
-    image: space-order-frontend
+    image: order-fe-dev
     build:
       context: .
       dockerfile: apps/order/Dockerfile
       target: development
-    container_name: space-order-frontend-dev
+    container_name: order-fe-dev
     restart: unless-stopped
     environment:
       NODE_ENV: development
       PORT: 3000
-      ORDERHUB_INTERNAL_URL: http://orderhub:8080
+      ORDERHUB_INTERNAL_URL: http://ssurak:8080
     ports:
       - "3000:3000"
     volumes:
@@ -139,9 +139,9 @@ services:
       - /app/.next
       - /app/apps/order/.next
     depends_on:
-      - orderhub
+      - ssurak
     networks:
-      - spaceorder-network
+      - ssurak-network
     env_file:
       - .env
 
@@ -149,7 +149,7 @@ services:
   prisma-studio:
     build:
       context: .
-      dockerfile: apps/orderhub/Dockerfile
+      dockerfile: apps/ssurak/Dockerfile
       target: development
     container_name: spaceorder-prisma-studio
     restart: unless-stopped
@@ -162,12 +162,12 @@ services:
       mysql:
         condition: service_healthy
     networks:
-      - spaceorder-network
+      - ssurak-network
     env_file:
       - .env
 
 networks:
-  spaceorder-network:
+  ssurak-network:
     driver: bridge
 
 volumes:

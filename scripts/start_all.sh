@@ -111,21 +111,21 @@ check_env_file() {
   fi
 }
 
-wait_for_orderhub() {
-  echo "Waiting for orderhub to be ready..."
+wait_for_ssurak() {
+  echo "Waiting for ssurak to be ready..."
   local max_attempts=60
   local attempt=0
 
   while [ $attempt -lt $max_attempts ]; do
     if curl -fsS "http://localhost:${SERVER_PORT:-8080}/" >/dev/null 2>&1; then
-      echo "orderhub is ready!"
+      echo "ssurak is ready!"
       return 0
     fi
 
     # Check if container exited with error
-    if ! run_compose ps orderhub | grep -q "Up"; then
-      echo "Error: orderhub container is not running"
-      run_compose logs orderhub --tail 50
+    if ! run_compose ps ssurak | grep -q "Up"; then
+      echo "Error: ssurak container is not running"
+      run_compose logs ssurak --tail 50
       exit 1
     fi
 
@@ -133,7 +133,7 @@ wait_for_orderhub() {
     sleep 2
   done
 
-  echo "Warning: Timeout waiting for orderhub. Check logs with: docker compose logs orderhub"
+  echo "Warning: Timeout waiting for ssurak. Check logs with: docker compose logs ssurak"
   return 1
 }
 
@@ -178,14 +178,14 @@ main() {
   run_compose ps
 
   echo ""
-  wait_for_orderhub
+  wait_for_ssurak
 
   echo ""
   echo "=== All services started ==="
   echo ""
   echo "  order (Customer):  http://localhost:3000"
-  echo "  orderdesk (Admin): http://localhost:3001"
-  echo "  orderhub (API):    http://localhost:8080"
+  echo "  console (Admin): http://localhost:3001"
+  echo "  ssurak (API):    http://localhost:8080"
   echo "  redis (Cache):     redis://localhost:6379"
   echo "  Prisma Studio:     http://localhost:5555"
   echo "  API Docs:          http://localhost:8080/docs"

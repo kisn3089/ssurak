@@ -106,7 +106,6 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       case "P2025": {
         const extractedModelName = this.extractModelName(exception.meta);
         const extractedUrl = this.extractUrl(request.url);
-        console.log("exception: ", exception);
         return {
           status: HttpStatus.NOT_FOUND,
           error: "Not Found",
@@ -139,7 +138,6 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       }
 
       default: {
-        console.log("prisma-exception-filter: default case", exception);
         return {
           status: HttpStatus.BAD_REQUEST,
           error: "Bad Request",

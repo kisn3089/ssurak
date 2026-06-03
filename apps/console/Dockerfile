@@ -10,7 +10,7 @@ WORKDIR /app
 
 # Copy root package files for monorepo
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY apps/orderdesk/package.json ./apps/orderdesk/package.json
+COPY apps/console/package.json ./apps/console/package.json
 COPY packages/ui/package.json ./packages/ui/package.json
 COPY packages/tsconfig/package.json ./packages/tsconfig/package.json
 COPY packages/lintconfig/package.json ./packages/lintconfig/package.json
@@ -34,7 +34,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 EXPOSE 3001
 
-CMD ["sh", "-c", "corepack enable pnpm && pnpm dev --filter=@spaceorder/orderdesk"]
+CMD ["sh", "-c", "corepack enable pnpm && pnpm dev --filter=@spaceorder/console"]
 
 # 2. Rebuild the source code only when needed
 FROM base AS builder
@@ -49,7 +49,7 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 
 # Build using turbo
-RUN corepack enable pnpm && pnpm build --filter=orderdesk
+RUN corepack enable pnpm && pnpm build --filter=console
 
 # 3. Production image, copy all the files and run next
 FROM base AS runner
@@ -61,11 +61,11 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nextjs -u 1001
 
-COPY --from=builder --chown=nextjs:nodejs /app/apps/orderdesk/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/apps/orderdesk/.next/static ./.next/static
-COPY --from=builder --chown=nextjs:nodejs /app/apps/orderdesk/.next/static ./apps/orderdesk/.next/static
-COPY --from=builder --chown=nextjs:nodejs /app/apps/orderdesk/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/apps/orderdesk/public ./apps/orderdesk/public
+COPY --from=builder --chown=nextjs:nodejs /app/apps/console/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/apps/console/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/apps/console/.next/static ./apps/console/.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/apps/console/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/apps/console/public ./apps/console/public
 
 USER nextjs
 
@@ -74,4 +74,4 @@ EXPOSE 3001
 ENV PORT=3001
 ENV HOSTNAME="0.0.0.0"
 
-CMD ["node", "apps/orderdesk/server.js"]
+CMD ["node", "apps/console/server.js"]

@@ -9,8 +9,8 @@ Turborepo monorepo for a restaurant ordering system using pnpm workspaces.
 **Apps:**
 
 - `order` - Customer-facing Next.js 14 app (port 3000)
-- `orderdesk` - Admin Next.js 14 app (port 3001)
-- `orderhub` - NestJS 11 backend API (port 8080)
+- `console` - Admin Next.js 14 app (port 3001)
+- `ssurak` - NestJS 11 backend API (port 8080)
 
 **Shared Packages:**
 
@@ -29,8 +29,8 @@ Turborepo monorepo for a restaurant ordering system using pnpm workspaces.
 # Development
 pnpm dev                           # All apps
 pnpm dev:order                     # Customer app (3000)
-pnpm dev:orderdesk                 # Admin app (3001)
-pnpm dev:orderhub                  # Backend API (8080)
+pnpm dev:console                 # Admin app (3001)
+pnpm dev:ssurak                  # Backend API (8080)
 
 # Build & Quality
 pnpm build                         # Build all
@@ -45,11 +45,11 @@ pnpm --filter=@spaceorder/db prisma:studio     # Open Prisma Studio
 pnpm --filter=@spaceorder/db prisma:seed       # Seed database
 pnpm --filter=@spaceorder/db prisma:reset      # Reset database
 
-# Testing (orderhub only)
-pnpm --filter=orderhub test        # Run unit tests
-pnpm --filter=orderhub test:watch  # Watch mode
-pnpm --filter=orderhub test:cov    # Coverage report
-pnpm --filter=orderhub test:e2e    # E2E tests
+# Testing (ssurak only)
+pnpm --filter=ssurak test        # Run unit tests
+pnpm --filter=ssurak test:watch  # Watch mode
+pnpm --filter=ssurak test:cov    # Coverage report
+pnpm --filter=ssurak test:e2e    # E2E tests
 
 # Filter syntax for specific packages
 pnpm build --filter=order
@@ -90,7 +90,7 @@ import type {
 
 Always run `prisma:generate` after schema changes.
 
-### Backend (orderhub)
+### Backend (ssurak)
 
 - CommonJS module system (not ESM)
 - **Config:** `ConfigModule` loads from root `.env` (`envFilePath: '../../.env'`)
@@ -106,15 +106,15 @@ Always run `prisma:generate` after schema changes.
 - Both use React Compiler (`reactCompiler: true` in next.config.js)
 - ESM module system (`"type": "module"`)
 - Tailwind CSS v4 with PostCSS
-- `orderdesk` has `transpilePackages: ["@spaceorder/ui"]`
-- `orderdesk` uses React Table v8 for data tables, React Hook Form for forms
+- `console` has `transpilePackages: ["@spaceorder/ui"]`
+- `console` uses React Table v8 for data tables, React Hook Form for forms
 
 ### Package Dependencies
 
 ```text
 order → @spaceorder/ui
-orderdesk → @spaceorder/api, @spaceorder/db, @spaceorder/ui, @spaceorder/auth
-orderhub → @spaceorder/db, @spaceorder/api
+console → @spaceorder/api, @spaceorder/db, @spaceorder/ui, @spaceorder/auth
+ssurak → @spaceorder/db, @spaceorder/api
 @spaceorder/api → @spaceorder/db, @spaceorder/auth
 ```
 
@@ -144,14 +144,14 @@ Root `docker-compose.yml` defines all services for local development:
 docker compose up -d              # Start all services
 docker compose up -d mysql        # Start only MySQL
 docker compose down               # Stop all services
-docker compose logs -f orderhub   # View backend logs
+docker compose logs -f ssurak   # View backend logs
 ```
 
 **Services:**
 
 - `mysql` - MySQL 8.0 database (port: `DB_PORT`, default 3306)
-- `orderhub` - NestJS backend API (port: `SERVER_PORT`, default 8080)
-- `orderdesk` - Admin Next.js app (port: 3001)
+- `ssurak` - NestJS backend API (port: `SERVER_PORT`, default 8080)
+- `console` - Admin Next.js app (port: 3001)
 - `order` - Customer Next.js app (port: 3000)
 - `prisma-studio` - Database GUI (port: 5555)
 

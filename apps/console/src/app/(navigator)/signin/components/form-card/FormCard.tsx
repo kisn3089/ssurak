@@ -39,7 +39,6 @@ export default function FormCard() {
     const signInResult = await signInAction(formData);
 
     if (!signInResult.success) {
-      console.log("signInResult: ", JSON.stringify(signInResult.error));
       setError("password", { message: signInResult.error?.message });
       return;
     }

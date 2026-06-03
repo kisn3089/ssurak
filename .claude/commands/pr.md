@@ -57,8 +57,8 @@ git diff <base-branch>...HEAD
 
 | 경로 패턴                          | 영향 범위                          |
 | ---------------------------------- | ---------------------------------- |
-| `apps/orderhub/`                   | 백엔드 API (Backend API)           |
-| `apps/order/`, `apps/orderdesk/`   | 프론트엔드 UI (Frontend UI)        |
+| `apps/ssurak/`                     | 백엔드 API (Backend API)           |
+| `apps/order/`, `apps/console/`     | 프론트엔드 UI (Frontend UI)        |
 | `packages/db/`, `prisma/`          | 데이터베이스 (Database)            |
 | `docker-compose.yml`, `Dockerfile` | Docker 설정 (Docker Configuration) |
 | 그 외                              | 기타 (Other)                       |
@@ -180,15 +180,15 @@ Frontend UI 변경이 감지되면 스크린샷 추가 안내 문구 작성
 
 **scope 결정:**
 
-- 단일 앱/패키지 변경: 해당 앱/패키지명 (예: `orderhub`, `orderdesk`, `db`)
+- 단일 앱/패키지 변경: 해당 앱/패키지명 (예: `ssurak`, `console`, `db`)
 - 여러 앱/패키지 변경: 가장 영향이 큰 것 또는 생략
 
 **예시:**
 
 ```text
-feat(orderhub): Owner/Admin 통합 인증 시스템 구축
-refactor(orderhub): 도메인 기반 모듈 아키텍처 재설계
-fix(orderdesk): 주문 목록 필터링 및 데이터 동기화 오류 수정
+feat(ssurak): Owner/Admin 통합 인증 시스템 구축
+refactor(ssurak): 도메인 기반 모듈 아키텍처 재설계
+fix(console): 주문 목록 필터링 및 데이터 동기화 오류 수정
 chore: reactCompiler 설정 제거 및 API 버전화 적용
 ```
 

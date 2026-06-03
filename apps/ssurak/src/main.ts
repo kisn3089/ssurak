@@ -32,7 +32,7 @@ async function bootstrap() {
         }
       : [
           configService.getOrThrow<string>("ORDER_APP_URL"),
-          configService.getOrThrow<string>("ORDERDESK_APP_URL"),
+          configService.getOrThrow<string>("CONSOLE_APP_URL"),
         ],
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
     credentials: true,
