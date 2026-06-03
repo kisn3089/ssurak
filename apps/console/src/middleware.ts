@@ -3,6 +3,7 @@ import parseCookieFromResponse from "@spaceorder/api/utils/parseCookieFromRespon
 import { isExpired } from "@spaceorder/auth";
 import { COOKIE_TABLE } from "@spaceorder/db/constants";
 import { NextRequest, NextResponse } from "next/server";
+import { cookieOptions } from "../utils/cookieOptions";
 
 export async function middleware(req: NextRequest) {
   const refreshToken = req.cookies.get(COOKIE_TABLE.REFRESH);
@@ -28,11 +29,7 @@ export async function middleware(req: NextRequest) {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "lax",
-            path: "/",
-            domain:
-              process.env.NODE_ENV === "production"
-                ? process.env.COOKIE_DOMAIN
-                : undefined,
+            ...cookieOptions,
             expires,
           });
         }
