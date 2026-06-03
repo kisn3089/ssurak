@@ -1,10 +1,12 @@
 # ============================================================================
 # Production stack — 홈서버(Mac mini) 전용
 #
-# 프론트엔드(order, orderdesk)는 Vercel에 배포되므로 여기에 포함하지 않습니다.
-# 공개 진입점은 Tailscale Funnel입니다(아웃바운드 터널 + TLS 처리).
-#   → 포트포워딩/유동 IP/헤어핀 불필요. 공개 URL은 https://hancos.<tailnet>.ts.net
-#   → 외부로 여는 인바운드 포트가 전혀 없습니다. MySQL/Redis/orderhub 모두 비공개.
+# 프론트엔드(order, console)는 Vercel에 배포되므로 여기에 포함하지 않습니다.
+# 공개 진입점은 Cloudflare Tunnel입니다(아웃바운드 터널 + TLS는 Cloudflare가 처리).
+#   → 커스텀 도메인 api.ssurak.com 을 홈서버 ssurack:8080 에 매핑(대시보드에서 설정).
+#   → 포트포워딩/유동 IP/헤어핀 불필요, WebSocket 지원, 인바운드 포트 0.
+#   → MySQL/Redis/ssurack 모두 비공개. order/console와 api 가 같은 등록가능도메인
+#     (예: order.ssurak.com / console.ssurak.com / api.ssurak.com)이라 쿠키가 same-site.
 #
 #   배포:  docker compose up -d --build
 #   개발:  docker compose -f docker-compose.dev.yml up
@@ -13,9 +15,10 @@
 #   DB_ROOT_PASSWORD, DB_NAME, DB_USER, DB_PASSWORD
 #   REDIS_PASSWORD
 #   JWT_* (access/refresh secret 등 기존 값)
-#   ORDER_APP_URL=https://<order>.vercel.app          # CORS 허용 오리진
-#   ORDERDESK_APP_URL=https://<orderdesk>.vercel.app   # CORS 허용 오리진
-#   TS_AUTHKEY=tskey-auth-...                          # Tailscale 인증키(admin 콘솔)
+#   ORDER_APP_URL=https://order.ssurak.com         # CORS 허용 오리진
+#   CONSOLE_APP_URL=https://console.ssurak.com   # CORS 허용 오리진
+#   COOKIE_DOMAIN=.ssurak.com                      # 쿠키 도메인(서브도메인 공유, 예: .ssurak.com)
+#   CLOUDFLARE_TUNNEL_TOKEN=eyJ...                  # 터널 토큰(긴 eyJ... 문자열, ID 아님)
 # ============================================================================
 
 services:
@@ -23,7 +26,7 @@ services:
     build:
       context: .
       dockerfile: packages/db/Dockerfile
-    container_name: orderhub-mysql
+    container_name: ssurack-mysql
     restart: unless-stopped
     command:
       # 운영용: 내구성 우선 설정
@@ -60,7 +63,7 @@ services:
 
   redis:
     image: redis:7.0-alpine
-    container_name: orderhub-redis
+    container_name: ssurack-redis
     restart: unless-stopped
     command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
     volumes:
@@ -79,9 +82,9 @@ services:
   migrate:
     build:
       context: .
-      dockerfile: apps/orderhub/Dockerfile
+      dockerfile: apps/ssurack/Dockerfile
       target: development
-    container_name: orderhub-migrate
+    container_name: ssurack-migrate
     command:
       [
         "sh",
@@ -99,13 +102,13 @@ services:
       - .env
     restart: "no"
 
-  orderhub:
-    image: orderhub-backend
+  ssurack:
+    image: ssurack-api
     build:
       context: .
-      dockerfile: apps/orderhub/Dockerfile
+      dockerfile: apps/ssurack/Dockerfile
       target: prod # ts-node transpile 로더로 소스 직접 실행(워치 제외)
-    container_name: orderhub-backend
+    container_name: ssurack-api
     restart: unless-stopped
     environment:
       NODE_ENV: production
@@ -126,25 +129,22 @@ services:
     env_file:
       - .env
 
-  # Tailscale Funnel — 공개 진입점.
-  # https://hanco.tailcbedf2.ts.net → 아웃바운드 터널 → orderhub:8080.
-  # 인바운드 포트를 열지 않으며 TLS는 Funnel이 처리한다. userspace 모드라
-  # NET_ADMIN/TUN 권한이 필요 없다.
-  tailscale:
-    image: tailscale/tailscale:latest
-    container_name: orderhub-tailscale
+  # Cloudflare Tunnel — 공개 진입점.
+  # api.ssurak.com → (Cloudflare 엣지) → 아웃바운드 터널 → http://ssurack:8080.
+  # 인바운드 포트를 열지 않고 TLS/도메인은 Cloudflare가 처리한다. WebSocket 지원.
+  #
+  # 사전 작업(Cloudflare Zero Trust 대시보드):
+  #   1) Networks → Tunnels → Create a tunnel (cloudflared 타입)
+  #   2) Public Hostname 추가: api.ssurak.com  →  Service: http://ssurack:8080
+  #   3) 발급된 토큰(긴 eyJ... 문자열)을 .env 의 CLOUDFLARE_TUNNEL_TOKEN 에 넣는다.
+  #      (Tunnel ID / Replica ID 가 아니라, --token 뒤에 오는 그 긴 문자열)
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: ssurack-cloudflared
     restart: unless-stopped
-    environment:
-      TS_AUTHKEY: ${TS_AUTHKEY}
-      TS_HOSTNAME: hanco # → ts.net 서브도메인이 됨
-      TS_STATE_DIR: /var/lib/tailscale
-      TS_SERVE_CONFIG: /config/funnel.json
-      TS_USERSPACE: "true"
-    volumes:
-      - tailscale_state:/var/lib/tailscale
-      - ./tailscale/funnel.json:/config/funnel.json:ro
+    command: tunnel --no-autoupdate run --token ${CLOUDFLARE_TUNNEL_TOKEN}
     depends_on:
-      - orderhub
+      - ssurack
     networks:
       - spaceorder-network
 
@@ -156,6 +156,4 @@ volumes:
   mysql_data:
     driver: local
   redis_data:
-    driver: local
-  tailscale_state:
     driver: local
