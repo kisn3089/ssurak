@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 const ORDERHUB_URL =
-  process.env.NEXT_PUBLIC_API_URL ??
+  process.env.ORDERHUB_INTERNAL_URL ??
   process.env.NEXT_PUBLIC_ORDERHUB_URL ??
   "http://localhost:8080";
 

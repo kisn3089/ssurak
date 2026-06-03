@@ -101,7 +101,7 @@ services:
     environment:
       NODE_ENV: development
       PORT: 3001
-      NEXT_PUBLIC_API_URL: http://orderhub:8080
+      ORDERHUB_INTERNAL_URL: http://orderhub:8080
     ports:
       - "3001:3001"
     volumes:
@@ -129,7 +129,7 @@ services:
     environment:
       NODE_ENV: development
       PORT: 3000
-      NEXT_PUBLIC_API_URL: http://orderhub:8080
+      ORDERHUB_INTERNAL_URL: http://orderhub:8080
     ports:
       - "3000:3000"
     volumes:

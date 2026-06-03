@@ -17,7 +17,7 @@ const STORE_CONTEXT_PATH = "/stores/v1/sessions/me/store-context";
 const CART_LIST_PATH = "/carts/v1/sessions/carts";
 const ORDER_HISTORY = "/orders/v1/sessions/orders";
 const baseUrl =
-  process.env.NEXT_PUBLIC_API_URL ??
+  process.env.ORDERHUB_INTERNAL_URL ??
   process.env.NEXT_PUBLIC_ORDERHUB_URL ??
   "http://localhost:8080";
 
