@@ -171,7 +171,7 @@ Central config in root `.env` file:
 **Server:**
 
 - `SERVER_PORT` - Backend port (default: 8080)
-- `ORDERHUB_URL` - Backend API URL for frontend apps
+- `SSURAK_URL` - Backend API URL for frontend apps
 
 **JWT:**
 
