@@ -19,16 +19,16 @@ type AuthInfoContextType = {
 const AuthInfoContext = React.createContext<AuthInfoContextType | null>(null);
 
 type AuthenticationProviderProps = React.PropsWithChildren & {
-  clientSignOut: VoidCallback;
+  serverSignOut: VoidCallback;
 };
 export default function AuthenticationProvider({
   children,
-  clientSignOut,
+  serverSignOut,
 }: AuthenticationProviderProps) {
   const [authInfo, setAuthInfo] = React.useState<AuthInfo>(defaultAuth);
 
   const signOut = () => {
-    clientSignOut();
+    serverSignOut();
     setAuthInfo(defaultAuth);
   };
 
