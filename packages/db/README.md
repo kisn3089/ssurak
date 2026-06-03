@@ -104,10 +104,10 @@ Required environment variables:
 
 Apps load database environment variables from this centralized `.env` file:
 
-**NestJS (orderhub example):**
+**NestJS (ssurack example):**
 
 ```typescript
-// apps/orderhub/src/app/app.module.ts
+// apps/ssurack/src/app/app.module.ts
 ConfigModule.forRoot({
   isGlobal: true,
   envFilePath: [".env", "../../packages/db/.env"], // Loads from both files

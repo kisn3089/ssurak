@@ -30,13 +30,13 @@ export const getRealtimeOriginKind = (
 ): OriginKind | null => {
   if (!origin) return null;
   const orderUrl = config.getOrThrow<string>("ORDER_APP_URL");
-  const orderdeskUrl = config.getOrThrow<string>("ORDERDESK_APP_URL");
+  const consoleUrl = config.getOrThrow<string>("CONSOLE_APP_URL");
   if (origin === orderUrl) return "customer";
-  if (origin === orderdeskUrl) return "admin";
+  if (origin === consoleUrl) return "admin";
 
   if (isDev(config) && PRIVATE_HOST_ORIGIN.test(origin)) {
     const port = getPort(origin);
-    return port === getPort(orderdeskUrl) ? "admin" : "customer";
+    return port === getPort(consoleUrl) ? "admin" : "customer";
   }
   return null;
 };
@@ -51,7 +51,7 @@ export const getRealtimeCorsOrigin = (
 ): string[] | CorsOriginFn => {
   const allowed = [
     config.getOrThrow<string>("ORDER_APP_URL"),
-    config.getOrThrow<string>("ORDERDESK_APP_URL"),
+    config.getOrThrow<string>("CONSOLE_APP_URL"),
   ];
   if (!isDev(config)) return allowed;
 

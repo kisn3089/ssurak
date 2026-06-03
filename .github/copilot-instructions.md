@@ -23,7 +23,7 @@ This is a **Turborepo monorepo** for a restaurant ordering system using **pnpm w
 - **Port**: 3000 (default)
 - **Path Alias**: `@/*` maps to `./src/*`
 
-#### orderdesk (Admin app)
+#### console (Admin app)
 
 - **Framework**: Next.js 14.2.33 with App Router
 - **React**: 18.3.1
@@ -39,7 +39,7 @@ This is a **Turborepo monorepo** for a restaurant ordering system using **pnpm w
 
 ### Backend App (apps/)
 
-#### orderhub (API server)
+#### ssurack (API server)
 
 - **Framework**: NestJS 11.0.1 with Express platform
 - **Runtime**: Node.js with TypeScript
@@ -181,8 +181,8 @@ This is a **Turborepo monorepo** for a restaurant ordering system using **pnpm w
 ```bash
 pnpm dev                    # Run all apps
 pnpm dev:order              # Run order app (port 3000)
-pnpm dev:orderdesk          # Run orderdesk app (port 3001)
-pnpm dev:orderhub           # Run orderhub API (port 8080)
+pnpm dev:console          # Run console app (port 3001)
+pnpm dev:ssurack           # Run ssurack API (port 8080)
 ```
 
 ### Database (Prisma)
@@ -203,25 +203,25 @@ pnpm check-types            # Type check all packages
 pnpm format                 # Format all files
 
 # Package-specific
-pnpm build --filter=orderhub
+pnpm build --filter=ssurack
 pnpm lint --filter=order
 ```
 
-### Testing (orderhub)
+### Testing (ssurack)
 
 ```bash
-pnpm --filter=orderhub test              # Run unit tests
-pnpm --filter=orderhub test:watch        # Watch mode
-pnpm --filter=orderhub test:e2e          # E2E tests
-pnpm --filter=orderhub test:cov          # Coverage report
+pnpm --filter=ssurack test              # Run unit tests
+pnpm --filter=ssurack test:watch        # Watch mode
+pnpm --filter=ssurack test:e2e          # E2E tests
+pnpm --filter=ssurack test:cov          # Coverage report
 ```
 
 ## Key Technical Context
 
 ### Module Systems
 
-- **Frontend apps (order, orderdesk)**: ESM (`"type": "module"`)
-- **Backend app (orderhub)**: CommonJS (no `"type": "module"`)
+- **Frontend apps (order, console)**: ESM (`"type": "module"`)
+- **Backend app (ssurack)**: CommonJS (no `"type": "module"`)
 
 ### React Compiler
 
@@ -239,8 +239,8 @@ pnpm --filter=orderhub test:cov          # Coverage report
 
 - Use `workspace:*` protocol for local packages
 - Apps depend on shared packages:
-  - `orderdesk` → `@spaceorder/api`, `@spaceorder/db`, `@spaceorder/ui`, `@spaceorder/auth`
-  - `orderhub` → `@spaceorder/db`, `@spaceorder/api`, `@spaceorder/auth`
+  - `console` → `@spaceorder/api`, `@spaceorder/db`, `@spaceorder/ui`, `@spaceorder/auth`
+  - `ssurack` → `@spaceorder/db`, `@spaceorder/api`, `@spaceorder/auth`
   - `@spaceorder/api` → `@spaceorder/db`, `@spaceorder/auth`
 
 ### NestJS Patterns
@@ -264,14 +264,14 @@ Root `docker-compose.yml` defines all services for local development:
 docker compose up -d              # Start all services
 docker compose up -d mysql        # Start only MySQL
 docker compose down               # Stop all services
-docker compose logs -f orderhub   # View backend logs
+docker compose logs -f ssurack   # View backend logs
 ```
 
 **Services:**
 
 - `mysql` - MySQL 8.0 database (port: `DB_PORT`, default 3306)
-- `orderhub` - NestJS backend API (port: `SERVER_PORT`, default 8080)
-- `orderdesk` - Admin Next.js app (port: 3001)
+- `ssurack` - NestJS backend API (port: `SERVER_PORT`, default 8080)
+- `console` - Admin Next.js app (port: 3001)
 - `order` - Customer Next.js app (port: 3000)
 
 ## Environment Variables

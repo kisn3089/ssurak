@@ -10,7 +10,7 @@ WORKDIR /app
 
 # Copy root package files for monorepo
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY apps/orderhub/package.json ./apps/orderhub/package.json
+COPY apps/ssurack/package.json ./apps/ssurack/package.json
 COPY packages/db/package.json ./packages/db/package.json
 COPY packages/auth/package.json ./packages/auth/package.json
 COPY packages/api/package.json ./packages/api/package.json
@@ -31,7 +31,7 @@ ENV NODE_ENV=development
 
 EXPOSE 8080
 
-CMD ["sh", "-c", "corepack enable pnpm && pnpm --filter=@spaceorder/db exec prisma migrate deploy && if [ \"$RUN_PRISMA_SEED\" = \"true\" ]; then pnpm --filter=@spaceorder/db exec prisma db seed; fi && pnpm --filter=@spaceorder/orderhub dev"]
+CMD ["sh", "-c", "corepack enable pnpm && pnpm --filter=@spaceorder/db exec prisma migrate deploy && if [ \"$RUN_PRISMA_SEED\" = \"true\" ]; then pnpm --filter=@spaceorder/db exec prisma db seed; fi && pnpm --filter=@spaceorder/ssurack dev"]
 
 
 
@@ -54,7 +54,7 @@ COPY . .
 
 ENV NODE_ENV=production
 
-WORKDIR /app/apps/orderhub
+WORKDIR /app/apps/ssurack
 EXPOSE 8080
 
 CMD ["node", "-r", "tsconfig-paths/register", "-r", "ts-node/register/transpile-only", "src/main.ts"]

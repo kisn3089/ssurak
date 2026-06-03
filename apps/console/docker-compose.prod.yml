@@ -1,14 +1,14 @@
 version: "3.8"
 
 services:
-  # Next.js Frontend (orderdesk app) - Production
-  orderdesk:
-    image: space-orderdesk-frontend:prod
+  # Next.js Frontend (console app) - Production
+  console:
+    image: space-console-frontend:prod
     build:
       context: ../../
-      dockerfile: apps/orderdesk/Dockerfile
+      dockerfile: apps/console/Dockerfile
       target: runner
-    container_name: space-orderdesk-frontend-prod
+    container_name: space-console-frontend-prod
     restart: unless-stopped
     environment:
       NODE_ENV: production
@@ -22,14 +22,14 @@ services:
   # Nginx Reverse Proxy
   nginx:
     image: nginx:alpine
-    container_name: space-orderdesk-nginx
+    container_name: space-console-nginx
     restart: unless-stopped
     ports:
       - "81:81"
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
-      - orderdesk
+      - console
     networks:
       - frontend-network
 

@@ -12,8 +12,8 @@ This guide explains how to run the space-order monorepo using Docker and Docker 
 The Docker setup includes four services:
 
 1. **mysql** - MySQL 8.0 database (port 3306)
-2. **orderhub** - NestJS backend API (port 8080)
-3. **orderdesk** - Next.js admin frontend (port 3001)
+2. **ssurack** - NestJS backend API (port 8080)
+3. **console** - Next.js admin frontend (port 3001)
 4. **order** - Next.js customer frontend (port 3000)
 5. **prisma-studio** - Prisma Studio database GUI (port 5555)
 
@@ -43,7 +43,7 @@ docker compose up -d --build
 docker compose logs -f
 
 # View logs for specific service
-docker compose logs -f orderhub
+docker compose logs -f ssurack
 docker compose logs -f order
 ```
 
@@ -61,7 +61,7 @@ docker compose down -v
 
 ### Initial Prisma Setup
 
-**Note:** In development mode, the orderhub container automatically runs `prisma:deploy` on startup. 시딩은 `RUN_PRISMA_SEED=true`로 설정한 경우에만 실행됩니다. Manual initialization is only needed when running locally without Docker.
+**Note:** In development mode, the ssurack container automatically runs `prisma:deploy` on startup. 시딩은 `RUN_PRISMA_SEED=true`로 설정한 경우에만 실행됩니다. Manual initialization is only needed when running locally without Docker.
 
 ```bash
 # From host machine (without Docker)
@@ -76,8 +76,8 @@ pnpm --filter=@spaceorder/db prisma:seed
 # Edit packages/db/prisma/schema.prisma first, then:
 pnpm --filter=@spaceorder/db prisma:migrate
 
-# If using Docker, restart orderhub to apply migrations:
-docker compose restart orderhub
+# If using Docker, restart ssurack to apply migrations:
+docker compose restart ssurack
 ```
 
 ### Access MySQL Database
@@ -93,8 +93,8 @@ mysql -h 127.0.0.1 -P 3306 -u spaceuser -p
 ## Service URLs
 
 - Customer Frontend (order): <http://localhost:3000>
-- Admin Frontend (orderdesk): <http://localhost:3001>
-- Backend API (orderhub): <http://localhost:8080>
+- Admin Frontend (console): <http://localhost:3001>
+- Backend API (ssurack): <http://localhost:8080>
 - MySQL Database: `localhost:3306`
 - Prisma Studio: <http://localhost:5555>
 
@@ -102,7 +102,7 @@ mysql -h 127.0.0.1 -P 3306 -u spaceuser -p
 
 ### Database Connection Issues
 
-If the orderhub app can't connect to MySQL:
+If the ssurack app can't connect to MySQL:
 
 1. Check if MySQL is healthy:
 
@@ -110,7 +110,7 @@ If the orderhub app can't connect to MySQL:
    docker compose ps
    ```
 
-2. Verify DATABASE_URL in orderhub service environment
+2. Verify DATABASE_URL in ssurack service environment
 
 3. Check MySQL logs:
 
@@ -122,8 +122,8 @@ If the orderhub app can't connect to MySQL:
 
 ```bash
 # Rebuild specific service
-docker compose up -d --build orderhub
-docker compose up -d --build orderdesk
+docker compose up -d --build ssurack
+docker compose up -d --build console
 docker compose up -d --build order
 
 # Rebuild all services
@@ -180,10 +180,10 @@ For production deployment:
 │   ├── order/
 │   │   ├── Dockerfile           # Next.js customer frontend container
 │   │   └── .dockerignore
-│   ├── orderdesk/
+│   ├── console/
 │   │   ├── Dockerfile           # Next.js admin frontend container
 │   │   └── .dockerignore
-│   └── orderhub/
+│   └── ssurack/
 │       ├── Dockerfile           # NestJS backend container
 │       └── .dockerignore
 ```
@@ -195,4 +195,4 @@ For production deployment:
 - MySQL initialization scripts are loaded from `packages/db/init/`
 - MySQL data persists in a Docker volume named `mysql_dev_data`
 - All services communicate through the `spaceorder-network` bridge network
-- **orderhub development mode** automatically runs `prisma:deploy` on container startup. 시딩은 `RUN_PRISMA_SEED=true` 환경변수 설정 시에만 실행
+- **ssurack development mode** automatically runs `prisma:deploy` on container startup. 시딩은 `RUN_PRISMA_SEED=true` 환경변수 설정 시에만 실행

@@ -48,10 +48,10 @@ reviews:
       instructions: 코드 리팩토링 관련 PR
     - label: order
       instructions: apps/order 관련 PR
-    - label: orderdesk
-      instructions: apps/orderdesk 관련 PR
-    - label: orderhub
-      instructions: apps/orderhub 관련 PR
+    - label: console
+      instructions: apps/console 관련 PR
+    - label: ssurack
+      instructions: apps/ssurack 관련 PR
     - label: packages
       instructions: packages 관련 PR
     - label: ui
