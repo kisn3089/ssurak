@@ -3,7 +3,7 @@ import { ConfigService } from "@nestjs/config";
 import { Redis } from "ioredis";
 import Redlock from "redlock";
 
-export const REDIS_CLIENT = "REDIS_ORDERHUB";
+export const REDIS_CLIENT = "REDIS_SSURAK";
 export const REDIS_PUB_CLIENT = "REDIS_PUB_CLIENT";
 export const REDIS_SUB_CLIENT = "REDIS_SUB_CLIENT";
 export const REDLOCK_CLIENT = "REDLOCK_CLIENT";
