@@ -112,7 +112,6 @@ services:
       PORT: 8080
       DATABASE_URL: mysql://${DB_USER}:${DB_PASSWORD}@mysql:3306/${DB_NAME}
       REDIS_HOST: redis
-    # 공개 포트 없음. Caddy가 내부 네트워크로 접근한다.
     expose:
       - "8080"
     depends_on:
@@ -128,7 +127,7 @@ services:
       - .env
 
   # Tailscale Funnel — 공개 진입점.
-  # Vercis(해외) → https://hancos.<tailnet>.ts.net → 아웃바운드 터널 → orderhub:8080.
+  # https://hanco.tailcbedf2.ts.net → 아웃바운드 터널 → orderhub:8080.
   # 인바운드 포트를 열지 않으며 TLS는 Funnel이 처리한다. userspace 모드라
   # NET_ADMIN/TUN 권한이 필요 없다.
   tailscale:
