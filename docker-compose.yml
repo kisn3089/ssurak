@@ -1,30 +1,45 @@
+# ============================================================================
+# Production stack — 홈서버(Mac mini) 전용
+#
+# 프론트엔드(order, orderdesk)는 Vercel에 배포되므로 여기에 포함하지 않습니다.
+# 공개 진입점은 Tailscale Funnel입니다(아웃바운드 터널 + TLS 처리).
+#   → 포트포워딩/유동 IP/헤어핀 불필요. 공개 URL은 https://hancos.<tailnet>.ts.net
+#   → 외부로 여는 인바운드 포트가 전혀 없습니다. MySQL/Redis/orderhub 모두 비공개.
+#
+#   배포:  docker compose up -d --build
+#   개발:  docker compose -f docker-compose.dev.yml up
+#
+# 필요한 .env 값:
+#   DB_ROOT_PASSWORD, DB_NAME, DB_USER, DB_PASSWORD
+#   REDIS_PASSWORD
+#   JWT_* (access/refresh secret 등 기존 값)
+#   ORDER_APP_URL=https://<order>.vercel.app          # CORS 허용 오리진
+#   ORDERDESK_APP_URL=https://<orderdesk>.vercel.app   # CORS 허용 오리진
+#   TS_AUTHKEY=tskey-auth-...                          # Tailscale 인증키(admin 콘솔)
+# ============================================================================
+
 services:
-  # MySQL Database for development
   mysql:
     build:
       context: .
       dockerfile: packages/db/Dockerfile
-    container_name: orderhub-dev-mysql
+    container_name: orderhub-mysql
     restart: unless-stopped
     command:
-      - --skip-log-bin
-      - --sync_binlog=0
-      - --innodb_flush_log_at_trx_commit=2
-      - --innodb_temp_data_file_path=ibtmp1:64M:autoextend:max:512M
-      # prod.yaml
-      # command:
-      #   - --innodb_flush_log_at_trx_commit=1
-      #   - --sync_binlog=1
-      #   - --binlog_expire_logs_seconds = 604800 # 7 days
+      # 운영용: 내구성 우선 설정
+      - --innodb_flush_log_at_trx_commit=1
+      - --sync_binlog=1
+      - --binlog_expire_logs_seconds=604800 # 7 days
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       MYSQL_DATABASE: ${DB_NAME}
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASSWORD}
-    ports:
-      - "3306:3306"
+    # 공개 포트 없음. 로컬 디버깅이 필요할 때만 아래 주석 해제(루프백 바인딩).
+    # ports:
+    #   - "127.0.0.1:3306:3306"
     volumes:
-      - mysql_dev_data:/var/lib/mysql
+      - mysql_data:/var/lib/mysql
     networks:
       - spaceorder-network
     healthcheck:
@@ -42,136 +57,105 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    env_file:
-      - .env
 
-  # Redis Cache
   redis:
     image: redis:7.0-alpine
-    container_name: spaceorder-redis
-    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    container_name: orderhub-redis
     restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
     volumes:
       - redis_data:/data
-    ports:
-      - "6379:6379"
     networks:
       - spaceorder-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  # NestJS Backend (orderhub app) - Development
-  orderhub:
-    image: orderhub-order-backend
+  # Prisma 마이그레이션 1회성 실행.
+  # runner 이미지는 schema/CLI를 포함하지 않으므로, schema가 있는 development
+  # 타깃을 재사용해 migrate deploy만 수행하고 종료한다.
+  migrate:
     build:
       context: .
       dockerfile: apps/orderhub/Dockerfile
       target: development
-    container_name: orderhub-dev-backend
+    container_name: orderhub-migrate
+    command:
+      [
+        "sh",
+        "-c",
+        "corepack enable pnpm && pnpm --filter=@spaceorder/db exec prisma migrate deploy",
+      ]
+    environment:
+      DATABASE_URL: mysql://${DB_USER}:${DB_PASSWORD}@mysql:3306/${DB_NAME}
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - spaceorder-network
+    env_file:
+      - .env
+    restart: "no"
+
+  orderhub:
+    image: orderhub-backend
+    build:
+      context: .
+      dockerfile: apps/orderhub/Dockerfile
+      target: prod # ts-node transpile 로더로 소스 직접 실행(워치 제외)
+    container_name: orderhub-backend
     restart: unless-stopped
     environment:
-      NODE_ENV: development
+      NODE_ENV: production
       PORT: 8080
       DATABASE_URL: mysql://${DB_USER}:${DB_PASSWORD}@mysql:3306/${DB_NAME}
-      RUN_PRISMA_SEED: ${RUN_PRISMA_SEED}
       REDIS_HOST: redis
-    ports:
-      - "${SERVER_PORT}:8080"
+    expose:
+      - "8080"
     depends_on:
       mysql:
         condition: service_healthy
       redis:
-        condition: service_started
-    networks:
-      - spaceorder-network
-    volumes:
-      - .:/app
-      - /app/node_modules
-      - /app/apps/orderhub/node_modules
-    env_file:
-      - .env
-
-  # Next.js Frontend (orderdesk app) - Development
-  orderdesk:
-    image: space-orderdesk-frontend
-    build:
-      context: .
-      dockerfile: apps/orderdesk/Dockerfile
-      target: development
-    container_name: space-orderdesk-frontend-dev
-    restart: unless-stopped
-    environment:
-      NODE_ENV: development
-      PORT: 3001
-      NEXT_PUBLIC_API_URL: http://orderhub:8080
-    ports:
-      - "3001:3001"
-    volumes:
-      - .:/app
-      - /app/node_modules
-      - /app/apps/orderdesk/node_modules
-      - /app/.next
-      - /app/apps/orderdesk/.next
-    depends_on:
-      - orderhub
-    networks:
-      - spaceorder-network
-    env_file:
-      - .env
-
-  # Next.js Frontend (order app) - Development
-  order:
-    image: space-order-frontend
-    build:
-      context: .
-      dockerfile: apps/order/Dockerfile
-      target: development
-    container_name: space-order-frontend-dev
-    restart: unless-stopped
-    environment:
-      NODE_ENV: development
-      PORT: 3000
-      NEXT_PUBLIC_API_URL: http://orderhub:8080
-    ports:
-      - "3000:3000"
-    volumes:
-      - .:/app
-      - /app/node_modules
-      - /app/apps/order/node_modules
-      - /app/.next
-      - /app/apps/order/.next
-    depends_on:
-      - orderhub
-    networks:
-      - spaceorder-network
-    env_file:
-      - .env
-
-  # Prisma Studio - Database GUI
-  prisma-studio:
-    build:
-      context: .
-      dockerfile: apps/orderhub/Dockerfile
-      target: development
-    container_name: spaceorder-prisma-studio
-    restart: unless-stopped
-    environment:
-      DATABASE_URL: mysql://${DB_USER}:${DB_PASSWORD}@mysql:3306/${DB_NAME}
-    ports:
-      - "5555:5555"
-    command: ["pnpm", "prisma:studio", "--", "--port", "5555"]
-    depends_on:
-      mysql:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
     networks:
       - spaceorder-network
     env_file:
       - .env
+
+  # Tailscale Funnel — 공개 진입점.
+  # https://hanco.tailcbedf2.ts.net → 아웃바운드 터널 → orderhub:8080.
+  # 인바운드 포트를 열지 않으며 TLS는 Funnel이 처리한다. userspace 모드라
+  # NET_ADMIN/TUN 권한이 필요 없다.
+  tailscale:
+    image: tailscale/tailscale:latest
+    container_name: orderhub-tailscale
+    restart: unless-stopped
+    environment:
+      TS_AUTHKEY: ${TS_AUTHKEY}
+      TS_HOSTNAME: hanco # → ts.net 서브도메인이 됨
+      TS_STATE_DIR: /var/lib/tailscale
+      TS_SERVE_CONFIG: /config/funnel.json
+      TS_USERSPACE: "true"
+    volumes:
+      - tailscale_state:/var/lib/tailscale
+      - ./tailscale/funnel.json:/config/funnel.json:ro
+    depends_on:
+      - orderhub
+    networks:
+      - spaceorder-network
 
 networks:
   spaceorder-network:
     driver: bridge
 
 volumes:
-  mysql_dev_data:
+  mysql_data:
     driver: local
   redis_data:
+    driver: local
+  tailscale_state:
     driver: local
