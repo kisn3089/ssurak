@@ -44,7 +44,7 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
-      - spaceorder-network
+      - ssurak-network
     healthcheck:
       test:
         [
@@ -69,7 +69,7 @@ services:
     volumes:
       - redis_data:/data
     networks:
-      - spaceorder-network
+      - ssurak-network
     healthcheck:
       test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
       interval: 10s
@@ -97,7 +97,7 @@ services:
       mysql:
         condition: service_healthy
     networks:
-      - spaceorder-network
+      - ssurak-network
     env_file:
       - .env
     restart: "no"
@@ -125,7 +125,7 @@ services:
       migrate:
         condition: service_completed_successfully
     networks:
-      - spaceorder-network
+      - ssurak-network
     env_file:
       - .env
 
@@ -146,10 +146,10 @@ services:
     depends_on:
       - ssurak
     networks:
-      - spaceorder-network
+      - ssurak-network
 
 networks:
-  spaceorder-network:
+  ssurak-network:
     driver: bridge
 
 volumes:

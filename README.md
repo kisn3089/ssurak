@@ -251,17 +251,17 @@ WAITING_ORDER → ACTIVE → PAYMENT_PENDING → CLOSED
 
 ## Environment Variables
 
-| Variable                      | Description           | Default               |
-| ----------------------------- | --------------------- | --------------------- |
-| `SERVER_PORT`                 | 백엔드 서버 포트      | 8080                  |
-| `DB_PORT`                     | MySQL 포트            | 3306                  |
-| `DB_NAME`                     | 데이터베이스 이름     | spaceorder            |
-| `DB_USER`                     | 데이터베이스 사용자   | -                     |
-| `DB_PASSWORD`                 | 데이터베이스 비밀번호 | -                     |
-| `DATABASE_URL`                | Prisma 연결 문자열    | -                     |
-| `JWT_ACCESS_TOKEN_SECRET`     | Access 토큰 시크릿    | -                     |
-| `JWT_REFRESH_TOKEN_SECRET`    | Refresh 토큰 시크릿   | -                     |
-| `NEXT_PUBLIC_API_SSURACK_URL` | 백엔드 API URL        | http://localhost:8080 |
+| Variable                     | Description           | Default               |
+| ---------------------------- | --------------------- | --------------------- |
+| `SERVER_PORT`                | 백엔드 서버 포트      | 8080                  |
+| `DB_PORT`                    | MySQL 포트            | 3306                  |
+| `DB_NAME`                    | 데이터베이스 이름     | spaceorder            |
+| `DB_USER`                    | 데이터베이스 사용자   | -                     |
+| `DB_PASSWORD`                | 데이터베이스 비밀번호 | -                     |
+| `DATABASE_URL`               | Prisma 연결 문자열    | -                     |
+| `JWT_ACCESS_TOKEN_SECRET`    | Access 토큰 시크릿    | -                     |
+| `JWT_REFRESH_TOKEN_SECRET`   | Refresh 토큰 시크릿   | -                     |
+| `NEXT_PUBLIC_API_SSURAK_URL` | 백엔드 API URL        | http://localhost:8080 |
 
 ## Docker Commands
 

@@ -10,7 +10,7 @@ export const resolveOrderhubBaseURL = (): string => {
     // dev 브라우저: 호스트에서 접근하므로 현재 호스트명 기준으로 해석.
     return `${window.location.protocol}//${window.location.hostname}:8080`;
   }
-  return process.env.NEXT_PUBLIC_API_SSURACK_URL || "http://localhost:8080";
+  return process.env.NEXT_PUBLIC_API_SSURAK_URL || "http://localhost:8080";
 };
 
 export const http = axios.create({
