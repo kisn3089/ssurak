@@ -38,3 +38,17 @@ export async function clearServerCookie(name: CookieKey) {
         : undefined,
   });
 }
+
+export async function clearAuthCookies() {
+  const cookieStore = await cookies();
+  for (const name of [COOKIE_TABLE.ACCESS_TOKEN, COOKIE_TABLE.REFRESH]) {
+    cookieStore.delete({
+      name,
+      path: "/",
+      domain:
+        process.env.NODE_ENV === "production"
+          ? process.env.COOKIE_DOMAIN
+          : undefined,
+    });
+  }
+}
