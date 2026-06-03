@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const ORDERHUB_URL =
-  process.env.ORDERHUB_INTERNAL_URL ??
+const SSURAK_URL =
+  process.env.SSURAK_INTERNAL_URL ??
   process.env.NEXT_PUBLIC_API_SSURAK_URL ??
   "http://localhost:8080";
 
@@ -11,7 +11,7 @@ export async function GET(
 ) {
   const { qrCode } = await params;
 
-  const apiResponse = await fetch(`${ORDERHUB_URL}/stores/v1/sessions`, {
+  const apiResponse = await fetch(`${SSURAK_URL}/stores/v1/sessions`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ qrCode }),

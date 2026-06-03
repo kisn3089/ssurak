@@ -22,15 +22,15 @@ export default function RequestButton<Response, Payload>({
   const { disabled, error, loading } = message;
 
   const buttonMessage = (): ReactNode => {
-    if (props.disabled && disabled) {
-      return disabled;
-    } else if (mutate.isPending && loading) {
+    if (mutate.isPending && loading) {
       return (
         <>
           <Spinner />
           <p>{loading}</p>
         </>
       );
+    } else if (props.disabled && disabled) {
+      return disabled;
     } else if (mutate.isError && error) {
       return (
         <>

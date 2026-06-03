@@ -2,10 +2,10 @@ import axios, { AxiosError, AxiosRequestConfig } from "axios";
 
 const isServer = typeof window === "undefined";
 
-export const resolveOrderhubBaseURL = (): string => {
+export const resolveSsurakBaseURL = (): string => {
   if (process.env.NODE_ENV !== "production") {
     if (isServer) {
-      return process.env.ORDERHUB_INTERNAL_URL || "http://localhost:8080";
+      return process.env.SSURAK_INTERNAL_URL || "http://localhost:8080";
     }
     // dev 브라우저: 호스트에서 접근하므로 현재 호스트명 기준으로 해석.
     return `${window.location.protocol}//${window.location.hostname}:8080`;
@@ -14,7 +14,7 @@ export const resolveOrderhubBaseURL = (): string => {
 };
 
 export const http = axios.create({
-  baseURL: resolveOrderhubBaseURL(),
+  baseURL: resolveSsurakBaseURL(),
   timeout: 10000,
   withCredentials: true,
 });

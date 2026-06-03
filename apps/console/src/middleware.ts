@@ -29,6 +29,10 @@ export async function middleware(req: NextRequest) {
             secure: process.env.NODE_ENV === "production",
             sameSite: "lax",
             path: "/",
+            domain:
+              process.env.NODE_ENV === "production"
+                ? process.env.COOKIE_DOMAIN
+                : undefined,
             expires,
           });
         }

@@ -19,11 +19,22 @@ export async function setServerCookie(
   const cookieStore = await cookies();
   cookieStore.set(name, value, {
     path: options?.path ?? "/",
+    domain:
+      process.env.NODE_ENV === "production"
+        ? process.env.COOKIE_DOMAIN
+        : undefined,
     ...options,
   });
 }
 
 export async function clearServerCookie(name: CookieKey) {
   const cookieStore = await cookies();
-  cookieStore.delete(name);
+  cookieStore.delete({
+    name,
+    path: "/",
+    domain:
+      process.env.NODE_ENV === "production"
+        ? process.env.COOKIE_DOMAIN
+        : undefined,
+  });
 }

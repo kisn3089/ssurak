@@ -289,7 +289,7 @@ DATABASE_URL="mysql://..."
 
 # Server
 SERVER_PORT=8080
-ORDERHUB_URL=http://localhost:8080
+SSURAK=http://localhost:8080
 
 # JWT
 JWT_ACCESS_TOKEN_SECRET=***
