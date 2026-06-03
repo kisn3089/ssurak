@@ -57,7 +57,7 @@ git show <commit-hash> --no-stat -p
 
 - `apps/console/` 변경 → `console/`
 - `apps/order/` 변경 → `order/`
-- `apps/ssurack/` 변경 → `ssurack/`
+- `apps/ssurak/` 변경 → `ssurak/`
 - `packages/ui/` 변경 → `ui/`
 - `packages/db/` 변경 → `db/`
 

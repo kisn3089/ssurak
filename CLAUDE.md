@@ -10,7 +10,7 @@ Turborepo monorepo for a restaurant ordering system using pnpm workspaces.
 
 - `order` - Customer-facing Next.js 14 app (port 3000)
 - `console` - Admin Next.js 14 app (port 3001)
-- `ssurack` - NestJS 11 backend API (port 8080)
+- `ssurak` - NestJS 11 backend API (port 8080)
 
 **Shared Packages:**
 
@@ -30,7 +30,7 @@ Turborepo monorepo for a restaurant ordering system using pnpm workspaces.
 pnpm dev                           # All apps
 pnpm dev:order                     # Customer app (3000)
 pnpm dev:console                 # Admin app (3001)
-pnpm dev:ssurack                  # Backend API (8080)
+pnpm dev:ssurak                  # Backend API (8080)
 
 # Build & Quality
 pnpm build                         # Build all
@@ -45,11 +45,11 @@ pnpm --filter=@spaceorder/db prisma:studio     # Open Prisma Studio
 pnpm --filter=@spaceorder/db prisma:seed       # Seed database
 pnpm --filter=@spaceorder/db prisma:reset      # Reset database
 
-# Testing (ssurack only)
-pnpm --filter=ssurack test        # Run unit tests
-pnpm --filter=ssurack test:watch  # Watch mode
-pnpm --filter=ssurack test:cov    # Coverage report
-pnpm --filter=ssurack test:e2e    # E2E tests
+# Testing (ssurak only)
+pnpm --filter=ssurak test        # Run unit tests
+pnpm --filter=ssurak test:watch  # Watch mode
+pnpm --filter=ssurak test:cov    # Coverage report
+pnpm --filter=ssurak test:e2e    # E2E tests
 
 # Filter syntax for specific packages
 pnpm build --filter=order
@@ -90,7 +90,7 @@ import type {
 
 Always run `prisma:generate` after schema changes.
 
-### Backend (ssurack)
+### Backend (ssurak)
 
 - CommonJS module system (not ESM)
 - **Config:** `ConfigModule` loads from root `.env` (`envFilePath: '../../.env'`)
@@ -114,7 +114,7 @@ Always run `prisma:generate` after schema changes.
 ```text
 order → @spaceorder/ui
 console → @spaceorder/api, @spaceorder/db, @spaceorder/ui, @spaceorder/auth
-ssurack → @spaceorder/db, @spaceorder/api
+ssurak → @spaceorder/db, @spaceorder/api
 @spaceorder/api → @spaceorder/db, @spaceorder/auth
 ```
 
@@ -144,13 +144,13 @@ Root `docker-compose.yml` defines all services for local development:
 docker compose up -d              # Start all services
 docker compose up -d mysql        # Start only MySQL
 docker compose down               # Stop all services
-docker compose logs -f ssurack   # View backend logs
+docker compose logs -f ssurak   # View backend logs
 ```
 
 **Services:**
 
 - `mysql` - MySQL 8.0 database (port: `DB_PORT`, default 3306)
-- `ssurack` - NestJS backend API (port: `SERVER_PORT`, default 8080)
+- `ssurak` - NestJS backend API (port: `SERVER_PORT`, default 8080)
 - `console` - Admin Next.js app (port: 3001)
 - `order` - Customer Next.js app (port: 3000)
 - `prisma-studio` - Database GUI (port: 5555)

@@ -3,9 +3,9 @@
 #
 # 프론트엔드(order, console)는 Vercel에 배포되므로 여기에 포함하지 않습니다.
 # 공개 진입점은 Cloudflare Tunnel입니다(아웃바운드 터널 + TLS는 Cloudflare가 처리).
-#   → 커스텀 도메인 api.ssurak.com 을 홈서버 ssurack:8080 에 매핑(대시보드에서 설정).
+#   → 커스텀 도메인 api.ssurak.com 을 홈서버 ssurak:8080 에 매핑(대시보드에서 설정).
 #   → 포트포워딩/유동 IP/헤어핀 불필요, WebSocket 지원, 인바운드 포트 0.
-#   → MySQL/Redis/ssurack 모두 비공개. order/console와 api 가 같은 등록가능도메인
+#   → MySQL/Redis/ssurak 모두 비공개. order/console와 api 가 같은 등록가능도메인
 #     (예: order.ssurak.com / console.ssurak.com / api.ssurak.com)이라 쿠키가 same-site.
 #
 #   배포:  docker compose up -d --build
@@ -26,7 +26,7 @@ services:
     build:
       context: .
       dockerfile: packages/db/Dockerfile
-    container_name: ssurack-mysql
+    container_name: ssurak-mysql
     restart: unless-stopped
     command:
       # 운영용: 내구성 우선 설정
@@ -63,7 +63,7 @@ services:
 
   redis:
     image: redis:7.0-alpine
-    container_name: ssurack-redis
+    container_name: ssurak-redis
     restart: unless-stopped
     command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
     volumes:
@@ -82,9 +82,9 @@ services:
   migrate:
     build:
       context: .
-      dockerfile: apps/ssurack/Dockerfile
+      dockerfile: apps/ssurak/Dockerfile
       target: development
-    container_name: ssurack-migrate
+    container_name: ssurak-migrate
     command:
       [
         "sh",
@@ -102,13 +102,13 @@ services:
       - .env
     restart: "no"
 
-  ssurack:
-    image: ssurack-api
+  ssurak:
+    image: ssurak-api
     build:
       context: .
-      dockerfile: apps/ssurack/Dockerfile
+      dockerfile: apps/ssurak/Dockerfile
       target: prod # ts-node transpile 로더로 소스 직접 실행(워치 제외)
-    container_name: ssurack-api
+    container_name: ssurak-api
     restart: unless-stopped
     environment:
       NODE_ENV: production
@@ -130,21 +130,21 @@ services:
       - .env
 
   # Cloudflare Tunnel — 공개 진입점.
-  # api.ssurak.com → (Cloudflare 엣지) → 아웃바운드 터널 → http://ssurack:8080.
+  # api.ssurak.com → (Cloudflare 엣지) → 아웃바운드 터널 → http://ssurak:8080.
   # 인바운드 포트를 열지 않고 TLS/도메인은 Cloudflare가 처리한다. WebSocket 지원.
   #
   # 사전 작업(Cloudflare Zero Trust 대시보드):
   #   1) Networks → Tunnels → Create a tunnel (cloudflared 타입)
-  #   2) Public Hostname 추가: api.ssurak.com  →  Service: http://ssurack:8080
+  #   2) Public Hostname 추가: api.ssurak.com  →  Service: http://ssurak:8080
   #   3) 발급된 토큰(긴 eyJ... 문자열)을 .env 의 CLOUDFLARE_TUNNEL_TOKEN 에 넣는다.
   #      (Tunnel ID / Replica ID 가 아니라, --token 뒤에 오는 그 긴 문자열)
   cloudflared:
     image: cloudflare/cloudflared:latest
-    container_name: ssurack-cloudflared
+    container_name: ssurak-cloudflared
     restart: unless-stopped
     command: tunnel --no-autoupdate run --token ${CLOUDFLARE_TUNNEL_TOKEN}
     depends_on:
-      - ssurack
+      - ssurak
     networks:
       - spaceorder-network
 

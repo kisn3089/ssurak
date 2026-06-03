@@ -50,8 +50,8 @@ reviews:
       instructions: apps/order 관련 PR
     - label: console
       instructions: apps/console 관련 PR
-    - label: ssurack
-      instructions: apps/ssurack 관련 PR
+    - label: ssurak
+      instructions: apps/ssurak 관련 PR
     - label: packages
       instructions: packages 관련 PR
     - label: ui

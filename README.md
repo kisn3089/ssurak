@@ -72,7 +72,7 @@ space-order/
 ├── apps/
 │   ├── order/          # 고객용 주문 앱 (Next.js, port 3000)
 │   ├── console/      # 관리자용 주문 접수 앱 (Next.js, port 3001)
-│   └── ssurack/       # 백엔드 API 서버 (NestJS, port 8080)
+│   └── ssurak/       # 백엔드 API 서버 (NestJS, port 8080)
 ├── packages/
 │   ├── db/             # Prisma 스키마 및 클라이언트 (SSOT)
 │   ├── api/            # React Query hooks, Axios HTTP 클라이언트
@@ -126,7 +126,7 @@ cd space-order
 | ----------------- | -------------------------- | --------------------- |
 | **order**         | http://localhost:3000      | 고객용 주문 앱        |
 | **console**       | http://localhost:3001      | 관리자용 주문 접수 앱 |
-| **ssurack**       | http://localhost:8080      | 백엔드 API            |
+| **ssurak**        | http://localhost:8080      | 백엔드 API            |
 | **Swagger Docs**  | http://localhost:8080/docs | API 문서              |
 | **Prisma Studio** | http://localhost:5555      | 데이터베이스 GUI      |
 
@@ -198,7 +198,7 @@ pnpm dev
 # 개별 앱 실행
 pnpm dev:order       # 고객 앱 (3000)
 pnpm dev:console   # 관리자 앱 (3001)
-pnpm dev:ssurack    # 백엔드 API (8080)
+pnpm dev:ssurak    # 백엔드 API (8080)
 ```
 
 ### Database Commands
@@ -269,5 +269,5 @@ WAITING_ORDER → ACTIVE → PAYMENT_PENDING → CLOSED
 docker compose up -d              # 모든 서비스 시작
 docker compose up -d mysql        # MySQL만 시작
 docker compose down               # 모든 서비스 중지
-docker compose logs -f ssurack   # 백엔드 로그 확인
+docker compose logs -f ssurak   # 백엔드 로그 확인
 ```
