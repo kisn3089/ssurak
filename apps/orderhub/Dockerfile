@@ -35,39 +35,26 @@ CMD ["sh", "-c", "corepack enable pnpm && pnpm --filter=@spaceorder/db exec pris
 
 
 
-# Stage 2: Builder
-FROM base AS builder
+# Stage 2: Production runtime (transpile-on-run)
+#
+# 워크스페이스 패키지(@spaceorder/*)가 TS 소스(main: index.ts)로 노출되어 있어,
+# SWC 컴파일 산출물(dist)이 자기완결적이지 않다(런타임에 @spaceorder/* 가 .js 로
+# 해석되지 않음). 따라서 dev와 동일하게 ts-node transpile 로더로 소스를 직접 실행한다.
+# 차이는 워치(nodemon) 없이 1회 기동한다는 점뿐이다.
+#
+# 더 가벼운 이미지를 원하면 webpack 번들 또는 패키지 dist 컴파일로 전환할 수 있으나,
+# Prisma/Socket.IO 번들링과 모노레포 exports 정비가 필요해 별도 작업으로 둔다.
+FROM deps AS prod
 WORKDIR /app
 
-# Copy node_modules from deps
-COPY --from=deps /app/node_modules ./node_modules
-
-# Copy all source code for monorepo
+# 전체 모노레포 소스 복사.
+# node_modules / .next / dist 등은 .dockerignore 로 제외되어, deps 단계에서 설치한
+# node_modules 와 생성된 Prisma client 가 그대로 보존된다.
 COPY . .
-
-# Build using turbo
-RUN corepack enable pnpm && pnpm build --filter=orderhub
-
-# Stage 3: Runner
-FROM base AS runner
-WORKDIR /app
 
 ENV NODE_ENV=production
 
-# Install OpenSSL for Prisma
-RUN apk add --no-cache openssl
-
-# Create app user
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nestjs
-
-# Copy necessary files
-COPY --from=builder --chown=nestjs:nodejs /app/apps/orderhub/dist ./dist
-COPY --from=builder --chown=nestjs:nodejs /app/node_modules ./node_modules
-COPY --from=builder --chown=nestjs:nodejs /app/package.json ./package.json
-
-USER nestjs
-
+WORKDIR /app/apps/orderhub
 EXPOSE 8080
 
-CMD ["node", "dist/main"]
+CMD ["node", "-r", "tsconfig-paths/register", "-r", "ts-node/register/transpile-only", "src/main.ts"]
