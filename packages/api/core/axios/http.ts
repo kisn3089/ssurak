@@ -3,10 +3,10 @@ import axios, { AxiosError, AxiosRequestConfig } from "axios";
 const isServer = typeof window === "undefined";
 
 export const resolveOrderhubBaseURL = (): string => {
-  if (isServer) {
-    return process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-  }
   if (process.env.NODE_ENV !== "production") {
+    if (isServer) {
+      return process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+    }
     return `${window.location.protocol}//${window.location.hostname}:8080`;
   }
   return process.env.NEXT_PUBLIC_ORDERHUB_URL || "http://localhost:8080";
