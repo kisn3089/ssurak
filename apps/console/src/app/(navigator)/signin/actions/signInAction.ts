@@ -63,6 +63,8 @@ export default async function signInAction(
       error: { message: "로그인 시 서버 오류가 발생했습니다." },
     };
 
+    console.log(JSON.stringify(error));
+
     if (error instanceof AxiosError) {
       if (error.response?.data?.statusCode === 401) {
         errorResponse["error"].message =
