@@ -1,10 +1,9 @@
 "use client";
 
 import AuthenticationProvider from "@spaceorder/auth/providers/AuthenticationProvider";
-import { COOKIE_TABLE } from "@spaceorder/db/constants";
 import { useRouter } from "next/navigation";
 import AxiosInterceptor from "@/lib/AxiosInterceptor";
-import { clearServerCookie } from "@/app/common/servers/cookies";
+import { clearAuthCookies } from "@/app/common/servers/cookies";
 
 export function OrderdeskAuthProvider({
   children,
@@ -16,10 +15,7 @@ export function OrderdeskAuthProvider({
   const signOut = () => {
     void (async () => {
       try {
-        await Promise.all([
-          clearServerCookie(COOKIE_TABLE.ACCESS_TOKEN),
-          clearServerCookie(COOKIE_TABLE.REFRESH),
-        ]);
+        await clearAuthCookies();
       } catch (error) {
         console.error("Error occurred while clearing cookies:", error);
       } finally {
