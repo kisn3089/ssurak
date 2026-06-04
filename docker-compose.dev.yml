@@ -73,6 +73,8 @@ services:
       DATABASE_URL: mysql://${DB_USER}:${DB_PASSWORD}@mysql:3306/${DB_NAME}
       RUN_PRISMA_SEED: ${RUN_PRISMA_SEED}
       REDIS_HOST: redis
+      ORDER_APP_URL: http://localhost:3000
+      CONSOLE_APP_URL: http://localhost:3001
     ports:
       - "${SERVER_PORT}:8080"
     depends_on:
@@ -101,7 +103,8 @@ services:
     environment:
       NODE_ENV: development
       PORT: 3001
-      SSURAK_INTERNAL_URL: http://ssurak:8080
+      NEXT_PUBLIC_SSURAK_INTERNAL_URL: http://ssurak:8080
+      NEXT_PUBLIC_ORDER_APP_URL: http://localhost:3000
     ports:
       - "3001:3001"
     volumes:
@@ -129,7 +132,7 @@ services:
     environment:
       NODE_ENV: development
       PORT: 3000
-      SSURAK_INTERNAL_URL: http://ssurak:8080
+      NEXT_PUBLIC_SSURAK_INTERNAL_URL: http://ssurak:8080
     ports:
       - "3000:3000"
     volumes:
@@ -146,25 +149,25 @@ services:
       - .env
 
   # Prisma Studio - Database GUI
-  prisma-studio:
-    build:
-      context: .
-      dockerfile: apps/ssurak/Dockerfile
-      target: development
-    container_name: spaceorder-prisma-studio
-    restart: unless-stopped
-    environment:
-      DATABASE_URL: mysql://${DB_USER}:${DB_PASSWORD}@mysql:3306/${DB_NAME}
-    ports:
-      - "5555:5555"
-    command: ["pnpm", "prisma:studio", "--", "--port", "5555"]
-    depends_on:
-      mysql:
-        condition: service_healthy
-    networks:
-      - ssurak-network
-    env_file:
-      - .env
+  # prisma-studio:
+  #   build:
+  #     context: .
+  #     dockerfile: apps/ssurak/Dockerfile
+  #     target: development
+  #   container_name: ssurak-prisma-studio
+  #   restart: unless-stopped
+  #   environment:
+  #     DATABASE_URL: mysql://${DB_USER}:${DB_PASSWORD}@mysql:3306/${DB_NAME}
+  #   ports:
+  #     - "5555:5555"
+  #   command: ["pnpm", "prisma:studio", "--", "--port", "5555"]
+  #   depends_on:
+  #     mysql:
+  #       condition: service_healthy
+  #   networks:
+  #     - ssurak-network
+  #   env_file:
+  #     - .env
 
 networks:
   ssurak-network:

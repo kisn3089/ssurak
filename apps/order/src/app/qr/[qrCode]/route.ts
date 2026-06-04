@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 const SSURAK_URL =
-  process.env.SSURAK_INTERNAL_URL ??
+  process.env.NEXT_PUBLIC_SSURAK_INTERNAL_URL ??
   process.env.NEXT_PUBLIC_API_SSURAK_URL ??
   "http://localhost:8080";
 
