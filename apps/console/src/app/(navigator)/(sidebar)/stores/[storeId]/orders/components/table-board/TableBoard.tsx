@@ -17,10 +17,9 @@ export default function TableBoard() {
     { onSuccess: setCache }
   );
 
-  const tableCount = tables.length ?? 0;
   return (
     <GlobalTimerProvider>
-      <TableBoardLayout count={tableCount}>
+      <TableBoardLayout>
         {tables.map((sanitizedTable) => (
           <TableOrderList
             key={sanitizedTable.publicId}

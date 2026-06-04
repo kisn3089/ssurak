@@ -1,45 +1,43 @@
 import { Button } from "@spaceorder/ui/components/button";
 import { Separator } from "@spaceorder/ui/components/separator";
 import { Spinner } from "@spaceorder/ui/components/spinner";
-import { UseMutationResult } from "@tanstack/react-query";
 import { CircleAlert } from "lucide-react";
 import { ComponentProps, ReactNode } from "react";
 
-type RequestButtonProps<Response, Payload> = {
-  mutate: UseMutationResult<Response, Error, Payload, unknown>;
-  message: {
+type RequestButtonProps = {
+  mutate: {
+    isPending: boolean;
+    isError: boolean;
+  };
+  message?: {
     disabled?: string;
     error?: string;
     loading?: string;
   };
 };
 
-export default function RequestButton<Response, Payload>({
+export default function RequestButton({
   mutate,
   message,
   ...props
-}: ComponentProps<typeof Button> & RequestButtonProps<Response, Payload>) {
-  const { disabled, error, loading } = message;
-
+}: ComponentProps<typeof Button> & RequestButtonProps) {
   const buttonMessage = (): ReactNode => {
-    if (mutate.isPending && loading) {
+    if (mutate.isPending) {
       return (
         <>
           <Spinner />
-          <p>{loading}</p>
+          {message?.loading && <p>{message.loading}</p>}
         </>
       );
-    } else if (props.disabled && disabled) {
-      return disabled;
-    } else if (mutate.isError && error) {
+    } else if (props.disabled) {
+      return message?.disabled ?? props.children;
+    } else if (mutate.isError) {
       return (
         <>
-          <>
-            <CircleAlert className="text-destructive" strokeWidth={3} />
-            <p>오류</p>
-          </>
+          <CircleAlert className="text-destructive" strokeWidth={3} />
+          <p>오류</p>
           <Separator orientation="vertical" className="h-4" />
-          <p>{error}</p>
+          {message?.error && <p>{message.error}</p>}
         </>
       );
     } else {

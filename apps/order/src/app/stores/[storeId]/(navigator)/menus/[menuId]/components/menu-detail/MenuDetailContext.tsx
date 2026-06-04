@@ -1,7 +1,11 @@
 "use client";
 
 import { createContext, useContext } from "react";
-import type { MenuOptionEntry, PublicMenu } from "@spaceorder/db/types";
+import type {
+  CartWithNotice,
+  MenuOptionEntry,
+  PublicMenu,
+} from "@spaceorder/db/types";
 import { useCartMutations } from "@spaceorder/api/core/cart/useCart.mutate";
 
 export type SelectedOptions = {
@@ -19,7 +23,7 @@ export interface MenuDetailActions {
   setQuantity: (next: number) => void;
   selectRequiredOption: (groupKey: string, optionKey: string) => void;
   selectCustomOption: (groupKey: string, optionKey: string) => void;
-  addCart: () => void;
+  addCart: () => Promise<CartWithNotice>;
 }
 
 export interface MenuDetailMeta {

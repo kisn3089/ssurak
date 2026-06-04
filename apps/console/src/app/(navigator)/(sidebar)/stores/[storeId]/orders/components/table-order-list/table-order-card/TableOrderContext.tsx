@@ -1,15 +1,11 @@
 "use client";
 
 import { createContext, useContext } from "react";
-import type {
-  SummarizedOrderWithItem,
-  SummarizedTableWithSessions,
-} from "@spaceorder/db";
+import type { SummarizedTableWithSessions } from "@spaceorder/db";
 
 /**
  * TableOrder Compound Component의 Context 인터페이스
  * - state: 테이블 및 세션 관련 상태
- * - actions: 주문 상태 변경 등의 액션
  * - meta: storeId, tableId 등 메타 정보
  */
 
@@ -25,14 +21,6 @@ export interface TableOrderState {
   isSelected: boolean;
 }
 
-// Actions
-export interface TableOrderActions {
-  updateOrderStatus: (
-    orderId: string,
-    status: SummarizedOrderWithItem["status"]
-  ) => Promise<void>;
-}
-
 // Meta
 export interface TableOrderMeta {
   tableId: string;
@@ -41,7 +29,6 @@ export interface TableOrderMeta {
 // Context Value
 export interface TableOrderContextValue {
   state: TableOrderState;
-  actions: TableOrderActions;
   meta: TableOrderMeta;
 }
 

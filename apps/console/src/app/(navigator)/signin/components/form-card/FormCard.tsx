@@ -6,8 +6,6 @@ import { CardContent, CardFooter } from "@spaceorder/ui/components/card";
 import { useForm } from "react-hook-form";
 import SignInField from "../sign-in-field/SignInField";
 import Link from "next/link";
-import { Checkbox } from "@spaceorder/ui/components/checkbox";
-import { Label } from "@spaceorder/ui/components/label";
 import signInAction from "../../actions/signInAction";
 import { useRouter } from "next/navigation";
 import { SignInPayload, signInPayloadSchema } from "@spaceorder/api";
@@ -53,7 +51,7 @@ export default function FormCard() {
         <div className="flex flex-col gap-2">
           <SignInField
             id="email"
-            label="Email"
+            label="이메일"
             type="email"
             placeholder="m@example.com"
             errorMessage={errors.email && errors.email?.message}
@@ -61,7 +59,7 @@ export default function FormCard() {
           />
           <SignInField
             id="password"
-            label="Password"
+            label="비밀번호"
             type="password"
             errorMessage={errors.password && errors.password?.message}
             register={register}
@@ -78,10 +76,11 @@ export default function FormCard() {
         </Button>
         <div className="flex items-center justify-between w-full">
           <div className="flex  gap-2">
-            <Checkbox name="isAdmin" id="isAdmin" defaultChecked={false} />
+            {/* TODO: Implement admin login functionality */}
+            {/* <Checkbox name="isAdmin" id="isAdmin" defaultChecked={false} />
             <Label htmlFor="isAdmin" className="text-xs">
               관리자 로그인
-            </Label>
+            </Label> */}
           </div>
           <Link
             href="#"

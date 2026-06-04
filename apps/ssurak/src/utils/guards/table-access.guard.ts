@@ -1,20 +1,21 @@
 import { Injectable } from "@nestjs/common";
 import { PrivateRequestUser } from "@spaceorder/db";
-import { AccessGuard } from "./access.guard";
+import { AccessGuard, AccessResult } from "./access.guard";
 
 @Injectable()
 export class TableAccessGuard extends AccessGuard {
   protected async proofCanAccess(
     user: PrivateRequestUser,
     params: Record<string, string>
-  ): Promise<boolean> {
+  ): Promise<AccessResult> {
     const ownerId = user.info.id;
     const tableId = params.tableId;
 
     const table = await this.prisma.table.findFirst({
-      where: { publicId: tableId, store: { ownerId } },
+      where: { publicId: tableId },
+      select: { store: { select: { ownerId: true } } },
     });
 
-    return !!table;
+    return this.resolveAccess(table, (t) => t.store.ownerId === ownerId);
   }
 }

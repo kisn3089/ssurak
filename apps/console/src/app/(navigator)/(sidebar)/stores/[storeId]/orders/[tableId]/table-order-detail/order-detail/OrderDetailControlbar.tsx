@@ -7,14 +7,14 @@ export function OrderDetailControlbar() {
     <div className="grid grid-cols-2 gap-2">
       <Button
         disabled
-        className="h-[clamp(4rem,6vw,6rem)] font-bold text-xl tracking-wider"
+        className="h-[clamp(4rem,6vw,6rem)] font-bold text-xl tracking-wider transition-none"
         variant="secondary"
       >
         할인
       </Button>
       <Button
         disabled
-        className="h-[clamp(4rem,6vw,6rem)] font-bold text-xl tracking-wider"
+        className="h-[clamp(4rem,6vw,6rem)] font-bold text-xl tracking-wider transition-none"
       >
         메뉴 추가
       </Button>

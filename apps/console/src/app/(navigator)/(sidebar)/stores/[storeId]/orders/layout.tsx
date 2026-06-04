@@ -16,9 +16,7 @@ export default function OrdersLayout({
     <GridLayout>
       <AwaitOrdersSummary>
         <OrderSyncDaemon />
-        <div className="flex flex-col h-full w-full">
-          <TableBoard />
-        </div>
+        <TableBoard />
         {children}
       </AwaitOrdersSummary>
     </GridLayout>

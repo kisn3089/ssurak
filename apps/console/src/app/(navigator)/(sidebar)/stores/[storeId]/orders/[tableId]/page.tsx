@@ -6,6 +6,7 @@ import TableOrderDetail from "./table-order-detail/TableOrderDetail";
 import ErrorFallback from "@/components/ErrorFallback";
 import { Suspense } from "react";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import OrdersPageLayout from "../components/OrdersPageLayout";
 
 export default function TableOrderDetailPage({
   params,
@@ -14,13 +15,13 @@ export default function TableOrderDetailPage({
 }) {
   const { storeId, tableId } = use(params);
   return (
-    <div className="overflow-hidden rounded-md border w-full h-full flex flex-col justify-between shadow-sm">
+    <OrdersPageLayout>
       <ErrorBoundary FallbackComponent={ErrorFallbackComponent}>
         <Suspense fallback={<LoadingSpinner />}>
           <TableOrderDetail params={{ storeId, tableId }} />
         </Suspense>
       </ErrorBoundary>
-    </div>
+    </OrdersPageLayout>
   );
 }
 

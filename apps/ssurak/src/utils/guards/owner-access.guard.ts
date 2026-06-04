@@ -1,16 +1,16 @@
 import { Injectable } from "@nestjs/common";
 import { PrivateRequestUser } from "@spaceorder/db";
-import { AccessGuard } from "./access.guard";
+import { AccessGuard, AccessResult } from "./access.guard";
 
 @Injectable()
 export class OwnerAccessGuard extends AccessGuard {
   protected proofCanAccess(
     user: PrivateRequestUser,
     params: Record<string, string>
-  ): boolean {
+  ): AccessResult {
     const userId = user.info.publicId;
     const ownerIdByParam = params.ownerId;
 
-    return userId === ownerIdByParam;
+    return userId === ownerIdByParam ? "GRANTED" : "FORBIDDEN";
   }
 }

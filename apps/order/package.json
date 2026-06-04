@@ -15,7 +15,7 @@
     "@spaceorder/ui": "workspace:*",
     "@tanstack/react-query": "^5.90.11",
     "axios": "^1.13.2",
-    "lucide-react": "^0.475.0",
+    "lucide-react": "^0.479.0",
     "next": "15.5.12",
     "react": "18.3.1",
     "react-dom": "18.3.1",

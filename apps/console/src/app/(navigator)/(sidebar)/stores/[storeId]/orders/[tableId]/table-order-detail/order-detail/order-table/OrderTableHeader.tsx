@@ -12,7 +12,10 @@ export function OrderTableHeader<TData>({
   return (
     <TableHeader>
       {table.getHeaderGroups().map((headerGroup) => (
-        <TableRow className="grid grid-cols-[2fr_1fr_1fr]" key={headerGroup.id}>
+        <TableRow
+          className="grid grid-cols-[1.5fr_1fr_1fr] xl:grid-cols-[2fr_1fr_1fr]"
+          key={headerGroup.id}
+        >
           {headerGroup.headers.map((header) => (
             <Head key={header.id} header={header} />
           ))}

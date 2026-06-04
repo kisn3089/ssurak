@@ -21,14 +21,9 @@ export async function setServerCookie(
   cookieStore.set(name, value, { ...cookieOptions, ...options });
 }
 
-export async function clearServerCookie(name: CookieKey) {
+export async function clearServerCookie(names: CookieKey[]) {
   const cookieStore = await cookies();
-  cookieStore.delete({ name, ...cookieOptions });
-}
-
-export async function clearAuthCookies() {
-  const cookieStore = await cookies();
-  for (const name of [COOKIE_TABLE.ACCESS_TOKEN, COOKIE_TABLE.REFRESH]) {
+  for (const name of names) {
     cookieStore.delete({ name, ...cookieOptions });
   }
 }

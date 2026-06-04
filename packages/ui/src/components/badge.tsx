@@ -2,6 +2,7 @@ import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@spaceorder/ui/lib/utils";
+import { Spinner } from "./spinner";
 
 const badgeVariants = cva(
   "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
@@ -23,11 +24,28 @@ const badgeVariants = cva(
 
 export interface BadgeProps
   extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof badgeVariants> {}
+    VariantProps<typeof badgeVariants> {
+  isLoading?: boolean;
+}
 
-function Badge({ className, variant, ...props }: BadgeProps) {
+function Badge({
+  className,
+  variant,
+  isLoading,
+  children,
+  ...props
+}: BadgeProps) {
+  const loadingVariants = isLoading
+    ? `opacity-50 cursor-not-allowed pointer-events-none`
+    : "";
+
   return (
-    <div className={cn(badgeVariants({ variant }), className)} {...props} />
+    <div
+      className={cn(badgeVariants({ variant }), className, loadingVariants)}
+      {...props}
+    >
+      {isLoading ? <Spinner /> : children}
+    </div>
   );
 }
 

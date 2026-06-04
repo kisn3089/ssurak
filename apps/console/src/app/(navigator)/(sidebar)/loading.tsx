@@ -7,7 +7,7 @@ import GridLayout from "./stores/[storeId]/orders/components/GridLayout";
 export default function LoadingSkeleton() {
   return (
     <GridLayout>
-      <TableBoardLayout count={8}>
+      <TableBoardLayout>
         {Array.from({ length: 8 }, (_, index) => (
           <Skeleton key={index} />
         ))}

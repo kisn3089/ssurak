@@ -3,7 +3,8 @@
 import AuthenticationProvider from "@spaceorder/auth/providers/AuthenticationProvider";
 import { useRouter } from "next/navigation";
 import AxiosInterceptor from "@/lib/AxiosInterceptor";
-import { clearAuthCookies } from "@/app/common/servers/cookies";
+import { clearServerCookie } from "@/app/common/servers/cookies";
+import { COOKIE_TABLE } from "@spaceorder/db/constants/cookieTable.const";
 
 export function OrderdeskAuthProvider({
   children,
@@ -15,7 +16,10 @@ export function OrderdeskAuthProvider({
   const signOut = () => {
     void (async () => {
       try {
-        await clearAuthCookies();
+        await clearServerCookie([
+          COOKIE_TABLE.ACCESS_TOKEN,
+          COOKIE_TABLE.REFRESH,
+        ]);
       } catch (error) {
         console.error("Error occurred while clearing cookies:", error);
       } finally {

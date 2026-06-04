@@ -3,22 +3,32 @@
 import { CardContent } from "@spaceorder/ui/components/card";
 import { Badge } from "@spaceorder/ui/components/badge";
 import { BADGE_BY_ORDER_STATUS } from "@spaceorder/ui/constants/badgeByOrderStatus.const";
-import { OrderStatus, SummarizedOrderWithItem } from "@spaceorder/db";
+import {
+  nextStatusMap,
+  OrderStatus,
+  SummarizedOrderWithItem,
+} from "@spaceorder/db";
 import { useTableOrderContext } from "./TableOrderContext";
 import ButtonWrapper from "@spaceorder/ui/components/ButtonWrapper";
-import { useState } from "react";
 import { Button } from "@spaceorder/ui/components/button";
 import ActivityRender from "@spaceorder/ui/components/activity-render/ActivityRender";
+import useOrderByTable from "@spaceorder/api/core/order/order/useOrderByTable.mutate";
+import { useParams } from "next/navigation";
 
 interface TableOrderItemProps {
   order: SummarizedOrderWithItem;
 }
 
 export function TableOrderItem({ order }: TableOrderItemProps) {
-  const [isError, setIsError] = useState(false);
+  const params = useParams<{ storeId: string }>();
   const {
-    actions: { updateOrderStatus },
+    state: { summarizedTable },
   } = useTableOrderContext();
+
+  const { updateOrderByTable: updateOrderByTableMutation } = useOrderByTable({
+    storeId: params.storeId,
+    tableId: summarizedTable.publicId,
+  });
 
   const isFinishStatus =
     order.status === OrderStatus.COMPLETED ||
@@ -28,13 +38,15 @@ export function TableOrderItem({ order }: TableOrderItemProps) {
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault();
-    if (isError) setIsError(false);
-
-    try {
-      await updateOrderStatus(order.publicId, order.status);
-    } catch {
-      setIsError(true);
+    const nextStatus = nextStatusMap[order.status];
+    if (!nextStatus) {
+      return;
     }
+
+    await updateOrderByTableMutation.mutateAsync({
+      orderId: order.publicId,
+      updateOrderPayload: { status: nextStatus },
+    });
   };
 
   return (
@@ -42,7 +54,9 @@ export function TableOrderItem({ order }: TableOrderItemProps) {
       <CardContent
         className={`rounded-lg bg-accent ${!isFinishStatus ? "hover:bg-background" : ""} border p-2 font-semibold flex flex-col justify-center`}
       >
-        <ActivityRender mode={isError ? "visible" : "hidden"}>
+        <ActivityRender
+          mode={updateOrderByTableMutation.isError ? "visible" : "hidden"}
+        >
           <Button
             className="w-full mb-2"
             variant={"destructive"}
@@ -55,6 +69,7 @@ export function TableOrderItem({ order }: TableOrderItemProps) {
           <Badge
             variant={BADGE_BY_ORDER_STATUS[order.status].badgeVariant}
             className="w-fit text-xs"
+            isLoading={updateOrderByTableMutation.isPending}
           >
             {BADGE_BY_ORDER_STATUS[order.status].label}
           </Badge>
