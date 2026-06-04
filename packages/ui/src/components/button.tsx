@@ -64,8 +64,8 @@ const Button = React.forwardRef<
         ref={ref}
         data-slot="button"
         className={cn(buttonVariants({ variant, size, className }))}
-        disabled={isLoading || props.disabled}
         {...props}
+        disabled={isLoading || props.disabled}
       >
         {isLoading ? <Spinner /> : children}
       </Comp>

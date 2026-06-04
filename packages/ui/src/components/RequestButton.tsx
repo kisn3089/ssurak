@@ -34,12 +34,10 @@ export default function RequestButton({
     } else if (mutate.isError) {
       return (
         <>
-          <>
-            <CircleAlert className="text-destructive" strokeWidth={3} />
-            <p>오류</p>
-          </>
+          <CircleAlert className="text-destructive" strokeWidth={3} />
+          <p>오류</p>
           <Separator orientation="vertical" className="h-4" />
-          {mutate.isError && <p>{message?.error}</p>}
+          {message?.error && <p>{message.error}</p>}
         </>
       );
     } else {
