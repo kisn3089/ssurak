@@ -14,6 +14,8 @@ type RequestWithClient = Request & {
   user: PrivateRequestUser;
 };
 
+export type AccessResult = "GRANTED" | "FORBIDDEN" | "NOT_FOUND";
+
 @Injectable()
 export abstract class AccessGuard implements CanActivate {
   constructor(protected prisma: PrismaService) {}
@@ -28,8 +30,15 @@ export abstract class AccessGuard implements CanActivate {
       );
     }
 
-    const canAccess = await this.proofCanAccess(request.user, request.params);
-    if (!canAccess) {
+    const result = await this.proofCanAccess(request.user, request.params);
+
+    if (result === "NOT_FOUND") {
+      throw new HttpException(
+        exceptionContentsIs("NOT_FOUND"),
+        HttpStatus.NOT_FOUND
+      );
+    }
+    if (result === "FORBIDDEN") {
       throw new HttpException(
         exceptionContentsIs("FORBIDDEN"),
         HttpStatus.FORBIDDEN
@@ -41,5 +50,21 @@ export abstract class AccessGuard implements CanActivate {
   protected abstract proofCanAccess(
     user: PrivateRequestUser,
     params: Record<string, string>
-  ): Promise<boolean> | boolean;
+  ): Promise<AccessResult> | AccessResult;
+
+  /**
+   * 리소스 존재 여부와 소유 여부를 구분해 접근 결과로 변환한다.
+   * - 리소스 없음 → NOT_FOUND
+   * - 소유자 불일치 → FORBIDDEN
+   * - 소유자 일치 → GRANTED
+   */
+  protected resolveAccess<T>(
+    resource: T | null,
+    isOwner: (resource: T) => boolean
+  ): AccessResult {
+    if (!resource) {
+      return "NOT_FOUND";
+    }
+    return isOwner(resource) ? "GRANTED" : "FORBIDDEN";
+  }
 }

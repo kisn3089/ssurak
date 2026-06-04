@@ -1,17 +1,18 @@
 import { Injectable } from "@nestjs/common";
 import { PrivateRequestUser } from "@spaceorder/db";
-import { AccessGuard } from "./access.guard";
+import { AccessGuard, AccessResult } from "./access.guard";
 
 @Injectable()
 export class AdminAccessGuard extends AccessGuard {
   protected proofCanAccess(
     user: PrivateRequestUser,
     params: Record<string, string>
-  ): boolean {
+  ): AccessResult {
     const userId = user.info.publicId;
     const adminIdByParam = params.adminId;
 
-    return userId === adminIdByParam && user.jwt.role === "admin";
+    const canAccess = userId === adminIdByParam && user.jwt.role === "admin";
+    return canAccess ? "GRANTED" : "FORBIDDEN";
   }
 }
 
