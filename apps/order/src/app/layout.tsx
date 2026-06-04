@@ -32,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="ko" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${jetbrainsMono.variable} antialiased max-w-2xl min-h-dvh mx-auto`}
+        className={`${inter.variable} ${jetbrainsMono.variable} antialiased min-h-dvh`}
       >
         <NextThemeProviders
           options={{
@@ -41,7 +41,9 @@ export default function RootLayout({
             richColors: true,
           }}
         >
-          <TanstackProvider>{children}</TanstackProvider>
+          <TanstackProvider>
+            <div className="mx-auto min-h-dvh max-w-2xl">{children}</div>
+          </TanstackProvider>
         </NextThemeProviders>
       </body>
     </html>
