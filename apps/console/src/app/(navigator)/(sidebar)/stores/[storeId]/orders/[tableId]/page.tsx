@@ -6,6 +6,7 @@ import TableOrderDetail from "./table-order-detail/TableOrderDetail";
 import ErrorFallback from "@/components/ErrorFallback";
 import { Suspense } from "react";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import OrdersPageLayout from "../components/OrdersPageLayout";
 
 export default function TableOrderDetailPage({
   params,
@@ -14,14 +15,13 @@ export default function TableOrderDetailPage({
 }) {
   const { storeId, tableId } = use(params);
   return (
-    // OrdersPage와 동일하게 스타일을 맞춰야 한다.
-    <div className="overflow-hidden rounded-md border h-full flex flex-col justify-between shadow-sm w-xl min-w-xs">
+    <OrdersPageLayout>
       <ErrorBoundary FallbackComponent={ErrorFallbackComponent}>
         <Suspense fallback={<LoadingSpinner />}>
           <TableOrderDetail params={{ storeId, tableId }} />
         </Suspense>
       </ErrorBoundary>
-    </div>
+    </OrdersPageLayout>
   );
 }
 
