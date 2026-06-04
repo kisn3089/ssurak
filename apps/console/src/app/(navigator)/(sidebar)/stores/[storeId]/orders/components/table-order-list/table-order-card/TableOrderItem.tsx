@@ -3,21 +3,32 @@
 import { CardContent } from "@spaceorder/ui/components/card";
 import { Badge } from "@spaceorder/ui/components/badge";
 import { BADGE_BY_ORDER_STATUS } from "@spaceorder/ui/constants/badgeByOrderStatus.const";
-import { OrderStatus, SummarizedOrderWithItem } from "@spaceorder/db";
+import {
+  nextStatusMap,
+  OrderStatus,
+  SummarizedOrderWithItem,
+} from "@spaceorder/db";
 import { useTableOrderContext } from "./TableOrderContext";
 import ButtonWrapper from "@spaceorder/ui/components/ButtonWrapper";
 import { Button } from "@spaceorder/ui/components/button";
 import ActivityRender from "@spaceorder/ui/components/activity-render/ActivityRender";
+import useOrderByTable from "@spaceorder/api/core/order/order/useOrderByTable.mutate";
+import { useParams } from "next/navigation";
 
 interface TableOrderItemProps {
   order: SummarizedOrderWithItem;
 }
 
 export function TableOrderItem({ order }: TableOrderItemProps) {
+  const params = useParams<{ storeId: string }>();
   const {
-    state: { updateOrderByTableMutation },
-    actions: { updateOrderStatus },
+    state: { summarizedTable },
   } = useTableOrderContext();
+
+  const { updateOrderByTable: updateOrderByTableMutation } = useOrderByTable({
+    storeId: params.storeId,
+    tableId: summarizedTable.publicId,
+  });
 
   const isFinishStatus =
     order.status === OrderStatus.COMPLETED ||
@@ -27,7 +38,15 @@ export function TableOrderItem({ order }: TableOrderItemProps) {
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault();
-    await updateOrderStatus(order.publicId, order.status);
+    const nextStatus = nextStatusMap[order.status];
+    if (!nextStatus) {
+      return;
+    }
+
+    await updateOrderByTableMutation.mutateAsync({
+      orderId: order.publicId,
+      updateOrderPayload: { status: nextStatus },
+    });
   };
 
   return (
