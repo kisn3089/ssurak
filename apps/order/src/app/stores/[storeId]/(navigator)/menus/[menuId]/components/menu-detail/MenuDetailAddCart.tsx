@@ -5,6 +5,8 @@ import { useMenuDetailContext } from "./MenuDetailContext";
 import { useState } from "react";
 import { Drawer } from "@spaceorder/ui/components/drawer";
 import MenuAddCartDrawer from "./MenuAddCartDrawer";
+import { AxiosError } from "axios";
+import { toast } from "@spaceorder/ui/components/sonner";
 
 export default function MenuDetailAddCart() {
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
@@ -15,9 +17,19 @@ export default function MenuDetailAddCart() {
     actions: { addCart },
   } = useMenuDetailContext();
 
-  const addCartThenOpenDrawer = () => {
-    addCart();
-    setIsOpenDrawer(true);
+  const addCartThenOpenDrawer = async () => {
+    try {
+      await addCart();
+      setIsOpenDrawer(true);
+    } catch (error: unknown) {
+      let message = "장바구니에 담는 중 오류가 발생했습니다.";
+      if (error instanceof AxiosError) {
+        if (error.response?.status === 401) {
+          message = "세션이 만료되었습니다. 다시 QR코드를 스캔해주세요.";
+        }
+      }
+      toast.error(message);
+    }
   };
 
   return (
