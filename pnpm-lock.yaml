@@ -55,8 +55,8 @@ importers:
         specifier: ^6.1.1
         version: 6.1.1(next@15.5.12(babel-plugin-react-compiler@1.0.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
       lucide-react:
-        specifier: ^0.475.0
-        version: 0.475.0(react@18.3.1)
+        specifier: ^0.479.0
+        version: 0.479.0(react@18.3.1)
       next:
         specifier: 15.5.12
         version: 15.5.12(babel-plugin-react-compiler@1.0.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -128,8 +128,8 @@ importers:
         specifier: ^1.13.2
         version: 1.13.2
       lucide-react:
-        specifier: ^0.475.0
-        version: 0.475.0(react@18.3.1)
+        specifier: ^0.479.0
+        version: 0.479.0(react@18.3.1)
       next:
         specifier: 15.5.12
         version: 15.5.12(babel-plugin-react-compiler@1.0.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -534,8 +534,8 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       lucide-react:
-        specifier: ^0.475.0
-        version: 0.475.0(react@18.3.1)
+        specifier: ^0.479.0
+        version: 0.479.0(react@18.3.1)
       motion:
         specifier: ^12.23.24
         version: 12.23.24(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -557,6 +557,9 @@ importers:
       tw-animate-css:
         specifier: ^1.3.6
         version: 1.4.0
+      vaul:
+        specifier: ^1.1.2
+        version: 1.1.2(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@spaceorder/lintconfig':
         specifier: workspace:*
@@ -5072,8 +5075,8 @@ packages:
     resolution: {integrity: sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==}
     engines: {node: '>=12'}
 
-  lucide-react@0.475.0:
-    resolution: {integrity: sha512-NJzvVu1HwFVeZ+Gwq2q00KygM1aBhy/ZrhY9FsAgJtpB+E4R7uxRk9M2iKvHa6/vNxZydIB59htha4c2vvwvVg==}
+  lucide-react@0.479.0:
+    resolution: {integrity: sha512-aBhNnveRhorBOK7uA4gDjgaf+YlHMdMhQ/3cupk6exM10hWlEU+2QtWYOfhXhjAsmdb6LeKR+NZnow4UxRRiTQ==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
@@ -6545,6 +6548,12 @@ packages:
   vary@1.1.2:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
     engines: {node: '>= 0.8'}
+
+  vaul@1.1.2:
+    resolution: {integrity: sha512-ZFkClGpWyI2WUQjdLJ/BaGuV6AVQiJ3uELGk3OYtP+B6yCO7Cmn9vPFXVJkRaGkOJu3m8bQMgtyzNHixULceQA==}
+    peerDependencies:
+      react: ^16.8 || ^17.0 || ^18.0 || ^19.0.0 || ^19.0.0-rc
+      react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0.0 || ^19.0.0-rc
 
   walker@1.0.8:
     resolution: {integrity: sha512-ts/8E8l5b7kY0vlWLewOkDXMmPdLcVV4GmOQLyxuSswIJsweeFZtAsMF7k1Nszz+TYBQrlYRmzOnr398y1JemQ==}
@@ -11700,7 +11709,7 @@ snapshots:
 
   lru-cache@7.18.3: {}
 
-  lucide-react@0.475.0(react@18.3.1):
+  lucide-react@0.479.0(react@18.3.1):
     dependencies:
       react: 18.3.1
 
@@ -13301,6 +13310,15 @@ snapshots:
   validator@13.15.23: {}
 
   vary@1.1.2: {}
+
+  vaul@1.1.2(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    dependencies:
+      '@radix-ui/react-dialog': 1.1.15(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+    transitivePeerDependencies:
+      - '@types/react'
+      - '@types/react-dom'
 
   walker@1.0.8:
     dependencies:
