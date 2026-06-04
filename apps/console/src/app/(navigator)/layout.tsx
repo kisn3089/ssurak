@@ -10,7 +10,7 @@ export default function NavigatorLayout({
     <section className="antialiased">
       <nav className="flex justify-between px-6 items-center w-screen h-14 bg-edge-background">
         <Link href="/dashboard" className="font-bold text-lg">
-          ACCEPTOR
+          SSURAK
         </Link>
         <div className="flex flex-row items-center gap-4">
           <ToggleTheme />

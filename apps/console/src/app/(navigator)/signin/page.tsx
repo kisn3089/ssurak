@@ -7,7 +7,7 @@ export default async function SignInPage() {
       <Card className="w-full max-w-md min-w-sm">
         <CardHeader className="p-8">
           <CardTitle className="flex justify-center font-bold">
-            SPACEORDER
+            관리자 로그인
           </CardTitle>
         </CardHeader>
         <FormCard />
