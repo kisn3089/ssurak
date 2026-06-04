@@ -5,10 +5,11 @@ import type {
   SummarizedOrderWithItem,
   SummarizedTableWithSessions,
 } from "@spaceorder/db";
+import useOrderByTable from "@spaceorder/api/core/order/order/useOrderByTable.mutate";
 
 /**
  * TableOrder Compound Component의 Context 인터페이스
- * - state: 테이블 및 세션 관련 상태
+ * - state: 테이블 및 세션 관련 상태 & 주문 Status 변경 요청 상태
  * - actions: 주문 상태 변경 등의 액션
  * - meta: storeId, tableId 등 메타 정보
  */
@@ -23,6 +24,9 @@ export interface TableOrderState {
     : never;
   isActivatedTable: boolean;
   isSelected: boolean;
+  updateOrderByTableMutation: ReturnType<
+    typeof useOrderByTable
+  >["updateOrderByTable"];
 }
 
 // Actions

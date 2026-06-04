@@ -15,7 +15,7 @@ type OrderTableItemProps<TData> = {
 };
 export function OrderTableItem<TData>({ row }: OrderTableItemProps<TData>) {
   return (
-    <TableCell className="grid grid-cols-[2fr_1fr_1fr] cursor-pointer min-h-16 animate-fade-in-up">
+    <TableCell className="grid grid-cols-[1.5fr_1fr_1fr] xl:grid-cols-[2fr_1fr_1fr] cursor-pointer min-h-16 animate-fade-in-up">
       {row.getVisibleCells().map((cell) => (
         <div
           key={cell.id}

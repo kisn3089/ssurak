@@ -7,7 +7,7 @@ export default function EmptyOrderDetail() {
       renderPayment={
         <Button
           disabled
-          className="h-[clamp(4rem,6vw,6rem)] font-bold text-xl tracking-wider"
+          className="h-[clamp(4rem,6vw,6rem)] font-bold text-xl tracking-wider transition-none"
         >
           결제
         </Button>

@@ -29,7 +29,7 @@ export function TableOrderCard({ children }: TableOrderCardProps) {
       className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg"
     >
       <Card
-        className={`w-full h-full min-h-[200px] flex flex-col transition-shadow duration-300 ${sessionActiveStyle} ${inactiveStyle} ${selectedStyle}`}
+        className={`h-full min-h-[220px] flex flex-col transition-shadow duration-300 bg-accent ${sessionActiveStyle} ${inactiveStyle} ${selectedStyle}`}
       >
         {children}
       </Card>

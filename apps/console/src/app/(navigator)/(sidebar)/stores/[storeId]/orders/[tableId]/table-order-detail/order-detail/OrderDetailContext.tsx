@@ -3,10 +3,11 @@
 import { createContext, useContext } from "react";
 import { OrderItemWithSummarizedOrder } from "./OrderDetailTable";
 import { PublicOrderWithItem } from "@spaceorder/db/types";
+import useOrderItem from "@spaceorder/api/core/order/order-item/useOrderItem.mutate";
 
 /**
  * TableOrderDetail Compound Component의 Context 인터페이스
- * - state: 테이블 세션, 주문 아이템, 총 금액, 편집 상태
+ * - state: 테이블 세션, 주문 아이템, 총 금액, 편집 상태, 요청 상태
  * - actions: 주문 아이템 수정/삭제, 선택 초기화
  * - meta: storeId, tableId, 로딩 상태
  */
@@ -18,6 +19,8 @@ export interface OrderDetailState {
   totalPrice: number;
   editingItem: OrderItemWithSummarizedOrder | null;
   rowSelection: Record<string, boolean>;
+  updateMutation: ReturnType<typeof useOrderItem>["update"];
+  removeMutation: ReturnType<typeof useOrderItem>["remove"];
 }
 
 // Actions

@@ -11,10 +11,10 @@ export function TableOrderFooter() {
   } = useTableOrderContext();
 
   return (
-    <ActivityRender mode={session?.expiresAt ? "visible" : "hidden"}>
-      <CardFooter className="p-2">
+    <CardFooter className="p-2 min-h-9">
+      <ActivityRender mode={session?.expiresAt ? "visible" : "hidden"}>
         <SessionExpireTime expiresAt={session?.expiresAt} />
-      </CardFooter>
-    </ActivityRender>
+      </ActivityRender>
+    </CardFooter>
   );
 }

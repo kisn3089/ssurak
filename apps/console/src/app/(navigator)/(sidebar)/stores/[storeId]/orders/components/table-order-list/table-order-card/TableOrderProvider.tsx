@@ -50,6 +50,7 @@ export function TableOrderProvider({
       session,
       isActivatedTable,
       isSelected,
+      updateOrderByTableMutation: updateOrderByTable,
     },
     actions: { updateOrderStatus },
     meta: { tableId: summarizedTable.publicId },

@@ -14,7 +14,8 @@ export default function TableOrderDetailPage({
 }) {
   const { storeId, tableId } = use(params);
   return (
-    <div className="overflow-hidden rounded-md border w-full h-full flex flex-col justify-between shadow-sm">
+    // OrdersPage와 동일하게 스타일을 맞춰야 한다.
+    <div className="overflow-hidden rounded-md border h-full flex flex-col justify-between shadow-sm w-xl min-w-xs">
       <ErrorBoundary FallbackComponent={ErrorFallbackComponent}>
         <Suspense fallback={<LoadingSpinner />}>
           <TableOrderDetail params={{ storeId, tableId }} />
