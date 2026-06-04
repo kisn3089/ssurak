@@ -30,7 +30,7 @@ export default function RequestButton({
         </>
       );
     } else if (props.disabled) {
-      return message?.disabled;
+      return message?.disabled ?? props.children;
     } else if (mutate.isError) {
       return (
         <>

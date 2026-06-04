@@ -33,7 +33,15 @@ export default function TableOrderQrCode({
   };
 
   const copyUrlToClipboard = () => {
-    const url = `${process.env.NEXT_PUBLIC_ORDER_APP_URL}/qr/${qrCode}`;
+    const orderAppUrl = process.env.NEXT_PUBLIC_ORDER_APP_URL;
+    if (!orderAppUrl) {
+      toast.error("주문 앱 URL이 설정되지 않았습니다.", {
+        position: "top-center",
+      });
+      return;
+    }
+
+    const url = `${orderAppUrl}/qr/${qrCode}`;
     const copiedSuccess = () =>
       toast.success("URL이 클립보드에 복사되었습니다!", {
         position: "top-center",
