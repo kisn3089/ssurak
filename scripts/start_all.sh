@@ -51,7 +51,7 @@ detect_compose_cmd() {
 }
 
 run_compose() {
-  "$DOCKER_COMPOSE_BIN" $DOCKER_COMPOSE_SUBCMD "-f $PROJECT_ROOT/docker-compose.dev.yml" "$@"
+  "$DOCKER_COMPOSE_BIN" $DOCKER_COMPOSE_SUBCMD -f "$PROJECT_ROOT/docker-compose.dev.yml" "$@"
 }
 
 check_docker() {

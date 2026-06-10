@@ -15,7 +15,7 @@
     "dev:order": "turbo run dev --filter=@spaceorder/order",
     "prod:order": "docker compose -f apps/order/docker-compose.prod.yml -d",
     "dev:console": "turbo run dev --filter=@spaceorder/console",
-    "dev:ssurak": "docker compose -f apps/ssurak/docker-compose.yml",
+    "dev:ssurak": "docker compose -f docker-compose.dev.yml up -d",
     "build:order": "turbo run build --filter=@spaceorder/order",
     "build:console": "turbo run build --filter=@spaceorder/console",
     "build:ssurak": "turbo run build --filter=@spaceorder/ssurak",
