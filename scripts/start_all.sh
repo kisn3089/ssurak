@@ -51,7 +51,7 @@ detect_compose_cmd() {
 }
 
 run_compose() {
-  "$DOCKER_COMPOSE_BIN" $DOCKER_COMPOSE_SUBCMD "$@"
+  "$DOCKER_COMPOSE_BIN" $DOCKER_COMPOSE_SUBCMD "-f $PROJECT_ROOT/docker-compose.dev.yml" "$@"
 }
 
 check_docker() {
@@ -138,7 +138,7 @@ wait_for_ssurak() {
 }
 
 stop_services() {
-  echo "=== Stopping SpaceOrder Services ==="
+  echo "=== Stopping ssurak Services ==="
   echo ""
 
   check_docker
@@ -155,7 +155,7 @@ main() {
     exit 0
   fi
 
-  echo "=== SpaceOrder Development Environment Setup ==="
+  echo "=== ssurak Development Environment Setup ==="
   echo ""
 
   check_docker
