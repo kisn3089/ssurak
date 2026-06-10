@@ -762,7 +762,7 @@ async function main() {
   console.log("│ Owner Accounts                                       │");
   console.log("├─────────────────────────────────────────────────────┤");
   console.log("│ Demo:     demo@ssurak.com / demo1234!         │");
-  console.log("│ Owner 1:     owner1@example.com / qwer1234!         │");
+  console.log("│ Owner 1:     owner@example.com / qwer1234!         │");
   console.log("└─────────────────────────────────────────────────────┘");
 }
 
