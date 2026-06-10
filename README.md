@@ -91,7 +91,7 @@ _Kubernetes 클러스터 위에 Istio 서비스 메시를 도입하여 트래픽
 
 ### Demo Playground
 
-`console.ssurak.com`에서 데모 계정으로 콘솔을 체험할 수 있습니다.
+[`console.ssurak.com`](https://console.ssurak.com)에서 데모 계정으로 콘솔을 체험할 수 있습니다.
 
 - **ID**: `demo@ssurak.com`
 - **PW**: `demo1234!`
@@ -232,7 +232,7 @@ cd space-order
   </tr>
 </table>
 
-<video src="https://github.com/user-attachments/assets/546e9bc0-23ef-4dfb-9fe8-a58333d1de09"></video>
+[<video src="https://github.com/user-attachments/assets/c4fdf95b-a14c-4d05-be72-51f88ef26382"></video>](https://github.com/user-attachments/assets/c4fdf95b-a14c-4d05-be72-51f88ef26382)
 
 **주문 현황 페이지:** 매장의 모든 테이블과 주문 상태를 한눈에 확인할 수 있는 대시보드입니다. 테이블별로 현재 주문 내역과 상태가 Socket.IO를 통해 실시간으로 표시됩니다.
 
