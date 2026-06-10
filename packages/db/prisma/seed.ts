@@ -54,6 +54,17 @@ async function main() {
   // ==================== Owner 데이터 ====================
   console.log("📝 Creating owners...");
   const ownerPassword = await encryptPassword("qwer1234!");
+  const demoOwner = await prisma.owner.upsert({
+    where: { email: "demo@ssurak.com" },
+    update: {},
+    create: {
+      email: "demo@ssurak.com",
+      password: await encryptPassword("demo1234!"),
+      name: "테스터",
+      phone: "010-1234-5678",
+      businessNumber: "123-45-67890",
+    },
+  });
   const owner1 = await prisma.owner.upsert({
     where: { email: "owner@test.com" },
     update: {},
@@ -62,23 +73,12 @@ async function main() {
       password: ownerPassword,
       name: "홍길동",
       phone: "010-1234-5678",
-      businessNumber: "123-45-67890",
-    },
-  });
-  const owner2 = await prisma.owner.upsert({
-    where: { email: "test@test.com" },
-    update: {},
-    create: {
-      email: "test@test.com",
-      password: ownerPassword,
-      name: "테스트",
-      phone: "010-1234-5678",
-      businessNumber: "123-45-67891",
+      businessNumber: "121-45-67890",
     },
   });
   console.log("✅ Owners created:", {
+    demoOwner: demoOwner.email,
     owner1: owner1.email,
-    owner2: owner2.email,
   });
   // ==================== Store 데이터 ====================
   console.log("📝 Creating stores...");
@@ -87,7 +87,7 @@ async function main() {
     update: {},
     create: {
       publicId: "ytwmuk763jytydobq32yq06e",
-      ownerId: owner1.id,
+      ownerId: demoOwner.id,
       name: "스페이스 카페",
       address: "서울시 강남구 테헤란로 123",
       addressDetail: "2층",
@@ -102,7 +102,7 @@ async function main() {
     update: {},
     create: {
       publicId: "w5o48ydoexledyv5sosd4kcw",
-      ownerId: owner2.id,
+      ownerId: owner1.id,
       name: "테스트 카페",
       address: "서울시 용산구 212",
       addressDetail: "1층",
@@ -761,8 +761,8 @@ async function main() {
   console.log("├─────────────────────────────────────────────────────┤");
   console.log("│ Owner Accounts                                       │");
   console.log("├─────────────────────────────────────────────────────┤");
-  console.log("│ Owner 1:     owner1@example.com / qwer1234!         │");
-  console.log("│ Owner 2:     owner2@example.com / qwer1234!         │");
+  console.log("│ Demo:     demo@ssurak.com / demo1234!         │");
+  console.log("│ Owner 1:     owner@example.com / qwer1234!         │");
   console.log("└─────────────────────────────────────────────────────┘");
 }
 
