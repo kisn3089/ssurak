@@ -31,6 +31,53 @@ ssurak은 오프라인 주문을 소프트웨어와 접목시켜 **고객과 사
 
 ---
 
+## Key Features
+
+- **QR 코드 기반 주문**: 고객이 테이블의 QR 코드를 스캔하면 세션이 생성되고, 별도의 앱 설치 없이 브라우저에서 바로 주문
+- **실시간 주문 현황**: `Socket.IO` 기반으로 매장 관리자(console)와 고객(order)에게 주문/장바구니 변경을 실시간 브로드캐스트 (새로고침 불필요)
+- **실시간 장바구니**: 세션 단위 장바구니를 `Redis`에 저장하고 `Redlock` 분산 락으로 동시 수정 충돌을 방지
+- **같은 테이블 간 주문 맥락 실시간 공유**: 동일한 테이블을 공유하는 고객끼리 같은 장바구니와 주문 내용을 실시간으로 공유
+- **동시 주문 시 중복 생성 방지**: `Idempotency-Key`로 동시에 동일한 요청이 올 경우 중복 주문 생성 방지
+- **주문 상태 관리**: `PENDING` → `ACCEPTED` → `PREPARING` → `COMPLETED` 흐름으로 주문 처리
+- **테이블 세션 관리**: 테이블별 세션으로 주문 그룹화 및 결제 관리
+- **메뉴 옵션 시스템**: 필수 옵션과 선택 옵션을 지원하는 유연한 메뉴 구성
+- **JWT 인증 & 권한 분리**: 관리자(JWT)·고객(세션) 인증을 분리하고, WebSocket 핸드셰이크에서도 Origin·쿠키 기반으로 인증/룸 권한을 검증
+- **격리된 사설 배포**: `Cloudflare Tunnel`을 통한 아웃바운드 연결로 DB/캐시/API를 외부에 노출하지 않고 운영
+
+## Web UI
+
+<table>
+  <tr>
+    <td colspan="2"><b>주문 현황 페이지</b><br/><img src="./docs/gif/orders.gif" alt="주문 현황 페이지"></td>
+  </tr>
+  <tr>
+    <td><b>주문 상태 업데이트</b><br/><img src="./docs/gif/update-order-status.gif" alt="주문 상태 업데이트"></td>
+    <td><b>동일한 테이블 고객 간의 장바구니 및 주문 공유</b><br/><img src="./docs/gif/share-clients-carts.gif" alt="동일한 테이블 고객 간의 장바구니 및 주문 공유"></td>
+  </tr>
+</table>
+
+<video src="https://github.com/user-attachments/assets/c4fdf95b-a14c-4d05-be72-51f88ef26382"></video>
+
+**주문 현황 페이지:** 매장의 모든 테이블과 주문 상태를 한눈에 확인할 수 있는 대시보드입니다. 테이블별로 현재 주문 내역과 상태가 Socket.IO를 통해 실시간으로 표시됩니다.
+
+**주문 상태 업데이트:** 관리자가 주문 상태를 변경하면 Socket.IO를 통해 고객 화면과 다른 관리자 화면에 실시간으로 반영됩니다. 네트워크 오류 등으로 변경이 실패할 경우 사용자에게 명확한 피드백을 제공합니다.
+
+**동일한 테이블 고객 간 장바구니 및 주문 공유:** 같은 테이블을 공유하는 고객끼리 동일한 장바구니와 주문 내용을 실시간으로 공유하여, 여러 디바이스에서 함께 주문을 구성할 수 있습니다.
+
+## Deployment Front Services
+
+| 도메인                                             | 설명                                               |
+| -------------------------------------------------- | -------------------------------------------------- |
+| [`order.ssurak.com`](https://order.ssurak.com)     | 고객이 QR을 통해 주문하는 도메인                   |
+| [`console.ssurak.com`](https://console.ssurak.com) | 매장 관리인이 주문 상태를 실시간 모니터링하는 콘솔 |
+
+### Demo Playground
+
+[`console.ssurak.com`](https://console.ssurak.com)에서 데모 계정으로 콘솔을 체험할 수 있습니다.
+
+- **ID**: `demo@ssurak.com`
+- **PW**: `demo1234!`
+
 ## Architecture
 
 ssurak은 QR 코드 기반 테이블 주문 시스템으로, 고객용 주문 앱(order)과 매장 관리자용 콘솔 앱(console), 그리고 백엔드 API(ssurak)로 구성됩니다. 모노레포 구조로 공통 패키지를 공유하여 일관된 타입과 비즈니스 로직을 유지합니다.
@@ -81,33 +128,6 @@ _Kubernetes 클러스터 위에 Istio 서비스 메시를 도입하여 트래픽
 - **관측성**: `Kiali`로 메시 트래픽을 시각화하고 `Prometheus`로 메트릭을 수집
 
 > [Architecture Decision Records (ADRs)](https://www.notion.so/ACCEPTOR-2a6b9430272080a380e2cd2c6ec17556)
-
-## Deployment Front Services
-
-| 도메인               | 설명                                               |
-| -------------------- | -------------------------------------------------- |
-| `order.ssurak.com`   | 고객이 QR을 통해 주문하는 도메인                   |
-| `console.ssurak.com` | 매장 관리인이 주문 상태를 실시간 모니터링하는 콘솔 |
-
-### Demo Playground
-
-[`console.ssurak.com`](https://console.ssurak.com)에서 데모 계정으로 콘솔을 체험할 수 있습니다.
-
-- **ID**: `demo@ssurak.com`
-- **PW**: `demo1234!`
-
-## Key Features
-
-- **QR 코드 기반 주문**: 고객이 테이블의 QR 코드를 스캔하면 세션이 생성되고, 별도의 앱 설치 없이 브라우저에서 바로 주문
-- **실시간 주문 현황**: `Socket.IO` 기반으로 매장 관리자(console)와 고객(order)에게 주문/장바구니 변경을 실시간 브로드캐스트 (새로고침 불필요)
-- **실시간 장바구니**: 세션 단위 장바구니를 `Redis`에 저장하고 `Redlock` 분산 락으로 동시 수정 충돌을 방지
-- **같은 테이블 간 주문 맥락 실시간 공유**: 동일한 테이블을 공유하는 고객끼리 같은 장바구니와 주문 내용을 실시간으로 공유
-- **동시 주문 시 중복 생성 방지**: `Idempotency-Key`로 동시에 동일한 요청이 올 경우 중복 주문 생성 방지
-- **주문 상태 관리**: `PENDING` → `ACCEPTED` → `PREPARING` → `COMPLETED` 흐름으로 주문 처리
-- **테이블 세션 관리**: 테이블별 세션으로 주문 그룹화 및 결제 관리
-- **메뉴 옵션 시스템**: 필수 옵션과 선택 옵션을 지원하는 유연한 메뉴 구성
-- **JWT 인증 & 권한 분리**: 관리자(JWT)·고객(세션) 인증을 분리하고, WebSocket 핸드셰이크에서도 Origin·쿠키 기반으로 인증/룸 권한을 검증
-- **격리된 사설 배포**: `Cloudflare Tunnel`을 통한 아웃바운드 연결로 DB/캐시/API를 외부에 노출하지 않고 운영
 
 ## Tech Stack
 
@@ -204,41 +224,6 @@ cd space-order
 | **ssurak**        | http://localhost:8080      | 백엔드 API       |
 | **Swagger Docs**  | http://localhost:8080/docs | API 문서         |
 | **Prisma Studio** | http://localhost:5555      | 데이터베이스 GUI |
-
-#### 인증 플로우
-
-1. **Auth/v1 > Owner > SignIn** 또는 **Auth/v1 > Admin > SignIn** 요청 실행
-2. 응답의 `accessToken`이 환경 변수 `access_token`에 자동 저장됨
-3. 이후 모든 인증 필요 요청에 Bearer Token이 자동 적용
-
-#### 환경 변수
-
-| 변수                                 | 설명                                    | 자동 설정           |
-| ------------------------------------ | --------------------------------------- | ------------------- |
-| `base_url`                           | API 서버 주소 (`http://localhost:8080`) | 초기값 설정됨       |
-| `access_token`                       | JWT Access Token                        | 로그인 시 자동      |
-| `store_id`, `table_id`, `menu_id` 등 | 리소스 Public ID                        | Create 요청 시 자동 |
-| `session_token`                      | 고객 세션 토큰                          | 세션 생성 시 자동   |
-
-## Web UI
-
-<table>
-  <tr>
-    <td colspan="2"><b>주문 현황 페이지</b><br/><img src="./docs/gif/orders.gif" alt="주문 현황 페이지"></td>
-  </tr>
-  <tr>
-    <td><b>주문 상태 업데이트</b><br/><img src="./docs/gif/update-order-status.gif" alt="주문 상태 업데이트"></td>
-    <td><b>동일한 테이블 고객 간의 장바구니 및 주문 공유</b><br/><img src="./docs/gif/share-clients-carts.gif" alt="동일한 테이블 고객 간의 장바구니 및 주문 공유"></td>
-  </tr>
-</table>
-
-[<video src="https://github.com/user-attachments/assets/c4fdf95b-a14c-4d05-be72-51f88ef26382"></video>](https://github.com/user-attachments/assets/c4fdf95b-a14c-4d05-be72-51f88ef26382)
-
-**주문 현황 페이지:** 매장의 모든 테이블과 주문 상태를 한눈에 확인할 수 있는 대시보드입니다. 테이블별로 현재 주문 내역과 상태가 Socket.IO를 통해 실시간으로 표시됩니다.
-
-**주문 상태 업데이트:** 관리자가 주문 상태를 변경하면 Socket.IO를 통해 고객 화면과 다른 관리자 화면에 실시간으로 반영됩니다. 네트워크 오류 등으로 변경이 실패할 경우 사용자에게 명확한 피드백을 제공합니다.
-
-**동일한 테이블 고객 간 장바구니 및 주문 공유:** 같은 테이블을 공유하는 고객끼리 동일한 장바구니와 주문 내용을 실시간으로 공유하여, 여러 디바이스에서 함께 주문을 구성할 수 있습니다.
 
 ## Development
 
