@@ -3,6 +3,7 @@
 import { Exception } from "@spaceorder/api/types";
 import { AxiosError, isAxiosError } from "axios";
 import ErrorFallbackView from "./stores/[storeId]/(navigator)/common/ErrorFallbackView";
+import SessionExpiredError from "./stores/[storeId]/components/SessionExpiredError";
 
 export default function MenuErrorPage({
   error,
@@ -11,6 +12,10 @@ export default function MenuErrorPage({
   error: Error | AxiosError<Exception>;
   reset: () => void;
 }) {
+  if (isAxiosError(error) && error.status === 401) {
+    return <SessionExpiredError />;
+  }
+
   return (
     <ErrorFallbackView
       errorTitle={
