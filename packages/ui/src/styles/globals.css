@@ -22,6 +22,10 @@
   --muted-foreground: oklch(0.556 0 0);
   --blue: oklch(0.9523 0.0275 232.66);
   --blue-foreground: oklch(0.53 0.19 257.428);
+  --teal: oklch(62.86% 0.11 182.253);
+  --teal-deep: oklch(49.72% 0.085 184.126);
+  --teal-wash: oklch(96.12% 0.016 182.716);
+  --landing-background: oklch(97.36% 0.003 174.484);
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
@@ -99,6 +103,10 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-blue: var(--blue);
   --color-blue-foreground: var(--blue-foreground);
+  --color-teal: var(--teal);
+  --color-teal-deep: var(--teal-deep);
+  --color-teal-wash: var(--teal-wash);
+  --color-landing-background: var(--landing-background);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
@@ -163,4 +171,13 @@
 .scrollbar-hide {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
+}
+
+.landing-layout {
+  margin-inline: auto;
+  padding: max(20px, env(safe-area-inset-top)) 22px
+    max(24px, env(safe-area-inset-bottom));
+  background:
+    radial-gradient(120% 80% at 50% -10%, var(--teal-wash) 0%, transparent 55%),
+    var(--color-landing-background);
 }

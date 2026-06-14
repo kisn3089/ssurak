@@ -1,17 +1,26 @@
-import PostmanGuide from "@/components/PostmanGuide";
-import { Card, CardHeader, CardTitle } from "@spaceorder/ui/components/card";
+import Description from "@/components/landing/Description";
+import Eyebrow from "@/components/landing/Eyebrow";
+import Footer from "@/components/landing/Footer";
+import GuideComment from "@/components/landing/GuideComment";
+import GuideStep from "@/components/landing/GuideStep";
+import LandingHeader from "@/components/landing/LandingHeader";
+import Title from "@/components/landing/Title";
+import QrScan from "@spaceorder/ui/components/qr-scan/QrScan";
 
-export default function Home() {
+export default function LandingPage() {
   return (
-    <div className="flex flex-col items-center justify-center gap-8 h-full p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="pb-4">
-          <CardTitle className="font-bold text-xl">
-            {"테이블의 QR 코드를 스캔해주세요!"}
-          </CardTitle>
-        </CardHeader>
-        <PostmanGuide />
-      </Card>
+    <div className="landing-layout w-full min-h-dvh flex flex-col text-black">
+      <LandingHeader />
+
+      <main className="flex-1 flex flex-col items-center text-center justify-center py-4.5">
+        <Eyebrow />
+        <Title />
+        <Description />
+        <QrScan />
+        <GuideComment />
+        <GuideStep />
+      </main>
+      <Footer />
     </div>
   );
 }

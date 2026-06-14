@@ -13,6 +13,7 @@ export default function MenuErrorPage({
 }) {
   return (
     <ErrorFallbackView
+      error={error}
       errorTitle={
         isAxiosError(error)
           ? error.response?.data.message
