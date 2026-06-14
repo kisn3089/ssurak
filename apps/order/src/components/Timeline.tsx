@@ -16,6 +16,7 @@ interface TimelineProps {
 }
 
 export default function Timeline({ steps, className = "" }: TimelineProps) {
+  // TODO: activeStep 관리 로직 추가 필요 & useHook으로 분리
   const [activeStep, _setActiveStep] = useState(0);
 
   return (

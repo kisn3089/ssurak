@@ -33,8 +33,6 @@
   }
 }
 
-/* ---------- Signature: scan viewfinder ---------- */
-
 @media (prefers-reduced-motion: reduce) {
   .status::before {
     animation: none;
