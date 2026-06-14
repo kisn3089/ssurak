@@ -172,3 +172,12 @@
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+
+.landing-layout {
+  margin-inline: auto;
+  padding: max(20px, env(safe-area-inset-top)) 22px
+    max(24px, env(safe-area-inset-bottom));
+  background:
+    radial-gradient(120% 80% at 50% -10%, var(--teal-wash) 0%, transparent 55%),
+    var(--color-landing-background);
+}
