@@ -16,7 +16,7 @@ export default function ErrorFallbackView({
   children,
   reset,
 }: ErrorFallbackViewProps) {
-  if (isAxiosError(error) && error.status === 401) {
+  if (isAxiosError(error) && error.response?.status === 401) {
     return <SessionExpiredError />;
   }
 

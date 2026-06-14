@@ -1,5 +1,5 @@
 import Description from "@/components/landing/Description";
-import Eyebraw from "@/components/landing/Eyebraw";
+import Eyebrow from "@/components/landing/Eyebrow";
 import Footer from "@/components/landing/Footer";
 import GuideComment from "@/components/landing/GuideComment";
 import GuideStep from "@/components/landing/GuideStep";
@@ -13,7 +13,7 @@ export default function LandingPage() {
       <LandingHeader />
 
       <main className="flex-1 flex flex-col items-center text-center justify-center py-4.5">
-        <Eyebraw />
+        <Eyebrow />
         <Title />
         <Description />
         <QrScan />
