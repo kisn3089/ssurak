@@ -1,17 +1,25 @@
 import { Button } from "@spaceorder/ui/components/button";
+import { isAxiosError } from "axios";
 import { CircleAlert } from "lucide-react";
+import SessionExpiredError from "../../components/SessionExpiredError";
 
 type ErrorFallbackViewProps = {
+  error: Error | unknown;
   errorTitle: string;
   reset?: () => void;
   children?: React.ReactNode;
 };
 
 export default function ErrorFallbackView({
+  error,
   errorTitle,
   children,
   reset,
 }: ErrorFallbackViewProps) {
+  if (isAxiosError(error) && error.status === 401) {
+    return <SessionExpiredError />;
+  }
+
   return (
     <div className="min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center p-4 text-center break-keep">
       <CircleAlert className="w-16 h-16 text-destructive mb-4" />

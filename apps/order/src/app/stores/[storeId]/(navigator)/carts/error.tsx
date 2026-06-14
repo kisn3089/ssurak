@@ -5,7 +5,7 @@ import { AxiosError } from "axios";
 import ErrorFallbackView from "../common/ErrorFallbackView";
 
 export default function CartError({
-  error: _,
+  error,
   reset,
 }: {
   error: Error | AxiosError<Exception>;
@@ -13,6 +13,7 @@ export default function CartError({
 }) {
   return (
     <ErrorFallbackView
+      error={error}
       errorTitle={"장바구니 정보를 불러오는 중 오류가 발생했습니다."}
       reset={reset}
     ></ErrorFallbackView>

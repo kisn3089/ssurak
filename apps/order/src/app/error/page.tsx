@@ -5,7 +5,8 @@ import ErrorFallbackView from "../stores/[storeId]/(navigator)/common/ErrorFallb
 export default function RootErrorPage() {
   return (
     <ErrorFallbackView
+      error={undefined}
       errorTitle={"서버가 불안정합니다. 다시 스캔해주세요."}
-    ></ErrorFallbackView>
+    />
   );
 }
