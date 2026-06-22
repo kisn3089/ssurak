@@ -1,20 +1,26 @@
 "use client";
 
 import { Card } from "@spaceorder/ui/components/card";
-import { useTableOrderContext } from "./TableOrderContext";
 import ConditionalLink from "@/components/ConditionalLink";
 import { useParams } from "next/navigation";
+import { BoardTableWithSessions } from "@spaceorder/db/types";
 
 interface TableOrderCardProps {
   children: React.ReactNode;
+  sanitizedTable: BoardTableWithSessions;
 }
 
-export function TableOrderCard({ children }: TableOrderCardProps) {
-  const { storeId } = useParams<{ storeId: string }>();
-  const {
-    state: { isActivatedTable, isSelected, session },
-    meta: { tableId },
-  } = useTableOrderContext();
+export function TableOrderCard({
+  children,
+  sanitizedTable,
+}: TableOrderCardProps) {
+  const { storeId, tableId } = useParams<{
+    storeId: string;
+    tableId: string;
+  }>();
+  const session = sanitizedTable.tableSessions?.[0] ?? null;
+  const isActivatedTable = sanitizedTable.isActive === true;
+  const isSelected = tableId === sanitizedTable.publicId;
 
   const inactiveStyle = !isActivatedTable
     ? "opacity-20 cursor-not-allowed"
@@ -25,7 +31,7 @@ export function TableOrderCard({ children }: TableOrderCardProps) {
   return (
     <ConditionalLink
       condition={isActivatedTable}
-      href={`/stores/${storeId}/orders/${tableId}`}
+      href={`/stores/${storeId}/orders/${sanitizedTable.publicId}`}
       className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg"
     >
       <Card

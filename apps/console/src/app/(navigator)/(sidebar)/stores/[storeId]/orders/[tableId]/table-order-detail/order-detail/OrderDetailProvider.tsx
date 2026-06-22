@@ -7,7 +7,7 @@ import {
   OrderDetailContext,
   type OrderDetailContextValue,
 } from "./OrderDetailContext";
-import { OrderItemWithSummarizedOrder } from "./OrderDetailTable";
+import { OrderItemWithOrder } from "./OrderDetailTable";
 import { PublicOrderWithItem } from "@spaceorder/db/types";
 import useOrderItem from "@spaceorder/api/core/order/order-item/useOrderItem.mutate";
 import { toast } from "@spaceorder/ui/components/sonner";
@@ -32,11 +32,12 @@ export function OrderDetailProvider({
 
   const { update, remove } = useOrderItem({ storeId, tableId });
 
-  const [editingItem, setEditingItem] =
-    useState<OrderItemWithSummarizedOrder | null>(null);
+  const [editingItem, setEditingItem] = useState<OrderItemWithOrder | null>(
+    null
+  );
   const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
 
-  const orderItems: OrderItemWithSummarizedOrder[] = orders.flatMap((order) =>
+  const orderItems: OrderItemWithOrder[] = orders.flatMap((order) =>
     order.orderItems.map((item) => ({
       ...item,
       totalPrice: item.unitPrice * item.quantity,

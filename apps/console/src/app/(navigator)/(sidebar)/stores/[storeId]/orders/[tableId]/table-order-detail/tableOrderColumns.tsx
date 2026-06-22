@@ -2,7 +2,7 @@
 
 import { Button } from "@spaceorder/ui/components/button";
 import { ColumnDef, RowData } from "@tanstack/react-table";
-import { OrderItemWithSummarizedOrder } from "./order-detail/OrderDetailTable";
+import { OrderItemWithOrder } from "./order-detail/OrderDetailTable";
 import { transCurrencyFormat } from "@spaceorder/api/utils/priceFormatter";
 import ActivityRender from "@spaceorder/ui/components/activity-render/ActivityRender";
 
@@ -13,7 +13,7 @@ declare module "@tanstack/react-table" {
     resetEditing: () => void;
   }
 }
-export const tableOrderColumns: ColumnDef<OrderItemWithSummarizedOrder>[] = [
+export const tableOrderColumns: ColumnDef<OrderItemWithOrder>[] = [
   {
     accessorKey: "name",
     header: "메뉴명",

@@ -2,7 +2,7 @@
 
 import useQueryWithAuth from "@spaceorder/api/hooks/useQueryWithAuth";
 import { useSetCacheByStoreBoard } from "./[storeId]/orders/hooks/useSetCacheByStoreBoard";
-import { PublicStore, SummarizedOrdersByStore } from "@spaceorder/db";
+import { OrderBoardByStore, PublicStore } from "@spaceorder/db";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ErrorBoundary } from "react-error-boundary";
@@ -28,8 +28,8 @@ function FetchToRedirect() {
   } = useSuspenseWithAuth<PublicStore[]>(`/stores/v1`);
 
   /** TODO: store가 2개 이상일 경우 선택할 수 있도록 분기 필요 */
-  const { isSuccess, isError } = useQueryWithAuth<SummarizedOrdersByStore>(
-    `/orders/v1/stores/${stores[0].publicId}/orders/summary`,
+  const { isSuccess, isError } = useQueryWithAuth<OrderBoardByStore>(
+    `/orders/v1/stores/${stores[0].publicId}/board`,
     {
       onSuccess: (tableBoard) => setCache(tableBoard, stores[0].publicId),
       enabled: isStoresSuccess,

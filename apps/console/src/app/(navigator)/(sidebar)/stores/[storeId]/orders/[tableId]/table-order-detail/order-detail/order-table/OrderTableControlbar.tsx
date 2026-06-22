@@ -3,12 +3,12 @@ import { Button } from "@spaceorder/ui/components/button";
 import { TableCell } from "@spaceorder/ui/components/table";
 import { tableOrderColumns } from "../../tableOrderColumns";
 import { useOrderDetailContext } from "../OrderDetailContext";
-import { OrderItemWithSummarizedOrder } from "../OrderDetailTable";
+import { OrderItemWithOrder } from "../OrderDetailTable";
 import { Row } from "@tanstack/react-table";
 import RequestButton from "@spaceorder/ui/components/RequestButton";
 
 interface OrderTableControlbarProps {
-  row: Row<OrderItemWithSummarizedOrder>;
+  row: Row<OrderItemWithOrder>;
   isSelected: boolean;
 }
 export function OrderTableControlbar({
@@ -20,16 +20,6 @@ export function OrderTableControlbar({
     actions: { updateOrderItem, removeOrderItem },
   } = useOrderDetailContext();
 
-  const preventAndUpdate = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    updateOrderItem();
-  };
-
-  const preventAndRemove = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    removeOrderItem();
-  };
-
   const fontSemiBold = "font-semibold";
   return (
     <ActivityRender mode={isSelected ? "visible" : "hidden"}>
@@ -38,7 +28,7 @@ export function OrderTableControlbar({
           <Button
             className={fontSemiBold}
             variant={"destructive"}
-            onClick={preventAndRemove}
+            onClick={removeOrderItem}
             isLoading={removeMutation.isPending}
           >
             삭제
@@ -55,7 +45,7 @@ export function OrderTableControlbar({
             }}
             disabled={editingItem?.quantity === row.original.quantity}
             className={fontSemiBold}
-            onClick={preventAndUpdate}
+            onClick={updateOrderItem}
           >
             변경
           </RequestButton>

@@ -6,7 +6,7 @@ import { useOrderDetailContext } from "./OrderDetailContext";
 import { OrderTable } from "./order-table";
 import { OrderStatus, PublicOrderItem } from "@spaceorder/db/index";
 
-export type OrderItemWithSummarizedOrder = PublicOrderItem & {
+export type OrderItemWithOrder = PublicOrderItem & {
   totalPrice: number;
   orderId: string;
   orderStatus: OrderStatus;

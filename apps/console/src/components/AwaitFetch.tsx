@@ -1,7 +1,7 @@
 "use client";
 
 import useSuspenseWithAuth from "@spaceorder/api/hooks/useSuspenseWithAuth";
-import { SummarizedOrdersByStore } from "@spaceorder/db";
+import { OrderBoardByStore } from "@spaceorder/db";
 
 export default function AwaitFetch({
   url,
@@ -10,9 +10,9 @@ export default function AwaitFetch({
 }: {
   url: string;
   children: React.ReactNode;
-  onSuccess?: (data: SummarizedOrdersByStore) => void;
+  onSuccess?: (data: OrderBoardByStore) => void;
 }) {
-  const { isSuccess } = useSuspenseWithAuth<SummarizedOrdersByStore>(url, {
+  const { isSuccess } = useSuspenseWithAuth<OrderBoardByStore>(url, {
     onSuccess,
   });
 

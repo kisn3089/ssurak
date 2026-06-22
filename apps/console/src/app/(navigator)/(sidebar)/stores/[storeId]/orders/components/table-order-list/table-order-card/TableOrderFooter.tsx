@@ -3,17 +3,17 @@
 import { CardFooter } from "@spaceorder/ui/components/card";
 import ActivityRender from "@spaceorder/ui/components/activity-render/ActivityRender";
 import SessionExpireTime from "@/app/common/orders/SessionExpireTime";
-import { useTableOrderContext } from "./TableOrderContext";
+import { BoardSessionWithOrders } from "@spaceorder/db/types";
 
-export function TableOrderFooter() {
-  const {
-    state: { session },
-  } = useTableOrderContext();
+type TableOrderFooterProps = {
+  expiresAt: BoardSessionWithOrders["expiresAt"] | undefined;
+};
 
+export function TableOrderFooter({ expiresAt }: TableOrderFooterProps) {
   return (
     <CardFooter className="p-2 min-h-9">
-      <ActivityRender mode={session?.expiresAt ? "visible" : "hidden"}>
-        <SessionExpireTime expiresAt={session?.expiresAt} />
+      <ActivityRender mode={expiresAt ? "visible" : "hidden"}>
+        <SessionExpireTime expiresAt={expiresAt} />
       </ActivityRender>
     </CardFooter>
   );

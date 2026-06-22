@@ -10,7 +10,7 @@ export type OrderSubscriber = {
 
 type EmitOrder = {
   subscriber: OrderSubscriber;
-  payload: OrderSyncEvent;
+  payload: Omit<OrderSyncEvent, "tablePublicId">;
   excludeSocketId?: string;
 };
 
@@ -52,7 +52,7 @@ export class OrderEventsService {
     const scope = excludeSocketId
       ? server.to([adminsRoom, tableRoom]).except(excludeSocketId)
       : server.to([adminsRoom, tableRoom]);
-    scope.emit(event, payload);
+    scope.emit(event, { ...payload, tablePublicId });
     this.logger.log(
       `emit ${event} → ${adminsRoom}, ${tableRoom}${excludeSocketId ? ` (except ${excludeSocketId})` : ""}`
     );

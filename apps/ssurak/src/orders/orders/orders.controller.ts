@@ -23,15 +23,15 @@ import {
   DocsOwnerOrderGetActiveSessionOrders,
   DocsOwnerOrderGetList,
   DocsOwnerOrderGetListByStore,
-  DocsOwnerOrderGetSummary,
+  DocsOwnerOrderGetBoard,
   DocsOwnerOrderGetUnique,
   DocsOwnerOrderUpdate,
 } from "src/docs/ownerOrder.docs";
 import { OrderStatus } from "@spaceorder/db";
 import type {
   Owner,
+  OrderBoardByStore,
   PublicOrderWithItem,
-  SummarizedOrdersByStore,
   SyncNotice,
 } from "@spaceorder/db";
 import { Client } from "src/decorators/client.decorator";
@@ -63,15 +63,15 @@ export class OrdersController {
   // Store Orders
   // ============================================================
 
-  /** store에 속한 테이블별로 활성화된 세션의 요약된 주문 조회 */
-  @Get("stores/:storeId/orders/summary")
+  /** store의 모든 테이블 + 활성 세션의 full 주문을 한 번에 조회 (주문 보드 부트스트랩) */
+  @Get("stores/:storeId/board")
   @UseGuards(StoreAccessGuard, ZodValidation({ params: storeIdParamsSchema }))
-  @DocsOwnerOrderGetSummary()
-  async listOrdersSummary(
+  @DocsOwnerOrderGetBoard()
+  async getOrderBoard(
     @Client() client: Owner,
     @Param("storeId") storeId: string
-  ): Promise<SummarizedOrdersByStore> {
-    return await this.orderService.getOrdersSummary(client, storeId);
+  ): Promise<OrderBoardByStore<"Wide">> {
+    return await this.orderService.getOrderBoard(client, storeId);
   }
 
   /** store에 속한 모든 주문 조회 */

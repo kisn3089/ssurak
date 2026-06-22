@@ -1,13 +1,13 @@
 import { TableRow } from "@spaceorder/ui/components/table";
 import { useOrderDetailContext } from "../OrderDetailContext";
-import { OrderItemWithSummarizedOrder } from "../OrderDetailTable";
+import { OrderItemWithOrder } from "../OrderDetailTable";
 import { Row, Table } from "@tanstack/react-table";
 import { OrderStatus } from "@spaceorder/db/index";
 
 interface OrderTableRowProps {
   children: React.ReactNode;
-  table: Table<OrderItemWithSummarizedOrder>;
-  row: Row<OrderItemWithSummarizedOrder>;
+  table: Table<OrderItemWithOrder>;
+  row: Row<OrderItemWithOrder>;
 }
 export function OrderTableRow({ children, row, table }: OrderTableRowProps) {
   const {

@@ -1,11 +1,11 @@
 import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 import {
+  OrderBoardByStore,
   OrderStatus,
   Owner,
   Prisma,
   PublicOrderWithItem,
   SessionWithTable,
-  SummarizedOrdersByStore,
   TableSessionStatus,
 } from "@spaceorder/db";
 import type Redlock from "redlock";
@@ -251,10 +251,10 @@ export class OrdersService {
     }
   }
 
-  async getOrdersSummary(
+  async getOrderBoard(
     client: Owner,
     storeId: string
-  ): Promise<SummarizedOrdersByStore> {
+  ): Promise<OrderBoardByStore<"Wide">> {
     return await this.prismaService.table.findMany({
       where: { store: { ownerId: client.id, publicId: storeId } },
       include: orderSituationPayload(),

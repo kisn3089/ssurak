@@ -13,6 +13,7 @@ export type SyncNotice = {
 
 export type OrderSyncEvent = {
   notice: SyncNotice;
+  tablePublicId: string;
 };
 
 export type CartSyncEvent = {

@@ -1,4 +1,7 @@
-import { aliveSessionFilter } from "./session-query.const";
+import {
+  aliveSessionFilter,
+  ORDER_WITH_ITEMS_RECORD,
+} from "./session-query.const";
 
 export const orderSituationPayload = () => ({
   tableSessions: {
@@ -6,15 +9,7 @@ export const orderSituationPayload = () => ({
     select: {
       publicId: true,
       expiresAt: true,
-      orders: {
-        select: {
-          publicId: true,
-          status: true,
-          orderItems: {
-            select: { publicId: true, menuName: true, quantity: true },
-          },
-        },
-      },
+      orders: ORDER_WITH_ITEMS_RECORD,
     },
   },
 });

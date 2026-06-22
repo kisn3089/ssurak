@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext } from "react";
-import { OrderItemWithSummarizedOrder } from "./OrderDetailTable";
+import { OrderItemWithOrder } from "./OrderDetailTable";
 import { PublicOrderWithItem } from "@spaceorder/db/types";
 import useOrderItem from "@spaceorder/api/core/order/order-item/useOrderItem.mutate";
 
@@ -15,9 +15,9 @@ import useOrderItem from "@spaceorder/api/core/order/order-item/useOrderItem.mut
 // State
 export interface OrderDetailState {
   orders: PublicOrderWithItem[];
-  orderItems: OrderItemWithSummarizedOrder[];
+  orderItems: OrderItemWithOrder[];
   totalPrice: number;
-  editingItem: OrderItemWithSummarizedOrder | null;
+  editingItem: OrderItemWithOrder | null;
   rowSelection: Record<string, boolean>;
   updateMutation: ReturnType<typeof useOrderItem>["update"];
   removeMutation: ReturnType<typeof useOrderItem>["remove"];
@@ -25,7 +25,7 @@ export interface OrderDetailState {
 
 // Actions
 export interface OrderDetailActions {
-  setEditingItem: (item: OrderItemWithSummarizedOrder | null) => void;
+  setEditingItem: (item: OrderItemWithOrder | null) => void;
   setRowSelection: React.Dispatch<
     React.SetStateAction<Record<string, boolean>>
   >;
