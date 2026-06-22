@@ -20,7 +20,7 @@ import {
 import {
   DocsOwnerOrderCancel,
   DocsOwnerOrderCreate,
-  DocsOwnerOrderGetActiveSessionOrders,
+  DocsOwnerOrderGetActiveSession,
   DocsOwnerOrderGetList,
   DocsOwnerOrderGetListByStore,
   DocsOwnerOrderGetBoard,
@@ -30,6 +30,7 @@ import {
 import { OrderStatus } from "@spaceorder/db";
 import type {
   Owner,
+  ActiveSessionResponse,
   OrderBoardByStore,
   PublicOrderWithItem,
   SyncNotice,
@@ -170,14 +171,14 @@ export class OrdersController {
   // Table Orders
   // ============================================================
 
-  /** 테이블의 활성 세션에 속한 주문 목록 조회 */
-  @Get("tables/:tableId/active-session/orders")
+  /** 테이블의 활성 세션(full 주문 포함)을 조회 */
+  @Get("tables/:tableId/active-session")
   @UseGuards(TableAccessGuard, ZodValidation({ params: tableIdParamsSchema }))
-  @DocsOwnerOrderGetActiveSessionOrders()
-  async listOrdersByAliveSession(
+  @DocsOwnerOrderGetActiveSession()
+  async getActiveSession(
     @Param("tableId") tableId: string
-  ): Promise<PublicOrderWithItem<"Wide">[]> {
-    return await this.orderService.getOrdersByAliveSession(tableId);
+  ): Promise<ActiveSessionResponse<"Wide">> {
+    return await this.orderService.getActiveSessionWithOrders(tableId);
   }
 
   /** table에 속한 주문 생성 */

@@ -1,5 +1,5 @@
 import type {
-  BoardTableWithSessions,
+  BoardTableWithSession,
   Table,
   TableSession,
   TableSessionStatus,
@@ -259,7 +259,7 @@ export class BoardTableDto {
   @Type(() => BoardTableSessionDto)
   tableSessions?: BoardTableSessionDto[];
 
-  constructor(partial: Partial<BoardTableWithSessions>) {
+  constructor(partial: Partial<BoardTableWithSession>) {
     Object.assign(this, partial);
   }
 }

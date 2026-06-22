@@ -2,6 +2,7 @@ import { applyDecorators } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiParam, ApiResponse } from "@nestjs/swagger";
 import { PublicOrderWithItemsDto } from "src/dto/public/order.dto";
 import { BoardTableDto } from "src/dto/public/table.dto";
+import { BoardTableSessionDto } from "src/dto/public/session.dto";
 import {
   CreateOrderPayloadDto,
   UpdateOrderPayloadDto,
@@ -28,11 +29,11 @@ const meta = {
     summary: "매장 전체 주문 목록 조회",
     ok: { status: 200, description: "매장의 전체 주문 목록 반환" },
   },
-  getActiveSessionOrders: {
-    summary: "테이블 활성 세션 주문 목록 조회 (점주)",
+  getActiveSession: {
+    summary: "테이블 활성 세션 조회 (점주)",
     ok: {
       status: 200,
-      description: "활성 세션의 주문 목록 반환 (활성 세션이 없으면 빈 배열)",
+      description: "활성 세션(full 주문 포함) 반환, 없으면 빈 배열",
     },
   },
   getUnique: {
@@ -100,13 +101,13 @@ export const DocsOwnerOrderCancel = () =>
     ApiResponse(meta.notFound)
   );
 
-export const DocsOwnerOrderGetActiveSessionOrders = () =>
+export const DocsOwnerOrderGetActiveSession = () =>
   applyDecorators(
-    ApiOperation({ summary: meta.getActiveSessionOrders.summary }),
+    ApiOperation({ summary: meta.getActiveSession.summary }),
     ApiParam(paramsDocs.tableId),
     ApiResponse({
-      ...meta.getActiveSessionOrders.ok,
-      type: [PublicOrderWithItemsDto],
+      ...meta.getActiveSession.ok,
+      type: [BoardTableSessionDto],
     }),
     ApiResponse(meta.unauthorized)
   );
