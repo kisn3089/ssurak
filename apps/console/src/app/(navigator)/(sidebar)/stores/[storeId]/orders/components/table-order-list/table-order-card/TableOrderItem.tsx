@@ -12,15 +12,13 @@ import ButtonWrapper from "@spaceorder/ui/components/ButtonWrapper";
 import { Button } from "@spaceorder/ui/components/button";
 import ActivityRender from "@spaceorder/ui/components/activity-render/ActivityRender";
 import useOrderByTable from "@spaceorder/api/core/order/order/useOrderByTable.mutate";
-import { useParams } from "next/navigation";
 
 interface TableOrderItemProps {
   order: PublicOrderWithItem;
+  tableId: string;
 }
 
-export function TableOrderItem({ order }: TableOrderItemProps) {
-  const { tableId } = useParams<{ tableId: string }>();
-
+export function TableOrderItem({ order, tableId }: TableOrderItemProps) {
   const { updateOrderByTable: updateOrderByTableMutation } = useOrderByTable({
     tableId,
   });

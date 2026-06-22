@@ -86,7 +86,7 @@ export function TableOrderAcceptAllButton({
     failedUpdateItems.length > 0 ? "destructive" : "default";
 
   return (
-    <div className="pt-2">
+    <div className="px-2 pt-2">
       <Button
         disabled={isPending}
         onClick={acceptAllPendingOrders}

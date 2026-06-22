@@ -13,7 +13,7 @@ export default function OrderSyncDaemon() {
   const synchronize = (event: OrderSyncEvent) => {
     queryClient.invalidateQueries({
       queryKey: pathToQueryKey(
-        `/orders/v1/tables/${event.tablePublicId}/active-session/orders`
+        `/orders/v1/tables/${event.tablePublicId}/active-session`
       ),
     });
   };

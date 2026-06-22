@@ -1,8 +1,8 @@
 import { pathToQueryKey } from "@spaceorder/api/utils";
 import {
+  ActiveSessionResponse,
   LAST_ACCESSED_STORE_ID,
   OrderBoardByStore,
-  PublicOrderWithItem,
   PublicTable,
 } from "@spaceorder/db";
 import { useQueryClient } from "@tanstack/react-query";
@@ -25,12 +25,10 @@ export const useSetCacheByStoreBoard = () => {
         table
       );
 
-      const orders: PublicOrderWithItem[] = tableSessions?.[0]?.orders ?? [];
-      queryClient.setQueryData<PublicOrderWithItem[]>(
-        pathToQueryKey(
-          `/orders/v1/tables/${table.publicId}/active-session/orders`
-        ),
-        orders
+      const session: ActiveSessionResponse = tableSessions?.[0] ?? null;
+      queryClient.setQueryData<ActiveSessionResponse>(
+        pathToQueryKey(`/orders/v1/tables/${table.publicId}/active-session`),
+        session
       );
     });
   };

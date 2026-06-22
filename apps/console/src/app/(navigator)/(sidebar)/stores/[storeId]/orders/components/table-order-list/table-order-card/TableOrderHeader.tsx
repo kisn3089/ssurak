@@ -7,10 +7,10 @@ import {
 } from "@spaceorder/ui/components/card";
 import ActivityRender from "@spaceorder/ui/components/activity-render/ActivityRender";
 import TableOrderQrCode from "./TableOrderQrCode";
-import { BoardTableWithSessions } from "@spaceorder/db/types";
+import { BoardTableWithSession } from "@spaceorder/db/types";
 
 type TableOrderHeaderProps = {
-  sanitizedTable: BoardTableWithSessions;
+  sanitizedTable: BoardTableWithSession;
 };
 
 export function TableOrderHeader({ sanitizedTable }: TableOrderHeaderProps) {
