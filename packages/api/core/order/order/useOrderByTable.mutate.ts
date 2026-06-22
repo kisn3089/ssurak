@@ -5,10 +5,11 @@ import {
   UpdateOrderByTablePayload,
 } from "./httpOrder";
 import { pathToQueryKey } from "../../../utils/pathToQueryKey";
-import { PublicOrderWithItem } from "@spaceorder/db";
+import { ActiveSessionResponse } from "@spaceorder/db";
+import { mapSessionOrders } from "../sessionCache";
 
 function tableOrdersQueryKey(tableId: string) {
-  return pathToQueryKey(`/orders/v1/tables/${tableId}/active-session/orders`);
+  return pathToQueryKey(`/orders/v1/tables/${tableId}/active-session`);
 }
 
 type CreateOrderByTable = {
@@ -29,12 +30,8 @@ export default function useOrderByTable({ tableId }: Params) {
     mutationKey: ["owner", "order", "create"],
     mutationFn: ({ tableId, createOrderPayload }: CreateOrderByTable) =>
       httpOrder.createOrderByTable(tableId, createOrderPayload),
-    onSuccess: (serverOrder) => {
-      queryClient.setQueryData<PublicOrderWithItem[]>(
-        tableOrdersQueryKey(tableId),
-        (orders) => (orders ? [...orders, serverOrder] : orders)
-      );
-    },
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: tableOrdersQueryKey(tableId) }),
   });
 
   const updateOrderByTable = useMutation({
@@ -46,16 +43,16 @@ export default function useOrderByTable({ tableId }: Params) {
         queryKey: tableOrdersQueryKey(tableId),
       });
 
-      const previousOrders = queryClient.getQueryData<PublicOrderWithItem[]>(
+      const previousOrders = queryClient.getQueryData<ActiveSessionResponse>(
         tableOrdersQueryKey(tableId)
       );
 
       const nextStatus = updateOrderPayload.status;
       if (nextStatus) {
-        queryClient.setQueryData<PublicOrderWithItem[]>(
+        queryClient.setQueryData<ActiveSessionResponse>(
           tableOrdersQueryKey(tableId),
-          (orders) =>
-            orders?.map((order) =>
+          (session) =>
+            mapSessionOrders(session, (order) =>
               order.publicId === orderId
                 ? { ...order, status: nextStatus }
                 : order
@@ -74,10 +71,10 @@ export default function useOrderByTable({ tableId }: Params) {
       }
     },
     onSuccess: (serverOrder) => {
-      queryClient.setQueryData<PublicOrderWithItem[]>(
+      queryClient.setQueryData<ActiveSessionResponse>(
         tableOrdersQueryKey(tableId),
-        (orders) =>
-          orders?.map((order) =>
+        (session) =>
+          mapSessionOrders(session, (order) =>
             order.publicId === serverOrder.publicId ? serverOrder : order
           )
       );

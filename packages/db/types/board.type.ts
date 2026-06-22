@@ -14,9 +14,8 @@ export type BoardSessionWithOrders<
  * GET /orders/v1/tables/{tableId}/active-session 응답.
  * 활성 세션(주문 포함) 또는 활성 세션 없음(null).
  */
-export type ActiveSessionResponse<
-  Option extends "Narrow" | "Wide" = "Narrow",
-> = BoardSessionWithOrders<Option> | null;
+export type ActiveSessionResponse<Option extends "Narrow" | "Wide" = "Narrow"> =
+  BoardSessionWithOrders<Option> | null;
 
 export type BoardTableWithSession<Option extends "Narrow" | "Wide" = "Narrow"> =
   PublicTable & {

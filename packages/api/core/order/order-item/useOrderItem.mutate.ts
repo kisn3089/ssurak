@@ -4,11 +4,10 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { httpOrderItems, UpdateOrderItemPayload } from "./httpOrderItem";
-import {
-  PublicOrderItem,
-  PublicOrderWithItem,
-} from "@spaceorder/db/types/publicModel.type";
+import { PublicOrderItem } from "@spaceorder/db/types/publicModel.type";
 import { pathToQueryKey } from "../../../utils/pathToQueryKey";
+import { ActiveSessionResponse } from "@spaceorder/db/types/board.type";
+import { mapSessionOrderItems } from "../sessionCache";
 
 type UseOrderItemReturn = {
   update: UseMutationResult<
@@ -25,14 +24,7 @@ type UseOrderItemReturn = {
 type Params = { storeId: string; tableId: string };
 
 function tableOrdersQueryKey(tableId: string) {
-  return pathToQueryKey(`/orders/v1/tables/${tableId}/active-session/orders`);
-}
-
-function someOrderItem(
-  orderItems: PublicOrderItem[],
-  orderItemId: string
-): boolean {
-  return orderItems.some((oi) => oi.publicId === orderItemId);
+  return pathToQueryKey(`/orders/v1/tables/${tableId}/active-session`);
 }
 
 export default function useOrderItem({ tableId }: Params): UseOrderItemReturn {
@@ -52,26 +44,20 @@ export default function useOrderItem({ tableId }: Params): UseOrderItemReturn {
         queryKey: tableOrdersQueryKey(tableId),
       });
 
-      const previousOrders = queryClient.getQueryData<PublicOrderWithItem[]>(
+      const previousOrders = queryClient.getQueryData<ActiveSessionResponse>(
         tableOrdersQueryKey(tableId)
       );
 
-      queryClient.setQueryData<PublicOrderWithItem[]>(
+      queryClient.setQueryData<ActiveSessionResponse>(
         tableOrdersQueryKey(tableId),
-        (orders) =>
-          orders?.map((order) => {
-            if (someOrderItem(order.orderItems, orderItemId)) {
-              return {
-                ...order,
-                orderItems: order.orderItems.map((oi) =>
-                  oi.publicId === orderItemId
-                    ? { ...oi, ...updateOrderItemPayload }
-                    : oi
-                ),
-              };
-            }
-            return order;
-          })
+        (session) =>
+          mapSessionOrderItems(session, orderItemId, (orderItems) =>
+            orderItems.map((oi) =>
+              oi.publicId === orderItemId
+                ? { ...oi, ...updateOrderItemPayload }
+                : oi
+            )
+          )
       );
 
       return { previousOrders };
@@ -85,22 +71,19 @@ export default function useOrderItem({ tableId }: Params): UseOrderItemReturn {
       }
     },
     onSuccess: (updatedOrderitem: PublicOrderItem) => {
-      queryClient.setQueryData<PublicOrderWithItem[]>(
+      queryClient.setQueryData<ActiveSessionResponse>(
         tableOrdersQueryKey(tableId),
-        (orders) =>
-          orders?.map((order) => {
-            if (someOrderItem(order.orderItems, updatedOrderitem.publicId)) {
-              return {
-                ...order,
-                orderItems: order.orderItems.map((oi) =>
-                  oi.publicId === updatedOrderitem.publicId
-                    ? updatedOrderitem
-                    : oi
-                ),
-              };
-            }
-            return order;
-          })
+        (session) =>
+          mapSessionOrderItems(
+            session,
+            updatedOrderitem.publicId,
+            (orderItems) =>
+              orderItems.map((oi) =>
+                oi.publicId === updatedOrderitem.publicId
+                  ? updatedOrderitem
+                  : oi
+              )
+          )
       );
     },
   });
@@ -114,24 +97,16 @@ export default function useOrderItem({ tableId }: Params): UseOrderItemReturn {
         queryKey: tableOrdersQueryKey(tableId),
       });
 
-      const previousOrders = queryClient.getQueryData<PublicOrderWithItem[]>(
+      const previousOrders = queryClient.getQueryData<ActiveSessionResponse>(
         tableOrdersQueryKey(tableId)
       );
 
-      queryClient.setQueryData<PublicOrderWithItem[]>(
+      queryClient.setQueryData<ActiveSessionResponse>(
         tableOrdersQueryKey(tableId),
-        (orders) =>
-          orders?.map((order) => {
-            if (someOrderItem(order.orderItems, orderItemId)) {
-              return {
-                ...order,
-                orderItems: order.orderItems.filter(
-                  (oi) => oi.publicId !== orderItemId
-                ),
-              };
-            }
-            return order;
-          })
+        (session) =>
+          mapSessionOrderItems(session, orderItemId, (orderItems) =>
+            orderItems.filter((oi) => oi.publicId !== orderItemId)
+          )
       );
 
       return { previousOrders };
