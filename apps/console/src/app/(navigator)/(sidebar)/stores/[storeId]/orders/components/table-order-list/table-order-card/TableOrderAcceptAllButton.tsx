@@ -5,34 +5,35 @@ import { Button } from "@spaceorder/ui/components/button";
 import {
   nextStatusMap,
   OrderStatus,
-  SummarizedOrderWithItem,
+  PublicOrderWithItem,
 } from "@spaceorder/db";
 
-import { useTableOrderContext } from "./TableOrderContext";
 import { Spinner } from "@spaceorder/ui/components/spinner";
 import useOrderByTable, {
   UpdateOrderByTable,
 } from "@spaceorder/api/core/order/order/useOrderByTable.mutate";
 import { UpdateOrderByTablePayload } from "@spaceorder/api/core/order/order/httpOrder";
-import { useParams } from "next/navigation";
 
-type FilteredPendingStatus = Omit<SummarizedOrderWithItem, "status"> & {
+type FilteredPendingStatus = Omit<PublicOrderWithItem, "status"> & {
   status: typeof OrderStatus.PENDING;
 };
 
-export function TableOrderAcceptAllButton() {
-  const params = useParams<{ storeId: string }>();
-  const {
-    state: { session },
-  } = useTableOrderContext();
+type TableOrderAcceptAllButtonProps = {
+  orders: PublicOrderWithItem[] | undefined;
+  tableId: string;
+};
 
+export function TableOrderAcceptAllButton({
+  orders,
+  tableId,
+}: TableOrderAcceptAllButtonProps) {
   const [isPending, startTransition] = useTransition();
   const [failedUpdateItems, setFailedUpdateItems] = useState<
     UpdateOrderByTable[]
   >([]);
-  const { updateOrderByTable } = useOrderByTable({ storeId: params.storeId });
+  const { updateOrderByTable } = useOrderByTable({ tableId });
 
-  const pendingOrders = session?.orders?.filter(
+  const pendingOrders = orders?.filter(
     (order): order is FilteredPendingStatus =>
       order.status === OrderStatus.PENDING
   );

@@ -1,7 +1,7 @@
 import type { Order, OrderItem, OrderStatus } from "@spaceorder/db";
 import { ApiProperty } from "@nestjs/swagger";
 import { Exclude, Expose, Type } from "class-transformer";
-import { PublicOrderItemDto, SummarizedOrderItemDto } from "./order-item";
+import { PublicOrderItemDto } from "./order-item";
 
 /** 주문 응답 DTO */
 export class PublicOrderDto {
@@ -52,25 +52,6 @@ export class PublicOrderDto {
   constructor(partial: Partial<Order>) {
     Object.assign(this, partial);
   }
-}
-
-/** 주문 요약 DTO (항목 포함) */
-export class SummarizedOrderDto {
-  @ApiProperty({ description: "주문 고유 ID" })
-  @Expose()
-  publicId: string;
-
-  @ApiProperty({ description: "주문 상태" })
-  @Expose()
-  status: OrderStatus;
-
-  @ApiProperty({
-    description: "주문 항목 목록",
-    type: [SummarizedOrderItemDto],
-  })
-  @Expose()
-  @Type(() => SummarizedOrderItemDto)
-  orderItems: SummarizedOrderItemDto[];
 }
 
 /** 주문 + 주문 항목 응답 DTO */

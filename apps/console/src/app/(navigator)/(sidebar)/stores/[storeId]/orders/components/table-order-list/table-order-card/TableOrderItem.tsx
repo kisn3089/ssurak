@@ -6,28 +6,21 @@ import { BADGE_BY_ORDER_STATUS } from "@spaceorder/ui/constants/badgeByOrderStat
 import {
   nextStatusMap,
   OrderStatus,
-  SummarizedOrderWithItem,
+  PublicOrderWithItem,
 } from "@spaceorder/db";
-import { useTableOrderContext } from "./TableOrderContext";
 import ButtonWrapper from "@spaceorder/ui/components/ButtonWrapper";
 import { Button } from "@spaceorder/ui/components/button";
 import ActivityRender from "@spaceorder/ui/components/activity-render/ActivityRender";
 import useOrderByTable from "@spaceorder/api/core/order/order/useOrderByTable.mutate";
-import { useParams } from "next/navigation";
 
 interface TableOrderItemProps {
-  order: SummarizedOrderWithItem;
+  order: PublicOrderWithItem;
+  tableId: string;
 }
 
-export function TableOrderItem({ order }: TableOrderItemProps) {
-  const params = useParams<{ storeId: string }>();
-  const {
-    state: { summarizedTable },
-  } = useTableOrderContext();
-
+export function TableOrderItem({ order, tableId }: TableOrderItemProps) {
   const { updateOrderByTable: updateOrderByTableMutation } = useOrderByTable({
-    storeId: params.storeId,
-    tableId: summarizedTable.publicId,
+    tableId,
   });
 
   const isFinishStatus =

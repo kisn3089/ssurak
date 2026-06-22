@@ -1,11 +1,11 @@
 import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 import {
+  ActiveSessionResponse,
+  OrderBoardByStore,
   OrderStatus,
   Owner,
   Prisma,
-  PublicOrderWithItem,
   SessionWithTable,
-  SummarizedOrdersByStore,
   TableSessionStatus,
 } from "@spaceorder/db";
 import type Redlock from "redlock";
@@ -26,7 +26,10 @@ import {
   ValidatableOrderItem,
   createOrderItemsWithValidMenu,
 } from "src/common/validate/order/create-order-item";
-import { ALIVE_SESSION_STATUSES } from "src/common/query/session-query.const";
+import {
+  aliveSessionFilter,
+  ORDER_WITH_ITEMS_RECORD,
+} from "src/common/query/session-query.const";
 import { validateOrderSessionToWrite } from "src/common/validate/order/order-session-to-write";
 import { MENU_VALIDATION_FIELDS_SELECT } from "src/common/query/menu-query.const";
 import { TABLE_OMIT } from "src/common/query/table-query.const";
@@ -251,10 +254,10 @@ export class OrdersService {
     }
   }
 
-  async getOrdersSummary(
+  async getOrderBoard(
     client: Owner,
     storeId: string
-  ): Promise<SummarizedOrdersByStore> {
+  ): Promise<OrderBoardByStore<"Wide">> {
     return await this.prismaService.table.findMany({
       where: { store: { ownerId: client.id, publicId: storeId } },
       include: orderSituationPayload(),
@@ -262,18 +265,18 @@ export class OrdersService {
     });
   }
 
-  async getOrdersByAliveSession(
+  async getActiveSessionWithOrders(
     tableId: string
-  ): Promise<PublicOrderWithItem<"Wide">[]> {
-    return await this.prismaService.order.findMany({
-      where: {
-        table: { publicId: tableId },
-        tableSession: {
-          expiresAt: { gt: new Date() },
-          status: { in: ALIVE_SESSION_STATUSES },
-        },
+  ): Promise<ActiveSessionResponse<"Wide">> {
+    const aliveFilter = aliveSessionFilter();
+    return await this.prismaService.tableSession.findFirst({
+      ...aliveFilter,
+      where: { ...aliveFilter.where, table: { publicId: tableId } },
+      select: {
+        publicId: true,
+        expiresAt: true,
+        orders: ORDER_WITH_ITEMS_RECORD,
       },
-      ...ORDER_ITEMS_WITH_OMIT_PRIVATE,
     });
   }
 

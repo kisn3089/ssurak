@@ -1,5 +1,5 @@
 import type {
-  SummarizedTableWithSessions,
+  BoardTableWithSession,
   Table,
   TableSession,
   TableSessionStatus,
@@ -10,7 +10,7 @@ import { Exclude, Expose, Type } from "class-transformer";
 import { PublicStoreDto } from "./store.dto";
 import { PublicOrderWithItemsDto } from "./order.dto";
 import { TableSessionDto } from "./table-session-base.dto";
-import { SummarizedTableSessionDto } from "./session.dto";
+import { BoardTableSessionDto } from "./session.dto";
 import { PublicMenuDto } from "./menu.dto";
 
 export class TableDto {
@@ -204,8 +204,8 @@ export class TableWithStoreContextDto {
   }
 }
 
-/** 테이블 요약 DTO (세션 포함) */
-export class SummarizedTableDto {
+/** 보드 테이블 DTO (full 주문 세션 포함) */
+export class BoardTableDto {
   @ApiProperty({ description: "테이블 고유 ID" })
   @Expose()
   publicId: string;
@@ -252,14 +252,14 @@ export class SummarizedTableDto {
 
   @ApiProperty({
     description: "테이블 세션 목록",
-    type: [SummarizedTableSessionDto],
+    type: [BoardTableSessionDto],
     required: false,
   })
   @Expose()
-  @Type(() => SummarizedTableSessionDto)
-  tableSessions?: SummarizedTableSessionDto[];
+  @Type(() => BoardTableSessionDto)
+  tableSessions?: BoardTableSessionDto[];
 
-  constructor(partial: Partial<SummarizedTableWithSessions>) {
+  constructor(partial: Partial<BoardTableWithSession>) {
     Object.assign(this, partial);
   }
 }

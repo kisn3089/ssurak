@@ -6,15 +6,16 @@ import {
   CardTitle,
 } from "@spaceorder/ui/components/card";
 import ActivityRender from "@spaceorder/ui/components/activity-render/ActivityRender";
-import { useTableOrderContext } from "./TableOrderContext";
 import TableOrderQrCode from "./TableOrderQrCode";
+import { BoardTableWithSession } from "@spaceorder/db/types";
 
-export function TableOrderHeader() {
-  const {
-    state: { summarizedTable, isActivatedTable },
-  } = useTableOrderContext();
+type TableOrderHeaderProps = {
+  sanitizedTable: BoardTableWithSession;
+};
 
-  const { tableNumber, qrCode, section } = summarizedTable;
+export function TableOrderHeader({ sanitizedTable }: TableOrderHeaderProps) {
+  const { isActive, tableNumber, qrCode, section } = sanitizedTable;
+  const isActivatedTable = isActive === true;
 
   return (
     <CardHeader className="space-y-0 flex flex-row justify-between items-center gap-1 p-2">

@@ -7,8 +7,8 @@ import {
   OrderDetailContext,
   type OrderDetailContextValue,
 } from "./OrderDetailContext";
-import { OrderItemWithSummarizedOrder } from "./OrderDetailTable";
-import { PublicOrderWithItem } from "@spaceorder/db/types";
+import { OrderItemWithOrder } from "./OrderDetailTable";
+import { ActiveSessionResponse } from "@spaceorder/db/types";
 import useOrderItem from "@spaceorder/api/core/order/order-item/useOrderItem.mutate";
 import { toast } from "@spaceorder/ui/components/sonner";
 
@@ -22,21 +22,23 @@ export function OrderDetailProvider({
   children,
 }: OrderDetailProviderProps) {
   const { storeId, tableId } = params;
-  const fetchUrl = `/orders/v1/tables/${tableId}/active-session/orders`;
+  const fetchUrl = `/orders/v1/tables/${tableId}/active-session`;
 
-  const { data: orders, isRefetching } = useSuspenseWithAuth<
-    PublicOrderWithItem[]
-  >(fetchUrl, {
-    queryOptions: { refetchOnMount: true },
-  });
+  const { data: session, isRefetching } =
+    useSuspenseWithAuth<ActiveSessionResponse>(fetchUrl, {
+      queryOptions: { refetchOnMount: true },
+    });
 
   const { update, remove } = useOrderItem({ storeId, tableId });
 
-  const [editingItem, setEditingItem] =
-    useState<OrderItemWithSummarizedOrder | null>(null);
+  const [editingItem, setEditingItem] = useState<OrderItemWithOrder | null>(
+    null
+  );
   const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
 
-  const orderItems: OrderItemWithSummarizedOrder[] = orders.flatMap((order) =>
+  const orders = session?.orders ?? [];
+
+  const orderItems: OrderItemWithOrder[] = orders.flatMap((order) =>
     order.orderItems.map((item) => ({
       ...item,
       totalPrice: item.unitPrice * item.quantity,

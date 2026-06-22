@@ -2,10 +2,10 @@ import { OptionSnapshotValue } from "@spaceorder/db/types/menuOptions.type";
 import ActivityRender from "@spaceorder/ui/components/activity-render/ActivityRender";
 import { Badge } from "@spaceorder/ui/components/badge";
 import { TableCell } from "@spaceorder/ui/components/table";
-import { OrderItemWithSummarizedOrder } from "../OrderDetailTable";
+import { OrderItemWithOrder } from "../OrderDetailTable";
 
 interface OrderTableOptionsProps {
-  optionsSnapshot: OrderItemWithSummarizedOrder["optionsSnapshot"];
+  optionsSnapshot: OrderItemWithOrder["optionsSnapshot"];
   isSelected: boolean;
 }
 export function OrderTableOptions({

@@ -56,18 +56,3 @@ export class PublicOrderItemDto {
     Object.assign(this, partial);
   }
 }
-
-/** 주문 항목 요약 DTO */
-export class SummarizedOrderItemDto {
-  @ApiProperty({ description: "주문 항목 고유 ID" })
-  @Expose()
-  publicId: string;
-
-  @ApiProperty({ description: "메뉴 이름" })
-  @Expose()
-  menuName: string;
-
-  @ApiProperty({ description: "수량" })
-  @Expose()
-  quantity: number;
-}

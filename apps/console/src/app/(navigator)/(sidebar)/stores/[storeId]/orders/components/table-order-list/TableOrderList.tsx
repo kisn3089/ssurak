@@ -1,21 +1,33 @@
-import { SummarizedTableWithSessions } from "@spaceorder/db";
+"use client";
+
+import { ActiveSessionResponse, BoardTableWithSession } from "@spaceorder/db";
 import { TableOrderCard } from "./table-order-card";
+import useSuspenseWithAuth from "@spaceorder/api/hooks/useSuspenseWithAuth";
 
 type TableBoardProps = {
-  sanitizedTable: SummarizedTableWithSessions;
+  sanitizedTable: BoardTableWithSession;
 };
 
 export default function TableOrderList({ sanitizedTable }: TableBoardProps) {
+  const { data: session } = useSuspenseWithAuth<ActiveSessionResponse>(
+    `/orders/v1/tables/${sanitizedTable.publicId}/active-session`
+  );
+  const orders = session?.orders ?? [];
+
   return (
-    <TableOrderCard.Provider summarizedTable={sanitizedTable}>
-      <TableOrderCard.Card>
-        <TableOrderCard.Header />
-        <TableOrderCard.Content>
-          <TableOrderCard.AcceptAllButton />
-          <TableOrderCard.OrderList />
-        </TableOrderCard.Content>
-        <TableOrderCard.Footer />
-      </TableOrderCard.Card>
-    </TableOrderCard.Provider>
+    <TableOrderCard.Card sanitizedTable={sanitizedTable} session={session}>
+      <TableOrderCard.Header sanitizedTable={sanitizedTable} />
+      <TableOrderCard.Content>
+        <TableOrderCard.AcceptAllButton
+          orders={orders}
+          tableId={sanitizedTable.publicId}
+        />
+        <TableOrderCard.OrderList
+          orders={orders}
+          tableId={sanitizedTable.publicId}
+        />
+      </TableOrderCard.Content>
+      <TableOrderCard.Footer expiresAt={session?.expiresAt} />
+    </TableOrderCard.Card>
   );
 }
