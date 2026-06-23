@@ -34,7 +34,6 @@ export function OrderDetailProvider({
   const [editingItem, setEditingItem] = useState<OrderItemWithOrder | null>(
     null
   );
-  const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
 
   const orders = session?.orders ?? [];
 
@@ -52,12 +51,17 @@ export function OrderDetailProvider({
   // Actions
   const updateEditingQuantity = (delta: number) => {
     setEditingItem((prev) =>
-      prev ? { ...prev, quantity: Math.max(1, prev.quantity + delta) } : null
+      prev
+        ? {
+            ...prev,
+            totalPrice: prev.unitPrice * Math.max(1, prev.quantity + delta),
+            quantity: Math.max(1, prev.quantity + delta),
+          }
+        : null
     );
   };
 
   const resetSelection = () => {
-    setRowSelection({});
     setEditingItem(null);
   };
 
@@ -83,6 +87,7 @@ export function OrderDetailProvider({
 
   const removeOrderItem = async () => {
     if (!editingItem) return;
+
     try {
       await remove.mutateAsync({ orderItemId: editingItem.publicId });
       toast.success(`${editingItem.menuName} 메뉴를 주문에서 제외했습니다.`, {
@@ -103,13 +108,11 @@ export function OrderDetailProvider({
       orderItems,
       totalPrice,
       editingItem,
-      rowSelection,
       updateMutation: update,
       removeMutation: remove,
     },
     actions: {
       setEditingItem,
-      setRowSelection,
       updateEditingQuantity,
       resetSelection,
       updateOrderItem,

@@ -13,22 +13,20 @@ export type OrderItemWithOrder = PublicOrderItem & {
 };
 export function OrderDetailTable() {
   const {
-    state: { orderItems, editingItem, rowSelection },
-    actions: { setRowSelection, updateEditingQuantity, resetSelection },
+    state: { orderItems, editingItem },
+    actions: { updateEditingQuantity },
   } = useOrderDetailContext();
 
   const tableMeta = {
     editingData: editingItem,
     updateEditingQuantity,
-    resetEditing: resetSelection,
   };
 
   const table = useReactTable({
     data: orderItems,
     columns: tableOrderColumns,
     getCoreRowModel: getCoreRowModel(),
-    state: { rowSelection },
-    onRowSelectionChange: setRowSelection,
+    getRowId: (row) => row.publicId,
     meta: tableMeta,
   });
 
@@ -37,10 +35,10 @@ export function OrderDetailTable() {
       <OrderTable.Header table={table} />
       <OrderTable.Body>
         {table.getRowModel().rows.map((row) => {
-          const isSelected = row.getIsSelected();
+          const isSelected = editingItem?.publicId === row.original.publicId;
 
           return (
-            <OrderTable.Row key={row.id} row={row} table={table}>
+            <OrderTable.Row key={row.id} row={row} isSelected={isSelected}>
               <OrderTable.Options
                 optionsSnapshot={row.original.optionsSnapshot}
                 isSelected={isSelected}

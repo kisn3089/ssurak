@@ -1,20 +1,22 @@
 import { TableRow } from "@spaceorder/ui/components/table";
 import { useOrderDetailContext } from "../OrderDetailContext";
 import { OrderItemWithOrder } from "../OrderDetailTable";
-import { Row, Table } from "@tanstack/react-table";
+import { Row } from "@tanstack/react-table";
 import { OrderStatus } from "@spaceorder/db/index";
 
 interface OrderTableRowProps {
   children: React.ReactNode;
-  table: Table<OrderItemWithOrder>;
   row: Row<OrderItemWithOrder>;
+  isSelected: boolean;
 }
-export function OrderTableRow({ children, row, table }: OrderTableRowProps) {
+export function OrderTableRow({
+  children,
+  row,
+  isSelected,
+}: OrderTableRowProps) {
   const {
-    actions: { resetSelection, setEditingItem },
+    actions: { setEditingItem },
   } = useOrderDetailContext();
-
-  const isSelected = row.getIsSelected();
 
   const isFinalizedOrder =
     row.original.orderStatus === OrderStatus.COMPLETED ||
@@ -29,14 +31,8 @@ export function OrderTableRow({ children, row, table }: OrderTableRowProps) {
 
     if (isFinalizedOrder) return;
 
-    if (isSelected) {
-      row.toggleSelected(false);
-      resetSelection();
-    } else {
-      table.resetRowSelection();
-      row.toggleSelected(true);
-      setEditingItem(row.original);
-    }
+    // editingItem이 단일 선택의 SSOT. 설정 시 이전 선택은 자동으로 대체된다.
+    setEditingItem(isSelected ? null : row.original);
   };
 
   const ignoreTabKey = (e: React.KeyboardEvent<HTMLTableRowElement>) => {

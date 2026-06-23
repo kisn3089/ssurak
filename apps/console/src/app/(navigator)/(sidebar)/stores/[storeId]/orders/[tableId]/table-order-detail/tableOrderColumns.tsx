@@ -10,7 +10,6 @@ declare module "@tanstack/react-table" {
   interface TableMeta<TData extends RowData> {
     editingData: TData | null;
     updateEditingQuantity: (delta: number) => void;
-    resetEditing: () => void;
   }
 }
 export const tableOrderColumns: ColumnDef<OrderItemWithOrder>[] = [
@@ -25,9 +24,10 @@ export const tableOrderColumns: ColumnDef<OrderItemWithOrder>[] = [
     accessorKey: "quantity",
     header: () => <div className="text-center w-full">수량</div>,
     cell: ({ row, table }) => {
-      const isSelected = row.getIsSelected();
       const meta = table.options.meta;
       if (!meta) return null;
+
+      const isSelected = meta.editingData?.publicId === row.original.publicId;
 
       const displayQuantity =
         isSelected && meta.editingData
@@ -65,9 +65,13 @@ export const tableOrderColumns: ColumnDef<OrderItemWithOrder>[] = [
   {
     accessorKey: "totalPrice",
     header: () => <div className="text-right w-full">가격</div>,
-    cell: ({ row }) => {
-      const amount = parseInt(row.getValue("totalPrice"));
-      const formatted = transCurrencyFormat(amount);
+    cell: ({ row, table }) => {
+      const editingData = table.options.meta?.editingData;
+      const isSelected = editingData?.publicId === row.original.publicId;
+      const price = isSelected
+        ? editingData?.totalPrice
+        : row.getValue<number>("totalPrice");
+      const formatted = transCurrencyFormat(price);
 
       return <div className="text-right w-full">{formatted}</div>;
     },

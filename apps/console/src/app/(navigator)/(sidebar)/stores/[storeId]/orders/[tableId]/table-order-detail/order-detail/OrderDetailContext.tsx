@@ -18,7 +18,6 @@ export interface OrderDetailState {
   orderItems: OrderItemWithOrder[];
   totalPrice: number;
   editingItem: OrderItemWithOrder | null;
-  rowSelection: Record<string, boolean>;
   updateMutation: ReturnType<typeof useOrderItem>["update"];
   removeMutation: ReturnType<typeof useOrderItem>["remove"];
 }
@@ -26,9 +25,6 @@ export interface OrderDetailState {
 // Actions
 export interface OrderDetailActions {
   setEditingItem: (item: OrderItemWithOrder | null) => void;
-  setRowSelection: React.Dispatch<
-    React.SetStateAction<Record<string, boolean>>
-  >;
   updateEditingQuantity: (delta: number) => void;
   resetSelection: () => void;
   updateOrderItem: () => Promise<void>;
