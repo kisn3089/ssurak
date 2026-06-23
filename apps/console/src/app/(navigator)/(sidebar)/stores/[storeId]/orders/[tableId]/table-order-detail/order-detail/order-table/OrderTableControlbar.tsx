@@ -20,6 +20,14 @@ export function OrderTableControlbar({
     actions: { updateOrderItem, removeOrderItem },
   } = useOrderDetailContext();
 
+  async function stopEventAndRunFn(
+    e: React.MouseEvent<HTMLButtonElement>,
+    fn: () => Promise<void>
+  ) {
+    e.stopPropagation();
+    await fn();
+  }
+
   const fontSemiBold = "font-semibold";
   return (
     <ActivityRender mode={isSelected ? "visible" : "hidden"}>
@@ -28,7 +36,7 @@ export function OrderTableControlbar({
           <Button
             className={fontSemiBold}
             variant={"destructive"}
-            onClick={removeOrderItem}
+            onClick={(e) => stopEventAndRunFn(e, removeOrderItem)}
             isLoading={removeMutation.isPending}
           >
             삭제
@@ -45,7 +53,7 @@ export function OrderTableControlbar({
             }}
             disabled={editingItem?.quantity === row.original.quantity}
             className={fontSemiBold}
-            onClick={updateOrderItem}
+            onClick={(e) => stopEventAndRunFn(e, updateOrderItem)}
           >
             변경
           </RequestButton>
