@@ -12,8 +12,8 @@ type TableOrderFooterProps = {
 export function TableOrderFooter({ expiresAt }: TableOrderFooterProps) {
   return (
     <CardFooter className="p-2 min-h-9">
-      <ActivityRender mode={expiresAt ? "visible" : "hidden"}>
-        <SessionExpireTime expiresAt={expiresAt} />
+      <ActivityRender value={expiresAt}>
+        {(expiresAt) => <SessionExpireTime expiresAt={expiresAt} />}
       </ActivityRender>
     </CardFooter>
   );

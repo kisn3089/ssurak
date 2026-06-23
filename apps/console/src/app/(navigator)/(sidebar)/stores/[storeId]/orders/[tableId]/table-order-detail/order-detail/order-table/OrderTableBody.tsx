@@ -19,11 +19,8 @@ export function OrderTableBody({ children }: OrderTableBodyProps) {
 
   return (
     <TableBody>
-      <ActivityRender
-        mode={isRefetching ? "hidden" : "visible"}
-        fallback={<LoadingFallback />}
-      >
-        {children}
+      <ActivityRender value={!isRefetching} fallback={<LoadingFallback />}>
+        {() => children}
       </ActivityRender>
     </TableBody>
   );

@@ -95,15 +95,17 @@ function ChangeQuantityButton({
   };
 
   return (
-    <ActivityRender mode={isSelected ? "visible" : "hidden"}>
-      <Button
-        size="sm"
-        className="size-7 font-semibold border bg-background text-accent-foreground shadow-xs hover:bg-accent"
-        onClick={changeQuantity}
-        {...restProps}
-      >
-        {children}
-      </Button>
+    <ActivityRender value={isSelected}>
+      {() => (
+        <Button
+          size="sm"
+          className="size-7 font-semibold border bg-background text-accent-foreground shadow-xs hover:bg-accent"
+          onClick={changeQuantity}
+          {...restProps}
+        >
+          {children}
+        </Button>
+      )}
     </ActivityRender>
   );
 }

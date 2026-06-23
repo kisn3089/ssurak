@@ -15,16 +15,18 @@ export function TableOrderOrderList({
 }: TableOrderOrderListProps) {
   return (
     <div className="flex flex-col gap-y-1 p-2">
-      <ActivityRender mode={orders && orders.length > 0 ? "visible" : "hidden"}>
-        {orders
-          ?.filter((order) => order.orderItems.length > 0)
-          .map((order) => (
-            <TableOrderItem
-              key={order.publicId}
-              order={order}
-              tableId={tableId}
-            />
-          ))}
+      <ActivityRender value={orders.length > 0}>
+        {() =>
+          orders
+            .filter((order) => order.orderItems.length > 0)
+            .map((order) => (
+              <TableOrderItem
+                key={order.publicId}
+                order={order}
+                tableId={tableId}
+              />
+            ))
+        }
       </ActivityRender>
     </div>
   );

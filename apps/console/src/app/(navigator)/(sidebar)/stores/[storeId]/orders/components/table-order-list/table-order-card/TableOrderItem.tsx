@@ -47,16 +47,16 @@ export function TableOrderItem({ order, tableId }: TableOrderItemProps) {
       <CardContent
         className={`rounded-lg bg-accent ${!isFinishStatus ? "hover:bg-background" : ""} border p-2 font-semibold flex flex-col justify-center`}
       >
-        <ActivityRender
-          mode={updateOrderByTableMutation.isError ? "visible" : "hidden"}
-        >
-          <Button
-            className="w-full mb-2"
-            variant={"destructive"}
-            onClick={onOrderStatusUpdate}
-          >
-            다시 시도
-          </Button>
+        <ActivityRender value={updateOrderByTableMutation.isError}>
+          {() => (
+            <Button
+              className="w-full mb-2"
+              variant={"destructive"}
+              onClick={onOrderStatusUpdate}
+            >
+              다시 시도
+            </Button>
+          )}
         </ActivityRender>
         <div className="flex justify-center">
           <Badge

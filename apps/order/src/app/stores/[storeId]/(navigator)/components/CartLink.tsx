@@ -27,8 +27,10 @@ export default function CartLink() {
     <Button variant={"outline"} className="relative" asChild>
       <Link href={`/stores/${storeId}/carts`}>
         <ConciergeBell />
-        <ActivityRender mode={cartMenuCount > 0 ? "visible" : "hidden"}>
-          <CountIcon count={cartMenuCount} className="-top-0.5 -right-0.5" />
+        <ActivityRender value={cartMenuCount || undefined}>
+          {(count) => (
+            <CountIcon count={count} className="-top-0.5 -right-0.5" />
+          )}
         </ActivityRender>
       </Link>
     </Button>

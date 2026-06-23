@@ -1,5 +1,6 @@
 "use client";
 
+import ActivityRender from "@spaceorder/ui/components/activity-render/ActivityRender";
 import { Button } from "@spaceorder/ui/components/button";
 import {
   Sheet,
@@ -11,7 +12,7 @@ import {
 } from "@spaceorder/ui/components/sheet";
 import { toast } from "@spaceorder/ui/components/sonner";
 import { Copy, QrCode } from "lucide-react";
-import Image from "next/image";
+import { QRCodeSVG } from "qrcode.react";
 import { useState } from "react";
 
 type QrCodeModalProps = {
@@ -27,21 +28,23 @@ export default function TableOrderQrCode({
 }: QrCodeModalProps) {
   const [isOpen, setIsOpen] = useState(false);
 
+  const orderAppUrl = process.env.NEXT_PUBLIC_ORDER_APP_URL;
+  const qrUrl = orderAppUrl ? `${orderAppUrl}/qr/${qrCode}` : null;
+
   const preventEvent = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
   };
 
   const copyUrlToClipboard = () => {
-    const orderAppUrl = process.env.NEXT_PUBLIC_ORDER_APP_URL;
-    if (!orderAppUrl) {
+    if (!qrUrl) {
       toast.error("주문 앱 URL이 설정되지 않았습니다.", {
         position: "top-center",
       });
       return;
     }
 
-    const url = `${orderAppUrl}/qr/${qrCode}`;
+    const url = qrUrl;
     const copiedSuccess = () =>
       toast.success("URL이 클립보드에 복사되었습니다!", {
         position: "top-center",
@@ -81,14 +84,20 @@ export default function TableOrderQrCode({
               <Copy />
             </Button>
           </div>
-          <Image
-            src={`/img/table_${tableNumber}.png`}
-            alt={`QR code for table ${tableNumber}`}
-            width={300}
-            height={300}
-            className="mx-auto mb-4 rounded-xl"
-            style={{ width: "auto", height: "auto" }}
-          />
+          <ActivityRender value={qrUrl}>
+            {(url) => (
+              <div className="flex items-center justify-center mb-4">
+                <QRCodeSVG
+                  value={url}
+                  size={140}
+                  level="M"
+                  marginSize={2}
+                  title={`QR code for table ${tableNumber}`}
+                  className="rounded-xl"
+                />
+              </div>
+            )}
+          </ActivityRender>
         </SheetContent>
       </div>
     </Sheet>
