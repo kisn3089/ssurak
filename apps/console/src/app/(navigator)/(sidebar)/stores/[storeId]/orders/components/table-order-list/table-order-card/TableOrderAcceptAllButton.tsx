@@ -35,7 +35,7 @@ export function TableOrderAcceptAllButton({
 
   const pendingOrders = orders?.filter(
     (order): order is FilteredPendingStatus =>
-      order.status === OrderStatus.PENDING
+      order.status === OrderStatus.PENDING && order.orderItems.length > 0
   );
 
   if (!pendingOrders?.length) {
