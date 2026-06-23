@@ -1,20 +1,20 @@
-type ActivityRenderProps = {
-  mode: "visible" | "hidden";
+type ActivityRenderProps<T> = {
+  value: T;
   fallback?: React.ReactNode;
-  children: React.ReactNode;
+  children: (value: NonNullable<T>) => React.ReactNode;
 };
 
-export default function ActivityRender({
-  mode,
+export default function ActivityRender<T>({
+  value,
   children,
   fallback,
-}: ActivityRenderProps) {
-  if (mode === "hidden") {
+}: ActivityRenderProps<T>) {
+  if (value == null || value === false || value === "") {
     if (fallback) {
       return <>{fallback}</>;
     }
     return null;
   }
 
-  return <>{children}</>;
+  return <>{children(value)}</>;
 }

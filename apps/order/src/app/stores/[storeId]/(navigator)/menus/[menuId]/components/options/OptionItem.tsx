@@ -37,8 +37,10 @@ export default function OptionItem({
             >
               <div className="flex flex-col">
                 <span>{opt.key}</span>
-                <ActivityRender mode={opt.price > 0 ? "visible" : "hidden"}>
-                  <span>{`+${opt.price.toLocaleString("ko-KR")}원`}</span>
+                <ActivityRender value={opt.price > 0 ? opt.price : undefined}>
+                  {(price) => (
+                    <span>{`+${price.toLocaleString("ko-KR")}원`}</span>
+                  )}
                 </ActivityRender>
               </div>
             </Button>

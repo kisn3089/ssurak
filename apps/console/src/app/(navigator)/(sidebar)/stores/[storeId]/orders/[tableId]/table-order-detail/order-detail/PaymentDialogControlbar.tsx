@@ -64,10 +64,10 @@ export default function PaymentDialogControlbar({
         disabled={paymentTransaction.isPending}
       >
         <ActivityRender
-          mode={paymentTransaction.isPending ? "hidden" : "visible"}
+          value={!paymentTransaction.isPending}
           fallback={<LoadingTransaction />}
         >
-          {isError ? "결제 실패, 다시 시도" : children}
+          {() => (isError ? "결제 실패, 다시 시도" : children)}
         </ActivityRender>
       </AlertDialogAction>
     </>

@@ -27,8 +27,10 @@ export function TableOrderHeader({ sanitizedTable }: TableOrderHeaderProps) {
         />
         <CardTitle>{tableNumber}</CardTitle>
       </div>
-      <ActivityRender mode={section ? "visible" : "hidden"}>
-        <CardDescription className="text-sm">{section}</CardDescription>
+      <ActivityRender value={section}>
+        {(section) => (
+          <CardDescription className="text-sm">{section}</CardDescription>
+        )}
       </ActivityRender>
     </CardHeader>
   );

@@ -13,19 +13,21 @@ export function OrderTableOptions({
   isSelected,
 }: OrderTableOptionsProps) {
   return (
-    <ActivityRender mode={optionsSnapshot ? "visible" : "hidden"}>
-      <TableCell className="flex gap-1 flex-wrap pt-4 px-4 pb-0">
-        <OptionsSnapshotBadge
-          options={optionsSnapshot?.requiredOptions}
-          isSelected={isSelected}
-          type="required"
-        />
-        <OptionsSnapshotBadge
-          options={optionsSnapshot?.customOptions}
-          isSelected={isSelected}
-          type="custom"
-        />
-      </TableCell>
+    <ActivityRender value={optionsSnapshot}>
+      {(optionsSnapshot) => (
+        <TableCell className="flex gap-1 flex-wrap pt-4 px-4 pb-0">
+          <OptionsSnapshotBadge
+            options={optionsSnapshot.requiredOptions}
+            isSelected={isSelected}
+            type="required"
+          />
+          <OptionsSnapshotBadge
+            options={optionsSnapshot.customOptions}
+            isSelected={isSelected}
+            type="custom"
+          />
+        </TableCell>
+      )}
     </ActivityRender>
   );
 }

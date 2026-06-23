@@ -30,10 +30,12 @@ export default function MenuCard({ menu, priority = false }: MenuCardProps) {
           <ItemFooter className="text-base font-semibold text-primary">
             {transCurrencyFormat(menu.price)}
           </ItemFooter>
-          <ActivityRender mode={menu.description ? "visible" : "hidden"}>
-            <ItemDescription className="leading-4 pt-2">
-              {menu.description}
-            </ItemDescription>
+          <ActivityRender value={menu.description}>
+            {(description) => (
+              <ItemDescription className="leading-4 pt-2">
+                {description}
+              </ItemDescription>
+            )}
           </ActivityRender>
         </ItemContent>
         <div className="flex items-center">
