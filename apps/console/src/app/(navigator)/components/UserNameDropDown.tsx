@@ -1,4 +1,4 @@
-import { SidebarMenuButton } from "@spaceorder/ui/components/sidebar";
+import { SidebarMenuButton } from "@spaceorder/ui/components/layouts/sidebar";
 import UserInfoDropdown from "../(sidebar)/components/UserInfoDropdown";
 import { ShieldUser } from "lucide-react";
 import UserName from "../(sidebar)/components/UserName";

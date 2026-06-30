@@ -15,7 +15,7 @@ type OrderItemOption = {
 export type CreateOrderByTablePayload = {
   orderItems: Array<
     { menuPublicId: string } & Pick<PublicOrderItem, "quantity"> &
-      Partial<Pick<PublicOrderItem, "menuName"> & OrderItemOption>
+      Partial<OrderItemOption>
   >;
   memo?: string;
 };

@@ -1,17 +1,17 @@
 "use client";
 
-import { CardContent } from "@spaceorder/ui/components/card";
-import { Badge } from "@spaceorder/ui/components/badge";
+import { CardContent } from "@spaceorder/ui/components/layouts/card";
 import { BADGE_BY_ORDER_STATUS } from "@spaceorder/ui/constants/badgeByOrderStatus.const";
 import {
   nextStatusMap,
   OrderStatus,
   PublicOrderWithItem,
 } from "@spaceorder/db";
-import ButtonWrapper from "@spaceorder/ui/components/ButtonWrapper";
-import { Button } from "@spaceorder/ui/components/button";
 import ActivityRender from "@spaceorder/ui/components/activity-render/ActivityRender";
 import useOrderByTable from "@spaceorder/api/core/order/order/useOrderByTable.mutate";
+import { Button } from "@spaceorder/ui/components/buttons/button";
+import { Badge } from "@spaceorder/ui/components/forms/badge";
+import ButtonWrapper from "@spaceorder/ui/components/buttons/ButtonWrapper";
 
 interface TableOrderItemProps {
   order: PublicOrderWithItem;

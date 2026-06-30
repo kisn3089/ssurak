@@ -18,7 +18,7 @@ export default function OrderItemThumbnail({
           size="item"
           src={menuImageUrl}
           alt={menuName}
-          className="rounded-xl"
+          className="rounded-2xl"
         />
         <CountIcon
           count={quantity}

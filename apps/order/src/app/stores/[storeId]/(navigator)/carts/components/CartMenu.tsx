@@ -1,12 +1,12 @@
 "use client";
 
-import { CardHeader } from "@spaceorder/ui/components/card";
+import { CardHeader } from "@spaceorder/ui/components/layouts/card";
 import type { PublicCartItem } from "@spaceorder/db/types";
 import MenuImage from "../../menus/components/MenuImage";
-import MenuCounter from "../../menus/components/MenuCounter";
 import { useCart } from "./CartProvider";
 import CartMenuContent from "./CartMenuContent";
 import DeleteMenuButton from "./DeleteMenuButton";
+import MenuCounter from "@spaceorder/ui/components/menu/menu-detail/MenuCounter";
 
 type CartMenuProps = {
   menu: PublicCartItem;

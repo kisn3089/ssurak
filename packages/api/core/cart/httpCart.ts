@@ -11,7 +11,8 @@ const prefix = "/carts/v1";
 export type AddCartItemPayload = Pick<
   PublicCartItem,
   "menuPublicId" | "quantity" | "requiredOptions" | "customOptions"
->;
+> &
+  Partial<Pick<PublicCartItem, "menuName">>;
 
 export type UpdateCartItemPayload = Omit<AddCartItemPayload, "menuPublicId">;
 

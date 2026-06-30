@@ -1,14 +1,14 @@
 import z from "zod";
-import { commonSchema } from "../common";
-import { storeIdParamsSchema } from "./store.schema";
-import {
-  MenuCustomOptionValue,
+import type {
   MenuCustomOption,
+  MenuCustomOptionValue,
   MenuOption,
   MenuOptionValue,
   MenuRequiredOptionValue,
   MenuRequiredOption,
-} from "@spaceorder/db";
+} from "../../types/menuOptions.type";
+import { commonSchema } from "../common";
+import { storeIdParamsSchema } from "./store.schema";
 
 const menuIdParamsSchema = z
   .object({ menuId: commonSchema.cuid2("Menu") })

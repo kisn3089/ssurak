@@ -4,7 +4,7 @@ import useSuspenseWithSession from "@spaceorder/api/hooks/useSuspenseWithSession
 import { PublicCategoryWithMenus, StoreContext } from "@spaceorder/db/types";
 import { useState } from "react";
 import useObservingCategory from "./hooks/useObservingCategory";
-import { Button } from "@spaceorder/ui/components/button";
+import { Button } from "@spaceorder/ui/components/buttons/button";
 import CategoryMenuList from "./components/CategoryMenuList";
 
 export default function MenuListPage() {

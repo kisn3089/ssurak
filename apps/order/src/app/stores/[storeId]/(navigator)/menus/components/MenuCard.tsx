@@ -10,9 +10,9 @@ import {
 } from "@spaceorder/ui/components/item";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { transCurrencyFormat } from "@spaceorder/api/utils/priceFormatter";
 import ActivityRender from "@spaceorder/ui/components/activity-render/ActivityRender";
 import MenuImage from "./MenuImage";
+import { transCurrencyFormat } from "@spaceorder/ui/utils/menu/priceFormatter";
 
 type MenuCardProps = {
   menu: PublicMenu;

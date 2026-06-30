@@ -1,7 +1,7 @@
 "use client";
 
 import ActivityRender from "@spaceorder/ui/components/activity-render/ActivityRender";
-import { Button } from "@spaceorder/ui/components/button";
+import { Button } from "@spaceorder/ui/components/buttons/button";
 import {
   Sheet,
   SheetContent,
@@ -9,7 +9,7 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@spaceorder/ui/components/sheet";
+} from "@spaceorder/ui/components/layouts/sheet";
 import { toast } from "@spaceorder/ui/components/sonner";
 import { Copy, QrCode } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";

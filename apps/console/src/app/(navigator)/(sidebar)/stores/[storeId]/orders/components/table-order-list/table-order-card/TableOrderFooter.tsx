@@ -1,6 +1,6 @@
 "use client";
 
-import { CardFooter } from "@spaceorder/ui/components/card";
+import { CardFooter } from "@spaceorder/ui/components/layouts/card";
 import ActivityRender from "@spaceorder/ui/components/activity-render/ActivityRender";
 import SessionExpireTime from "@/app/common/orders/SessionExpireTime";
 import { BoardSessionWithOrders } from "@spaceorder/db/types";

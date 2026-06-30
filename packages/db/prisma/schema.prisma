@@ -2,6 +2,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator json {
+  provider = "prisma-json-types-generator"
+}
+
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
@@ -166,29 +170,18 @@ model Menu {
   createdAt       DateTime  @default(now()) @map("created_at")
   updatedAt       DateTime  @updatedAt @map("updated_at")
   deletedAt       DateTime? @map("deleted_at")
-  /**
-   * {
-   * "종류": {
-   *  "options": [
-   *    {"key": "아이스", "description": "시원하게 드셔보세요.", "price": 0 },
-   *    {"key": "핫", "description": "따뜻하게 드셔보세요.", "price": 0 },
-   *  ],
-   *  "defaultKey": "아이스",
-   * }
-   */
+  // 예시:
+  // { "종류": { "options": [{ "key": "아이스", "description": "시원하게 드셔보세요.", "price": 0 },
+  //                          { "key": "핫", "description": "따뜻하게 드셔보세요.", "price": 0 }],
+  //             "defaultKey": "아이스" } }
+  /// [MenuRequiredOption]
   requiredOptions Json?     @map("required_options")
-  /**
-   * {
-   * "카페인": {
-   *  "options": [
-   *    {"key": "진하게", "description": "카페인을 진하게 즐겨", "price": 1000 },
-   *    {"key": "연하게", "description": "카페인을 연하게 즐겨", "price": 0 },
-   *  ],
-   *    "trigger": [{ "group": "원두", "in": ["케냐", "코스타리코"] }],
-   *    "defaultKey": "진하게",
-   * },
-   * }
-   */
+  // 예시:
+  // { "카페인": { "options": [{ "key": "진하게", "description": "카페인을 진하게 즐겨", "price": 1000 },
+  //                            { "key": "연하게", "description": "카페인을 연하게 즐겨", "price": 0 }],
+  //              "trigger": [{ "group": "원두", "in": ["케냐", "코스타리코"] }],
+  //              "defaultKey": "진하게" } }
+  /// [MenuCustomOption]
   customOptions   Json?     @map("custom_options")
 
   // MVP 기능은 아니기 때문에 일단 보류
@@ -279,10 +272,9 @@ model OrderItem {
   optionsPrice    Int      @default(0) @map("options_price")
   unitPrice       Int      @map("unit_price")
   quantity        Int      @default(1)
-  /**
-   * 고객이 선택한 필수 및 선택 옵션들
-   * 예) { "requiredOptions": { "사이즈": "라지" }, "customOptions": { "얼음": "적게" } }
-   */
+  // 고객이 선택한 필수 및 선택 옵션들
+  // 예) { "requiredOptions": { "사이즈": "라지" }, "customOptions": { "얼음": "적게" } }
+  /// [OrderItemOptionSnapshot]
   optionsSnapshot Json?    @map("options_snapshot")
   createdAt       DateTime @default(now()) @map("created_at")
 

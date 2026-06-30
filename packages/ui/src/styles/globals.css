@@ -20,6 +20,7 @@
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
+  --accent-subtle: oklch(98.51% 0 0);
   --blue: oklch(0.9523 0.0275 232.66);
   --blue-foreground: oklch(0.53 0.19 257.428);
   --teal: oklch(62.86% 0.11 182.253);
@@ -63,6 +64,7 @@
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
   --muted-foreground: oklch(0.708 0 0);
+  --accent-subtle: oklch(18% 0 0);
   --blue: oklch(0.234 0.0275 232.66);
   --blue-foreground: oklch(0.846 0.1907 257.43);
   --accent: oklch(0.269 0 0);
@@ -101,6 +103,7 @@
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
+  --color-accent-subtle: var(--accent-subtle);
   --color-blue: var(--blue);
   --color-blue-foreground: var(--blue-foreground);
   --color-teal: var(--teal);
@@ -134,6 +137,7 @@
 
   --animate-fade-in: fade-in 0.5s ease-in-out;
   --animate-fade-in-up: fade-in-up 0.3s ease-in-out;
+  --text-tiny: 0.625rem;
   @keyframes fade-in {
     0% {
       opacity: 0;

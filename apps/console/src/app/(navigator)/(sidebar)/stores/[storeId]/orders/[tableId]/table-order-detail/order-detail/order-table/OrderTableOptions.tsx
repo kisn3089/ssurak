@@ -1,30 +1,24 @@
 import { OptionSnapshotValue } from "@spaceorder/db/types/menuOptions.type";
 import ActivityRender from "@spaceorder/ui/components/activity-render/ActivityRender";
-import { Badge } from "@spaceorder/ui/components/badge";
 import { TableCell } from "@spaceorder/ui/components/table";
 import { OrderItemWithOrder } from "../OrderDetailTable";
+import OptionTags from "../create-order/add-menu-detail/OptionTags";
 
 interface OrderTableOptionsProps {
   optionsSnapshot: OrderItemWithOrder["optionsSnapshot"];
-  isSelected: boolean;
 }
-export function OrderTableOptions({
-  optionsSnapshot,
-  isSelected,
-}: OrderTableOptionsProps) {
+export function OrderTableOptions({ optionsSnapshot }: OrderTableOptionsProps) {
   return (
     <ActivityRender value={optionsSnapshot}>
       {(optionsSnapshot) => (
         <TableCell className="flex gap-1 flex-wrap pt-4 px-4 pb-0">
-          <OptionsSnapshotBadge
-            options={optionsSnapshot.requiredOptions}
-            isSelected={isSelected}
-            type="required"
+          <OptionTags
+            options={snapshotToOptionTags(optionsSnapshot.requiredOptions)}
+            variant="destructive"
           />
-          <OptionsSnapshotBadge
-            options={optionsSnapshot.customOptions}
-            isSelected={isSelected}
-            type="custom"
+          <OptionTags
+            options={snapshotToOptionTags(optionsSnapshot.customOptions)}
+            variant="secondary"
           />
         </TableCell>
       )}
@@ -32,27 +26,14 @@ export function OrderTableOptions({
   );
 }
 
-function OptionsSnapshotBadge({
-  options,
-  isSelected,
-  type,
-}: {
-  options: OptionSnapshotValue | undefined;
-  isSelected: boolean;
-  type: "required" | "custom";
-}) {
-  const entries = Object.entries(options || {});
-  if (entries.length === 0) return null;
-
-  return (
-    <>
-      {entries.map(([key, value]) => (
-        <Badge
-          key={key}
-          className="whitespace-pre-wrap text-center tabular-nums"
-          variant={type === "required" ? "destructive" : "default"}
-        >{`${key}: ${value.key} ${isSelected && value.price !== 0 ? `\n${value.price}` : ""}`}</Badge>
-      ))}
-    </>
-  );
+function snapshotToOptionTags(
+  options: OptionSnapshotValue | undefined
+): Record<string, string> | undefined {
+  if (!options) return undefined;
+  const result: Record<string, string> = {};
+  Object.entries(options).forEach(([key, value]) => {
+    result[key] =
+      `${value.key}${value.price !== 0 ? ` +${value.price.toLocaleString("ko-KR")}` : ""}`;
+  });
+  return result;
 }

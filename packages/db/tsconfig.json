@@ -2,8 +2,7 @@
   "extends": "@spaceorder/tsconfig/react-library.json",
   "compilerOptions": {
     "rootDir": ".",
-    "outDir": "dist",
-    "paths": { "@spaceorder/auth/*": ["../auth/*"] }
+    "outDir": "dist"
   },
   "include": ["prisma/seed.ts", "index.ts"],
   "exclude": ["node_modules", "dist"]

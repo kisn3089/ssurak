@@ -9,7 +9,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from "@spaceorder/ui/components/dropdown-menu";
+} from "@spaceorder/ui/components/forms/dropdown-menu";
 import { PropsWithChildren } from "react";
 
 export default function UserInfoDropdown({ children }: PropsWithChildren) {

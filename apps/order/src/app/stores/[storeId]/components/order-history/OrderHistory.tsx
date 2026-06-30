@@ -2,7 +2,7 @@
 
 import useSuspenseWithSession from "@spaceorder/api/hooks/useSuspenseWithSession";
 import { PublicOrderWithItem } from "@spaceorder/db/types";
-import { Badge } from "@spaceorder/ui/components/badge";
+import { Badge } from "@spaceorder/ui/components/forms/badge";
 import { BADGE_BY_ORDER_STATUS } from "@spaceorder/ui/constants/badgeByOrderStatus.const";
 import OrderItemThumbnail from "./OrderItemThumbnail";
 
@@ -18,11 +18,14 @@ export default function OrderHistory() {
   }
 
   return (
-    <div className="flex gap-x-4 overflow-x-scroll [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+    <div className="flex gap-x-4 overflow-x-scroll [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] py-2">
       {orders
         .filter((order) => order.orderItems.length > 0)
         .map((order) => (
-          <div key={order.publicId} className="flex rounded-2xl bg-accent p-4">
+          <div
+            key={order.publicId}
+            className="flex rounded-4xl border border-border p-4 shadow-md"
+          >
             <div className="flex flex-col gap-y-2 items-center w-fit">
               <Badge
                 className="font-semibold text-center text-xs"

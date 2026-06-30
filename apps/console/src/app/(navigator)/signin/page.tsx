@@ -1,4 +1,8 @@
-import { Card, CardHeader, CardTitle } from "@spaceorder/ui/components/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+} from "@spaceorder/ui/components/layouts/card";
 import FormCard from "./components/form-card/FormCard";
 
 export default async function SignInPage() {

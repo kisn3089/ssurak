@@ -1,4 +1,8 @@
-import { Card, CardHeader, CardTitle } from "@spaceorder/ui/components/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+} from "@spaceorder/ui/components/layouts/card";
 
 export default function DashboardPage() {
   return (

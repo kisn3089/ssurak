@@ -2,11 +2,11 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { Prisma, PublicMenu } from "@spaceorder/db";
 import { CreateMenuPayloadDto, UpdateMenuPayloadDto } from "src/dto/menu.dto";
+import { OMIT_MENU_PRIVATE } from "src/common/query/session-query.const";
 
 @Injectable()
 export class MenuService {
   constructor(private readonly prismaService: PrismaService) {}
-  omitPrivate = { id: true, categoryId: true } as const;
 
   async createMenu(
     storeId: string,
@@ -17,7 +17,7 @@ export class MenuService {
 
     return await this.prismaService.menu.create({
       data: { ...rest, category: { connect: { publicId: categoryId } } },
-      omit: this.omitPrivate,
+      omit: OMIT_MENU_PRIVATE,
     });
   }
 
@@ -49,7 +49,7 @@ export class MenuService {
         ...rest,
         ...(categoryId && { category: { connect: { publicId: categoryId } } }),
       },
-      omit: this.omitPrivate,
+      omit: OMIT_MENU_PRIVATE,
     });
   }
 

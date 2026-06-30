@@ -41,7 +41,6 @@ export function OrderDetailTable() {
             <OrderTable.Row key={row.id} row={row} isSelected={isSelected}>
               <OrderTable.Options
                 optionsSnapshot={row.original.optionsSnapshot}
-                isSelected={isSelected}
               />
               <OrderTable.Item row={row} />
               <OrderTable.Controlbar row={row} isSelected={isSelected} />

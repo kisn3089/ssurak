@@ -1,8 +1,11 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@spaceorder/ui/components/button";
-import { CardContent, CardFooter } from "@spaceorder/ui/components/card";
+import { Button } from "@spaceorder/ui/components/buttons/button";
+import {
+  CardContent,
+  CardFooter,
+} from "@spaceorder/ui/components/layouts/card";
 import { useForm } from "react-hook-form";
 import SignInField from "../sign-in-field/SignInField";
 import Link from "next/link";

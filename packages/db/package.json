@@ -24,10 +24,11 @@
   "devDependencies": {
     "@spaceorder/lintconfig": "workspace:*",
     "@spaceorder/tsconfig": "workspace:*",
+    "@types/bcrypt": "^6.0.0",
     "dotenv-cli": "^11.0.0",
     "prisma": "^6.19.0",
+    "prisma-json-types-generator": "^3.6.2",
     "tsx": "^4.7.0",
-    "typescript": "^5",
-    "@types/bcrypt": "^6.0.0"
+    "typescript": "^5"
   }
 }

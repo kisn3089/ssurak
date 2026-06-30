@@ -13,7 +13,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarTrigger,
-} from "@spaceorder/ui/components/sidebar";
+} from "@spaceorder/ui/components/layouts/sidebar";
 import UserNameDropDown from "../../components/UserNameDropDown";
 import Link from "next/link";
 import { usePathname } from "next/navigation";

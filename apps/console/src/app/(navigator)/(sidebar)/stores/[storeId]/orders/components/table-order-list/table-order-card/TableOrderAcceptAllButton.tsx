@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Button } from "@spaceorder/ui/components/button";
+import { Button } from "@spaceorder/ui/components/buttons/button";
 import {
   nextStatusMap,
   OrderStatus,

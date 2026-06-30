@@ -3,7 +3,7 @@
 import useSuspenseWithSession from "@spaceorder/api/hooks/useSuspenseWithSession";
 import { Cart } from "@spaceorder/db/types";
 import ActivityRender from "@spaceorder/ui/components/activity-render/ActivityRender";
-import { Button } from "@spaceorder/ui/components/button";
+import { Button } from "@spaceorder/ui/components/buttons/button";
 import { ConciergeBell } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
