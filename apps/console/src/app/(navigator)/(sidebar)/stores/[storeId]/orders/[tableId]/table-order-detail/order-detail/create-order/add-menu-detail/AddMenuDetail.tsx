@@ -6,7 +6,6 @@ import AddedMenuList from "./added-menu-list/AddedMenuList";
 import CreateOrderButton, {
   CloseDialogProps,
 } from "./added-menu-list/CreateOrderButton";
-import { ItemDescription } from "@spaceorder/ui/components/item";
 
 export default function AddMenuDetail({ closeDialog }: CloseDialogProps) {
   const {
