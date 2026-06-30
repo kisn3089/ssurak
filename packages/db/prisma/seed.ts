@@ -1,6 +1,23 @@
 import { PrismaClient, AdminRole } from "@prisma/client";
 import type { Store } from "@prisma/client";
+import type {
+  MenuCustomOption,
+  MenuRequiredOption,
+} from "../types/menuOptions.type";
 import * as bcrypt from "bcrypt";
+
+type MenuSeed = {
+  publicId: string;
+  name: string;
+  price: number;
+  description: string;
+  category: string;
+  isAvailable: boolean;
+  sortOrder: number;
+  imageUrl: string;
+  requiredOptions?: MenuRequiredOption;
+  customOptions?: MenuCustomOption;
+};
 
 const prisma = new PrismaClient();
 
@@ -141,7 +158,7 @@ async function main() {
   // ==================== Menu 데이터 ====================
   console.log("📝 Creating menus...");
   // Store1 메뉴 (카페)
-  const createMenus = [
+  const createMenus: MenuSeed[] = [
     {
       publicId: "rbay46e0wjrj7n1h1q2ain8",
       name: "아메리카노",
