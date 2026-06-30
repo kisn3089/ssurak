@@ -6,9 +6,7 @@ import { createOrderItemPayloadSchema } from "../../../schemas/model/orderItem.s
 const prefix = "/orders/v1";
 
 type CreateOrderItemPayload = z.infer<typeof createOrderItemPayloadSchema>;
-export type UpdateOrderItemPayload = Partial<
-  Omit<CreateOrderItemPayload, "menuName">
->;
+export type UpdateOrderItemPayload = Partial<CreateOrderItemPayload>;
 
 async function updateOrderItem(
   orderItemId: string,

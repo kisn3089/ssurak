@@ -40,10 +40,12 @@ export const addCartItemPayloadSchema = z
     quantity: z.number().int().min(1, "수량은 최소 1 이상이어야 합니다."),
     requiredOptions: optionItemSchema.optional(),
     customOptions: optionItemSchema.optional(),
+    menuName: z.string().optional(),
+    price: z.number().optional(),
   })
   .strict();
 
 export const updateCartItemPayloadSchema = addCartItemPayloadSchema
-  .omit({ menuPublicId: true })
+  .omit({ menuPublicId: true, menuName: true, price: true })
   .partial()
   .strict();
