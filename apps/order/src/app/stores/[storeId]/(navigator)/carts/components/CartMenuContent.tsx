@@ -1,7 +1,7 @@
-import { transCurrencyFormat } from "@spaceorder/api/utils";
-import { CardContent, CardTitle } from "@spaceorder/ui/components/card";
+import { CardContent, CardTitle } from "@spaceorder/ui/components/layouts/card";
 import CartMenuOptions from "./CartMenuOptions";
 import { PublicCartItem } from "@spaceorder/db/types";
+import { transCurrencyFormat } from "@spaceorder/ui/utils/menu/priceFormatter";
 
 export default function CartMenuContent({ menu }: { menu: PublicCartItem }) {
   return (

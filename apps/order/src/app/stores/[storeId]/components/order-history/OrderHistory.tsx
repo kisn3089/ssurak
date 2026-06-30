@@ -2,7 +2,7 @@
 
 import useSuspenseWithSession from "@spaceorder/api/hooks/useSuspenseWithSession";
 import { PublicOrderWithItem } from "@spaceorder/db/types";
-import { Badge } from "@spaceorder/ui/components/badge";
+import { Badge } from "@spaceorder/ui/components/forms/badge";
 import { BADGE_BY_ORDER_STATUS } from "@spaceorder/ui/constants/badgeByOrderStatus.const";
 import OrderItemThumbnail from "./OrderItemThumbnail";
 

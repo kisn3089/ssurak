@@ -3,7 +3,10 @@
 import { useParams } from "next/navigation";
 import { PublicMenu, StoreContext } from "@spaceorder/db/types";
 import useSuspenseWithSession from "@spaceorder/api/hooks/useSuspenseWithSession";
-import { MenuDetail } from "./components/menu-detail";
+import MenuDetailAddCart from "./components/MenuDetailAddCart";
+import { MenuDetail } from "@spaceorder/ui/components/menu/menu-detail";
+import MenuImage from "../components/MenuImage";
+import { ItemDescription } from "@spaceorder/ui/components/item";
 
 export default function MenuDetailPage() {
   const { menuId } = useParams<{ menuId: string }>();
@@ -27,8 +30,21 @@ export default function MenuDetailPage() {
   return (
     <MenuDetail.Provider menu={menu}>
       <main className="bg-accent flex flex-col gap-y-2">
-        <MenuDetail.Info>
-          <MenuDetail.Counter />
+        <MenuDetail.Info
+          className="bg-background"
+          description={
+            <ItemDescription className="text-base line-clamp-none">
+              {menu.description}
+            </ItemDescription>
+          }
+        >
+          <MenuImage
+            src={menu.imageUrl}
+            priority={true}
+            alt={menu.name}
+            size="cover"
+            className="rounded-3xl min-h-72"
+          />
         </MenuDetail.Info>
         <section
           className="bg-white py-4 pb-[81px]"
@@ -37,7 +53,7 @@ export default function MenuDetailPage() {
           <MenuDetail.RequiredOptions />
           <MenuDetail.CustomOptions />
         </section>
-        <MenuDetail.AddCart />
+        <MenuDetailAddCart />
       </main>
     </MenuDetail.Provider>
   );

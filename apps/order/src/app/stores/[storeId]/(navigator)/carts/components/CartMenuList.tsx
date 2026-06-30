@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import { PlusIcon } from "lucide-react";
-import { Card } from "@spaceorder/ui/components/card";
-import { Button } from "@spaceorder/ui/components/button";
+import { Card } from "@spaceorder/ui/components/layouts/card";
 import CartMenu from "./CartMenu";
 import { useCart } from "./CartProvider";
 import { useParams } from "next/navigation";
+import TouchEventButton from "@spaceorder/ui/components/buttons/TouchEventButton";
 
 export default function CartMenuList() {
   const { storeId } = useParams<{ storeId: string }>();
@@ -19,12 +19,12 @@ export default function CartMenuList() {
           <CartMenu key={`${menu.menuPublicId}${menu.id}`} menu={menu} />
         ))}
         <div className="p-4 grid place-content-center">
-          <Button className="w-full rounded-3xl" asChild>
+          <TouchEventButton className="w-full rounded-3xl" asChild>
             <Link href={`/stores/${storeId}/menus`}>
               <PlusIcon strokeWidth={2.5} />
               메뉴 추가
             </Link>
-          </Button>
+          </TouchEventButton>
         </div>
       </Card>
     </section>

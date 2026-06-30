@@ -1,4 +1,4 @@
-import { Button } from "@spaceorder/ui/components/button";
+import { Button } from "@spaceorder/ui/components/buttons/button";
 import { isAxiosError } from "axios";
 import { CircleAlert } from "lucide-react";
 import SessionExpiredError from "../../components/SessionExpiredError";

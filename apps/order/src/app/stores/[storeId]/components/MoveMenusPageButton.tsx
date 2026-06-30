@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@spaceorder/ui/components/button";
+import { Button } from "@spaceorder/ui/components/buttons/button";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 

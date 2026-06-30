@@ -1,4 +1,4 @@
-import { Card } from "@spaceorder/ui/components/card";
+import { Card } from "@spaceorder/ui/components/layouts/card";
 
 type SectionCardViewProps = {
   children: React.ReactNode;

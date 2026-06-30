@@ -1,7 +1,7 @@
 "use client";
 
 import { useCart } from "./CartProvider";
-import RequestButton from "@spaceorder/ui/components/RequestButton";
+import RequestButton from "@spaceorder/ui/components/buttons/RequestButton";
 
 export default function CartPayment() {
   const {

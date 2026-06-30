@@ -1,4 +1,4 @@
-import { Separator } from "@spaceorder/ui/components/separator";
+import { Separator } from "@spaceorder/ui/components/forms/separator";
 import TableNumber from "./TableNumber";
 import CartLink from "./CartLink";
 
