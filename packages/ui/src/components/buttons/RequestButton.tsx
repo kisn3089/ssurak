@@ -1,8 +1,9 @@
-import { Button } from "@spaceorder/ui/components/button";
-import { Separator } from "@spaceorder/ui/components/separator";
+import { Button } from "@spaceorder/ui/components/buttons/button";
+import { Separator } from "@spaceorder/ui/components/forms/separator";
 import { Spinner } from "@spaceorder/ui/components/spinner";
 import { CircleAlert } from "lucide-react";
 import { ComponentProps, ReactNode } from "react";
+import TouchEventButton from "./TouchEventButton";
 
 type RequestButtonProps = {
   mutate: {
@@ -46,8 +47,8 @@ export default function RequestButton({
   };
 
   return (
-    <Button {...props} disabled={props.disabled || mutate.isPending}>
+    <TouchEventButton {...props} disabled={props.disabled || mutate.isPending}>
       {buttonMessage()}
-    </Button>
+    </TouchEventButton>
   );
 }

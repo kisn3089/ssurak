@@ -1,9 +1,9 @@
 import {
   TabsList,
   TabsTrigger,
-} from "@spaceorder/ui/components/animate-ui/components/animate/tabs";
+} from "@spaceorder/ui/components/animate-ui/components/tabs";
 
-export default function TabList() {
+export default function AnimationTabList() {
   return (
     <TabsList>
       <TabsTrigger value="account">Account</TabsTrigger>

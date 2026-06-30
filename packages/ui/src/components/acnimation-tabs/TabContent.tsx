@@ -1,5 +1,5 @@
-import { TabsContent } from "@spaceorder/ui/components/animate-ui/components/animate/tabs";
-import { Button } from "@spaceorder/ui/components/button";
+import { TabsContent } from "@spaceorder/ui/components/animate-ui/components/tabs";
+import { Button } from "@spaceorder/ui/components/buttons/button";
 import {
   Card,
   CardContent,
@@ -7,9 +7,9 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@spaceorder/ui/components/card";
-import { Input } from "@spaceorder/ui/components/input";
-import { Label } from "@spaceorder/ui/components/label";
+} from "@spaceorder/ui/components/layouts/card";
+import { Input } from "@spaceorder/ui/components/forms/input";
+import { Label } from "@spaceorder/ui/components/forms/label";
 
 export type CardField = {
   id: string;
