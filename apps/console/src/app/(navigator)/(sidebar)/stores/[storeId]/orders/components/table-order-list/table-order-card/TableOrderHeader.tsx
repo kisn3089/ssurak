@@ -4,7 +4,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@spaceorder/ui/components/card";
+} from "@spaceorder/ui/components/layouts/card";
 import ActivityRender from "@spaceorder/ui/components/activity-render/ActivityRender";
 import TableOrderQrCode from "./TableOrderQrCode";
 import { BoardTableWithSession } from "@spaceorder/db/types";

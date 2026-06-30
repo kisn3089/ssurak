@@ -1,6 +1,6 @@
 "use client";
 
-import { Card } from "@spaceorder/ui/components/card";
+import { Card } from "@spaceorder/ui/components/layouts/card";
 import ConditionalLink from "@/components/ConditionalLink";
 import { useParams } from "next/navigation";
 import {
@@ -41,7 +41,7 @@ export function TableOrderCard({
       className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg"
     >
       <Card
-        className={`h-full min-h-[220px] flex flex-col transition-shadow duration-300 bg-accent ${inactiveStyle} ${selectedStyle} ${activeHoverStyle}`}
+        className={`rounded-2xl h-full min-h-[220px] flex flex-col transition-shadow duration-300 bg-accent ${inactiveStyle} ${selectedStyle} ${activeHoverStyle}`}
       >
         {children}
       </Card>

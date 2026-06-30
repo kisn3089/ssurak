@@ -1,4 +1,4 @@
-import { SidebarProvider } from "@spaceorder/ui/components/sidebar";
+import { SidebarProvider } from "@spaceorder/ui/components/layouts/sidebar";
 import { cookies } from "next/headers";
 import NavSidebar from "./components/NavSidebar";
 import AuthGuard from "@/providers/AuthGuard";

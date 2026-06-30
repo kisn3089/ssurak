@@ -1,11 +1,11 @@
 "use client";
 
-import { Button } from "@spaceorder/ui/components/button";
-import { transCurrencyFormat } from "@spaceorder/api";
+import { Button } from "@spaceorder/ui/components/buttons/button";
 import { AlertDialogWrapper } from "@spaceorder/ui/components/alert-dialog/AlertDialogWrapper";
 import { useOrderDetailContext } from "./OrderDetailContext";
 import PaymentDialogControlbar from "./PaymentDialogControlbar";
 import { Dispatch, SetStateAction } from "react";
+import { transCurrencyFormat } from "@spaceorder/ui/utils/menu/priceFormatter";
 
 export function OrderDetailPayment() {
   const {

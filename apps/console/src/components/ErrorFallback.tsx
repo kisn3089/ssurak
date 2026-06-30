@@ -1,5 +1,5 @@
 import { useAuthInfo } from "@spaceorder/auth";
-import { Button } from "@spaceorder/ui/components/button";
+import { Button } from "@spaceorder/ui/components/buttons/button";
 import { useEffect } from "react";
 import { FallbackProps } from "react-error-boundary";
 

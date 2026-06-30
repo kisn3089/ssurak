@@ -1,23 +1,32 @@
 "use client";
 
-import { Button } from "@spaceorder/ui/components/button";
+import { DialogTrigger } from "@spaceorder/ui/components/layouts/dialog";
+import { useParams } from "next/navigation";
+import CreateOrderDialog from "./create-order/CreateOrderDialog";
+import TouchEventButton from "@spaceorder/ui/components/buttons/TouchEventButton";
 
 export function OrderDetailControlbar() {
+  const { tableId } = useParams<{ tableId: string }>();
+
   return (
     <div className="grid grid-cols-2 gap-2">
-      <Button
+      <TouchEventButton
         disabled
-        className="h-[clamp(4rem,6vw,6rem)] font-bold text-xl tracking-wider transition-none"
+        className="h-[clamp(4rem,6vw,6rem)] font-bold text-xl tracking-wider rounded-2xl"
         variant="secondary"
       >
         할인
-      </Button>
-      <Button
-        disabled
-        className="h-[clamp(4rem,6vw,6rem)] font-bold text-xl tracking-wider transition-none"
-      >
-        메뉴 추가
-      </Button>
+      </TouchEventButton>
+      <CreateOrderDialog>
+        <DialogTrigger asChild>
+          <TouchEventButton
+            disabled={!tableId}
+            className="h-[clamp(4rem,6vw,6rem)] font-bold text-xl tracking-wider rounded-2xl"
+          >
+            추가 주문
+          </TouchEventButton>
+        </DialogTrigger>
+      </CreateOrderDialog>
     </div>
   );
 }
