@@ -5,6 +5,9 @@ FROM node:22-alpine AS base
 # 1. Install dependencies only when needed
 FROM base AS deps
 RUN apk add --no-cache libc6-compat
+RUN corepack enable pnpm
+ENV PNPM_HOME=/pnpm
+ENV PATH="$PNPM_HOME:$PATH"
 
 WORKDIR /app
 
