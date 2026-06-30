@@ -13,7 +13,11 @@ import {
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { MenuService } from "./menu.service";
-import type { Owner, PublicMenu } from "@spaceorder/db";
+import type {
+  Owner,
+  PublicCategoryWithMenus,
+  PublicMenu,
+} from "@spaceorder/db";
 import { ZodValidation } from "src/utils/guards/zod-validation.guard";
 import { Client } from "src/decorators/client.decorator";
 import { PublicMenuDto } from "../../dto/public/menu.dto";
@@ -33,15 +37,21 @@ import {
 import { CreateMenuPayloadDto, UpdateMenuPayloadDto } from "src/dto/menu.dto";
 import { StoreAccessGuard } from "src/utils/guards/store-access.guard";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
-
-// GET /stores/:storeId/categories
+import {
+  CATEGORIES,
+  OMIT_CATEGORY_PRIVATE,
+} from "src/common/query/session-query.const";
+import { CategoryService } from "./category.service";
 
 @ApiTags("Menu")
 @ApiBearerAuth()
 @Controller(":storeId/menus")
 @UseGuards(JwtAuthGuard, StoreAccessGuard)
 export class MenuController {
-  constructor(private readonly menuService: MenuService) {}
+  constructor(
+    private readonly menuService: MenuService,
+    private readonly categoryService: CategoryService
+  ) {}
 
   @Post()
   @UseGuards(
@@ -64,13 +74,13 @@ export class MenuController {
   async list(
     @Client() client: Owner,
     @Param("storeId") storeId: string
-  ): Promise<PublicMenu[]> {
-    return await this.menuService.getMenuList({
+  ): Promise<PublicCategoryWithMenus[]> {
+    return await this.categoryService.getCategoryList({
       where: {
-        category: { store: { publicId: storeId, owner: { id: client.id } } },
-        deletedAt: null,
+        store: { publicId: storeId, owner: { id: client.id } },
       },
-      omit: this.menuService.omitPrivate,
+      ...CATEGORIES,
+      omit: OMIT_CATEGORY_PRIVATE,
     });
   }
 
@@ -87,7 +97,6 @@ export class MenuController {
         publicId: menuId,
         category: { store: { publicId: storeId } },
       },
-      omit: this.menuService.omitPrivate,
     });
 
     return new PublicMenuDto(findMenu);

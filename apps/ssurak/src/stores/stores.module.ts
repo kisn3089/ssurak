@@ -10,6 +10,7 @@ import { TableService } from "./table/table.service";
 import { SessionController } from "./session/session.controller";
 import { SessionService } from "./session/session.service";
 import { CustomerSessionController } from "./session/customer-session.controller";
+import { CategoryService } from "./menu/category.service";
 
 @Module({
   imports: [PassportModule, JwtModule],
@@ -20,6 +21,12 @@ import { CustomerSessionController } from "./session/customer-session.controller
     SessionController,
     CustomerSessionController,
   ],
-  providers: [StoresService, MenuService, TableService, SessionService],
+  providers: [
+    StoresService,
+    MenuService,
+    CategoryService,
+    TableService,
+    SessionService,
+  ],
 })
 export class StoreModule {}

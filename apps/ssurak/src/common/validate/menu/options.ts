@@ -1,15 +1,14 @@
 import { HttpException, HttpStatus } from "@nestjs/common";
-import {
-  Menu,
-  MenuCustomOptionValue,
-  MenuOption,
-  MenuOptionValue,
-  MenuRequiredOptionValue,
-  OptionSnapshotValue,
-} from "@spaceorder/db";
+import { Menu } from "@spaceorder/db";
 import { exceptionContentsIs } from "src/common/constants/exceptionContents";
 import { ExtendedMap } from "src/utils/helper/extendMap";
 import { menuOptionsPayloadSchema } from "@spaceorder/api/schemas/model/menu.schema";
+import type {
+  OptionSnapshotValue,
+  MenuCustomOptionValue,
+  MenuOption,
+  MenuRequiredOptionValue,
+} from "@spaceorder/api/types/menuOptions.type";
 
 type JsonMenuOptions = Pick<Menu, "requiredOptions" | "customOptions">;
 type PayloadOptions = {

@@ -28,24 +28,21 @@ export const INCLUDE_TABLE = {
 } as const;
 
 const AVAILABLE_MENU_FILTER = { deletedAt: null } as const;
-export const INCLUDE_TABLE_STORE_AVAILABLE_MENUS = {
-  table: {
-    include: {
-      store: {
-        include: {
-          categories: {
-            orderBy: { sortOrder: "asc" },
-            include: {
-              menus: {
-                where: AVAILABLE_MENU_FILTER,
-                orderBy: { sortOrder: "asc" },
-              },
-            },
-          },
-        },
-      },
+export const OMIT_MENU_PRIVATE = { id: true, categoryId: true } as const;
+export const OMIT_CATEGORY_PRIVATE = { id: true, storeId: true } as const;
+export const CATEGORIES = {
+  orderBy: { sortOrder: "asc" },
+  include: {
+    menus: {
+      where: AVAILABLE_MENU_FILTER,
+      orderBy: { sortOrder: "asc" },
+      omit: OMIT_MENU_PRIVATE,
     },
   },
+} as const;
+
+export const INCLUDE_TABLE_STORE_AVAILABLE_MENUS = {
+  table: { include: { store: { include: { categories: CATEGORIES } } } },
 } as const;
 
 /** Query Record */
