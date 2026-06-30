@@ -21,8 +21,9 @@ COPY packages/api/package.json ./packages/api/package.json
 COPY packages/db/package.json ./packages/db/package.json
 COPY packages/auth/package.json ./packages/auth/package.json
 
-# Install dependencies with pnpm
-RUN corepack enable pnpm && pnpm i --frozen-lockfile
+# Install dependencies with pnpm (store cached & shared across app builds)
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
+    pnpm i --frozen-lockfile
 
 # Copy prisma schema and .env, then generate client
 COPY packages/db/prisma ./packages/db/prisma
