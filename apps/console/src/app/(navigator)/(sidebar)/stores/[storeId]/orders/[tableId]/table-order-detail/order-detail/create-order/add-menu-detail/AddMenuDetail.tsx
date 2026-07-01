@@ -54,7 +54,7 @@ function AddMenuDetailLayout({
   return (
     <Card className="min-w-[360px] h-full flex flex-col justify-between bg-background rounded-3xl shadow-md  overflow-hidden">
       <div className="overflow-y-scroll scrollbar-hide">
-        <CardHeader className="p-3">{title}</CardHeader>
+        <CardHeader className="py-3 px-1">{title}</CardHeader>
         {children}
       </div>
       {button}
