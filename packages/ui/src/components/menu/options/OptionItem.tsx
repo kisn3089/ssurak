@@ -19,11 +19,9 @@ export default function OptionItem({
   const isTriggered = isTrigger(optionInfo, selectedOptions);
 
   return (
-    <Item className="flex-nowrap py-2">
-      <ItemTitle className="font-bold text-base whitespace-pre">
-        {key}
-      </ItemTitle>
-      <div className="grid grid-flow-col auto-cols-fr gap-2">
+    <Item className="flex-nowrap flex-col py-1 px-2 gap-1 items-start">
+      <ItemTitle className="font-bold text-sm whitespace-pre">{key}</ItemTitle>
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(6rem,1fr))] gap-1 w-full">
         {optionInfo.options.map((opt) => {
           const selected = selectedOptions.get(key) === opt.key;
 
@@ -31,7 +29,7 @@ export default function OptionItem({
             <TouchEventButton
               key={opt.key}
               variant={selected ? "default" : "outline"}
-              className={`h-14 min-w-fit font-semibold border rounded-xl`}
+              className={`h-14 min-w-fit font-semibold border rounded-2xl`}
               onClick={() => changeOption(key, opt.key)}
               disabled={!isTriggered}
             >
