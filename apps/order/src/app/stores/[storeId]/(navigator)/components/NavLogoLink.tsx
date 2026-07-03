@@ -1,13 +1,8 @@
-"use client";
-
 import Link from "next/link";
 import Image from "next/image";
 import StoreName from "./StoreName";
-import { useParams } from "next/dist/client/components/navigation";
 
-export default function NavLogoLink() {
-  const { storeId } = useParams<{ storeId: string }>();
-
+export default function NavLogoLink({ storeId }: { storeId: string }) {
   return (
     <Link href={`/stores/${storeId}`}>
       <div className="flex items-center gap-x-2 min-w-0">

@@ -23,9 +23,12 @@ const baseUrl =
 
 export default async function NavigatorLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: Promise<{ storeId: string }>;
 }) {
+  const { storeId } = await params;
   const sessionToken = (await cookies()).get(COOKIE_TABLE.SESSION_TOKEN)?.value;
 
   const queryClient = new QueryClient();
@@ -65,7 +68,7 @@ export default async function NavigatorLayout({
     <HydrationBoundary state={dehydrate(queryClient)}>
       <header className="flex flex-col items-center sticky bg-white top-0 z-10">
         <nav className="w-full h-12 flex items-center justify-between px-4">
-          <NavLogoLink />
+          <NavLogoLink storeId={storeId} />
           <NavTableNumber />
         </nav>
       </header>
