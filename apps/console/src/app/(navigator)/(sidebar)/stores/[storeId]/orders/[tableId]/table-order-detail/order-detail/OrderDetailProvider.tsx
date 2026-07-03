@@ -25,9 +25,7 @@ export function OrderDetailProvider({
   const fetchUrl = `/orders/v1/tables/${tableId}/active-session`;
 
   const { data: session, isRefetching } =
-    useSuspenseWithAuth<ActiveSessionResponse>(fetchUrl, {
-      queryOptions: { refetchOnMount: true },
-    });
+    useSuspenseWithAuth<ActiveSessionResponse>(fetchUrl);
 
   const { update, remove } = useOrderItem({ storeId, tableId });
 

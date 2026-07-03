@@ -1,3 +1,5 @@
+"use client";
+
 import useQueryWithSession from "@spaceorder/api/hooks/useQueryWithSession";
 import { StoreContext } from "@spaceorder/db/types";
 

@@ -8,6 +8,8 @@ import {
   unsubscribeAdmin,
 } from "./socket";
 import { OrderSyncEvent } from "@spaceorder/db/types";
+import { useQueryClient } from "@tanstack/react-query";
+import { pathToQueryKey } from "@spaceorder/api/utils";
 
 export type StoreRealtimeHandlers = {
   onCreatedAction?: (event: OrderSyncEvent) => void;
@@ -20,6 +22,28 @@ export const useStoreOrderSyncDaemon = (
   handlers: StoreRealtimeHandlers
 ): void => {
   const { onCreatedAction, onUpdatedAction, onCancelledAction } = handlers;
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (!storeId) return;
+
+    const socket = getRealtimeSocket();
+
+    const invalidateOrders = () => {
+      void queryClient.invalidateQueries({
+        queryKey: pathToQueryKey(`/orders/v1/stores/${storeId}/board`),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: pathToQueryKey("/orders/v1/tables"),
+      });
+    };
+
+    socket.io.on("reconnect", invalidateOrders);
+
+    return () => {
+      socket.io.off("reconnect", invalidateOrders);
+    };
+  }, [storeId, queryClient]);
 
   useEffect(() => {
     if (!storeId) return;

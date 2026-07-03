@@ -39,6 +39,7 @@ export default function RootLayout({
             position: "top-center",
             mobileOffset: { left: "60px", right: "60px" },
             richColors: true,
+            visibleToasts: 10,
           }}
         >
           <TanstackProvider>

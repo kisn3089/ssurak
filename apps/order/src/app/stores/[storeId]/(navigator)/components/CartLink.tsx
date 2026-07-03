@@ -14,13 +14,7 @@ export default function CartLink() {
 
   const { data: cartMenuCount } = useSuspenseWithSession<Cart, number>(
     "/carts/v1/sessions/carts",
-    {
-      queryOptions: {
-        select: (cart) => {
-          return cart.menus.length;
-        },
-      },
-    }
+    { queryOptions: { select: (cart) => cart.menus.length } }
   );
 
   return (
