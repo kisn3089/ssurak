@@ -32,7 +32,7 @@ export function TableOrderCard({
     <ConditionalLink
       condition={isActivatedTable && !isSelected}
       href={`/stores/${storeId}/orders/${sanitizedTable.publicId}`}
-      className="rounded-lg"
+      className="rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
       <Card
         className={`cursor-pointer rounded-2xl h-full min-h-[220px] flex flex-col transition-shadow duration-300 bg-accent ${inactiveStyle} ${selectedStyle}`}

@@ -51,13 +51,19 @@ export function TableOrderItem({ order, tableId }: TableOrderItemProps) {
             className="w-full mb-2"
             variant={"destructive"}
             onClick={onOrderStatusUpdate}
+            disabled={updateOrderByTableMutation.isPending}
           >
             다시 시도
           </TouchEventButton>
         )}
       </ActivityRender>
       <div className="flex justify-center cursor-pointer">
-        <button onClick={onOrderStatusUpdate} disabled={isFinishStatus}>
+        <button
+          className="inline-flex rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          type="button"
+          onClick={onOrderStatusUpdate}
+          disabled={isFinishStatus || updateOrderByTableMutation.isPending}
+        >
           <Badge
             variant={BADGE_BY_ORDER_STATUS[order.status].badgeVariant}
             className="w-fit text-xs cursor-pointer"

@@ -37,6 +37,7 @@ export default function CategoryList() {
                 <TouchFeedback key={menu.publicId}>
                   {({ isTouched, touchProps, mouseProps }) => (
                     <button
+                      className="rounded-3xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       onClick={() => menu.isAvailable && selectMenu(menu)}
                     >
                       <Card
