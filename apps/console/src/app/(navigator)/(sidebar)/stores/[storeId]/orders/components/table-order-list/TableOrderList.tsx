@@ -15,7 +15,7 @@ export default function TableOrderList({ sanitizedTable }: TableBoardProps) {
   const orders = session?.orders ?? [];
 
   return (
-    <TableOrderCard.Card sanitizedTable={sanitizedTable} session={session}>
+    <TableOrderCard.Card sanitizedTable={sanitizedTable}>
       <TableOrderCard.Header sanitizedTable={sanitizedTable} />
       <TableOrderCard.Content>
         <TableOrderCard.AcceptAllButton

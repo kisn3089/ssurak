@@ -9,9 +9,8 @@ import {
 } from "@spaceorder/db";
 import ActivityRender from "@spaceorder/ui/components/activity-render/ActivityRender";
 import useOrderByTable from "@spaceorder/api/core/order/order/useOrderByTable.mutate";
-import { Button } from "@spaceorder/ui/components/buttons/button";
 import { Badge } from "@spaceorder/ui/components/forms/badge";
-import ButtonWrapper from "@spaceorder/ui/components/buttons/ButtonWrapper";
+import TouchEventButton from "@spaceorder/ui/components/buttons/TouchEventButton";
 
 interface TableOrderItemProps {
   order: PublicOrderWithItem;
@@ -43,40 +42,40 @@ export function TableOrderItem({ order, tableId }: TableOrderItemProps) {
   };
 
   return (
-    <ButtonWrapper disabled={isFinishStatus} onClick={onOrderStatusUpdate}>
-      <CardContent
-        className={`rounded-lg bg-accent ${!isFinishStatus ? "hover:bg-background" : ""} border p-2 font-semibold flex flex-col justify-center`}
-      >
-        <ActivityRender value={updateOrderByTableMutation.isError}>
-          {() => (
-            <Button
-              className="w-full mb-2"
-              variant={"destructive"}
-              onClick={onOrderStatusUpdate}
-            >
-              다시 시도
-            </Button>
-          )}
-        </ActivityRender>
-        <div className="flex justify-center">
+    <CardContent
+      className={`rounded-lg bg-background border p-2 font-semibold flex flex-col justify-center`}
+    >
+      <ActivityRender value={updateOrderByTableMutation.isError}>
+        {() => (
+          <TouchEventButton
+            className="w-full mb-2"
+            variant={"destructive"}
+            onClick={onOrderStatusUpdate}
+          >
+            다시 시도
+          </TouchEventButton>
+        )}
+      </ActivityRender>
+      <div className="flex justify-center cursor-pointer">
+        <button onClick={onOrderStatusUpdate} disabled={isFinishStatus}>
           <Badge
             variant={BADGE_BY_ORDER_STATUS[order.status].badgeVariant}
-            className="w-fit text-xs"
+            className="w-fit text-xs cursor-pointer"
             isLoading={updateOrderByTableMutation.isPending}
           >
             {BADGE_BY_ORDER_STATUS[order.status].label}
           </Badge>
+        </button>
+      </div>
+      {order.orderItems.map((orderItem) => (
+        <div
+          className="flex justify-between text-sm/5"
+          key={orderItem.publicId}
+        >
+          <p>{orderItem.menuName}</p>
+          <p className="tabular-nums">{orderItem.quantity}</p>
         </div>
-        {order.orderItems.map((orderItem) => (
-          <div
-            className="flex justify-between text-sm/5"
-            key={orderItem.publicId}
-          >
-            <p>{orderItem.menuName}</p>
-            <p className="tabular-nums">{orderItem.quantity}</p>
-          </div>
-        ))}
-      </CardContent>
-    </ButtonWrapper>
+      ))}
+    </CardContent>
   );
 }
