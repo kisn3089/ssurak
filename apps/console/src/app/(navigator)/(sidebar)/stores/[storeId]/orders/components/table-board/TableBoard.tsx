@@ -4,17 +4,14 @@ import TableOrderList from "../table-order-list/TableOrderList";
 import { OrderBoardByStore } from "@spaceorder/db";
 import useSuspenseWithAuth from "@spaceorder/api/hooks/useSuspenseWithAuth";
 import TableBoardLayout from "../table-order-list/TableOrderListLayout";
-import { useSetCacheByStoreBoard } from "../../hooks/useSetCacheByStoreBoard";
 import { GlobalTimerProvider } from "@/app/common/orders/GlobalTimerContext";
 import { useParams } from "next/navigation";
 
 export default function TableBoard() {
   const params = useParams<{ storeId: string }>();
-  const { setCache } = useSetCacheByStoreBoard();
 
   const { data: tables } = useSuspenseWithAuth<OrderBoardByStore>(
-    `/orders/v1/stores/${params.storeId}/board`,
-    { onSuccess: setCache }
+    `/orders/v1/stores/${params.storeId}/board`
   );
 
   return (
