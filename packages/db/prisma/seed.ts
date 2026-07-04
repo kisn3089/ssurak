@@ -408,7 +408,7 @@ async function main() {
       {
         publicId: "ue14s3rhgdrci9lnua1eqd58",
         storeId: store.id,
-        tableNumber: 1,
+        tableNumber: "1",
         qrCode: "m66dsn0yfgdm08gugosx0j8k",
         name: "문 뒤",
         seats: 2,
@@ -420,7 +420,7 @@ async function main() {
       {
         publicId: "oa5zcc6kl8du8g9z7zvqjrkg",
         storeId: store.id,
-        tableNumber: 2,
+        tableNumber: "2",
         qrCode: "n7gfe6am4s8zvz2g1rsnl61o",
         name: "문 앞",
         seats: 2,
@@ -432,7 +432,7 @@ async function main() {
       {
         publicId: "bpfvgpx5ch1qnm6i5d8fa75y",
         storeId: store.id,
-        tableNumber: 3,
+        tableNumber: "3",
         qrCode: "jrdprt65xh6kiqrlpireptei",
         name: "중앙",
         seats: 4,
@@ -444,7 +444,7 @@ async function main() {
       {
         publicId: "lhc7159zorfjk1ojs4g77yzr",
         storeId: store.id,
-        tableNumber: 4,
+        tableNumber: "4",
         qrCode: "lhc7159zorfjk1ojs4g77yzr",
         name: "메인 테이블",
         seats: 4,
@@ -456,7 +456,7 @@ async function main() {
       {
         publicId: "n0e72gbtnstf9d96bur1im92",
         storeId: store.id,
-        tableNumber: 5,
+        tableNumber: "5",
         qrCode: "fwbs5gh9anqct151lbqb8z7e",
         name: "대형 테이블",
         seats: 6,
@@ -476,12 +476,11 @@ async function main() {
   // 생성된 테이블 조회 (tableNumber 기준)
   const createdTables = await prisma.table.findMany({
     where: { storeId: store1.id },
-    orderBy: { tableNumber: "asc" },
   });
 
-  const table1 = createdTables.find((t) => t.tableNumber === 1)!;
-  const table2 = createdTables.find((t) => t.tableNumber === 2)!;
-  const table4 = createdTables.find((t) => t.tableNumber === 4)!;
+  const table1 = createdTables.find((t) => t.tableNumber === "1")!;
+  const table2 = createdTables.find((t) => t.tableNumber === "2")!;
+  const table4 = createdTables.find((t) => t.tableNumber === "4")!;
 
   // 생성된 메뉴 조회
   const createdMenus = await prisma.menu.findMany({
