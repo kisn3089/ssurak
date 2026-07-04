@@ -4,7 +4,11 @@ import { commonSchema } from "../common";
 
 export const createTablePayloadSchema = z
   .object({
-    tableNumber: z.number().min(1, "테이블 번호는 1 이상이어야 합니다."),
+    tableNumber: z
+      .string()
+      .trim()
+      .min(1, "테이블 번호를 입력해주세요.")
+      .max(10, "테이블 번호는 최대 10자까지 가능합니다."),
     seats: z.number().min(1, "좌석 수는 1 이상이어야 합니다.").optional(),
     name: z
       .string()

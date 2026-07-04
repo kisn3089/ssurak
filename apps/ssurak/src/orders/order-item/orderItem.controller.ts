@@ -130,7 +130,7 @@ export class OrderItemController {
     const notice: SyncNotice = {
       level: "info",
       message: {
-        owner: `${meta.tableNumber}테이블 ${orderItem.menuName} 수량을 ${orderItem.quantity}개로 변경했습니다.`,
+        owner: `${meta.tableNumber} 테이블 ${orderItem.menuName} 수량을 ${orderItem.quantity}개로 변경했습니다.`,
         customer: `매장에서 ${orderItem.menuName} 수량을 ${orderItem.quantity}개로 변경했습니다.`,
       },
     };
@@ -167,7 +167,7 @@ export class OrderItemController {
       const notice: SyncNotice = {
         level: "info",
         message: {
-          owner: `${meta.tableNumber}테이블 ${meta.menuName} 메뉴 제외로 주문이 자동 취소되었습니다.`,
+          owner: `${meta.tableNumber} 테이블 ${meta.menuName} 메뉴 제외로 주문이 자동 취소되었습니다.`,
           customer: `매장에서 ${meta.menuName} 메뉴 제외로 주문이 자동 취소되었습니다.`,
         },
       };
@@ -181,7 +181,7 @@ export class OrderItemController {
     const notice: SyncNotice = {
       level: "info",
       message: {
-        owner: `${meta.tableNumber}테이블 ${meta.menuName} 메뉴가 주문에서 제외되었습니다.`,
+        owner: `${meta.tableNumber} 테이블 ${meta.menuName} 메뉴가 주문에서 제외되었습니다.`,
         customer: `매장에서 ${meta.menuName} 메뉴를 주문에서 제외하였습니다.`,
       },
     };

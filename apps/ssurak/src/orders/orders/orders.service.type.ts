@@ -30,7 +30,7 @@ export type ReturnOrder<
 } & MetaInfo<MetaInfoList, MetaKeys>;
 
 export type MetaInfoList = {
-  tableNumber: number;
+  tableNumber: string;
   deduplicated: boolean;
   orderStatus: OrderStatus;
 };

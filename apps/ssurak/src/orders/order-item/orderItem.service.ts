@@ -24,7 +24,7 @@ type DeletedOrderItem<MetaKeys extends keyof MetaInfoList = never> = {
 } & MetaInfo<MetaInfoList, MetaKeys>;
 
 type MetaInfoList = {
-  tableNumber: number;
+  tableNumber: string;
   menuName: string;
   orderAutoCancelled: boolean;
 };
