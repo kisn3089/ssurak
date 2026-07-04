@@ -1,4 +1,9 @@
-import { SidebarMenuButton } from "@spaceorder/ui/components/layouts/sidebar";
+"use client";
+
+import {
+  SidebarMenuButton,
+  useSidebar,
+} from "@spaceorder/ui/components/layouts/sidebar";
 import UserInfoDropdown from "../(sidebar)/components/UserInfoDropdown";
 import { ShieldUser } from "lucide-react";
 import UserName from "../(sidebar)/components/UserName";
@@ -6,9 +11,15 @@ import { Suspense } from "react";
 import { Spinner } from "@spaceorder/ui/components/spinner";
 
 export default function UserNameDropDown() {
+  const { open } = useSidebar();
+
+  if (!open) {
+    return null;
+  }
+
   return (
     <UserInfoDropdown>
-      <SidebarMenuButton variant={"outline"}>
+      <SidebarMenuButton className="gap-0" variant={"outline"}>
         <ShieldUser />
         <Suspense
           fallback={

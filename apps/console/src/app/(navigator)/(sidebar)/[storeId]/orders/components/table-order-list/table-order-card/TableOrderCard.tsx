@@ -2,7 +2,7 @@
 
 import { Card } from "@spaceorder/ui/components/layouts/card";
 import ConditionalLink from "@/components/ConditionalLink";
-import { useParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { BoardTableWithSession } from "@spaceorder/db/types";
 
 interface TableOrderCardProps {
@@ -14,10 +14,9 @@ export function TableOrderCard({
   children,
   sanitizedTable,
 }: TableOrderCardProps) {
-  const { storeId, tableId } = useParams<{
-    storeId: string;
-    tableId: string;
-  }>();
+  const { tableId } = useParams<{ tableId: string }>();
+  const [pathname] = usePathname().split("orders");
+
   const isActivatedTable = sanitizedTable.isActive === true;
   const isSelected = tableId === sanitizedTable.publicId;
 
@@ -31,7 +30,7 @@ export function TableOrderCard({
   return (
     <ConditionalLink
       condition={isActivatedTable && !isSelected}
-      href={`/stores/${storeId}/orders/${sanitizedTable.publicId}`}
+      href={`${pathname}orders/${sanitizedTable.publicId}`}
       className="rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
       <Card

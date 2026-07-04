@@ -6,5 +6,5 @@ import { PublicOwner } from "@spaceorder/db/types";
 export default function UserName() {
   const { data } = useSuspenseWithAuth<PublicOwner>(`/identity/v1/me`);
 
-  return <span>{data.name}</span>;
+  return <span className="w-full text-center">{data.name}</span>;
 }

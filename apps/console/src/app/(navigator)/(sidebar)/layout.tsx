@@ -18,14 +18,16 @@ export default async function SidebarLayout({
     <section className="antialiased">
       <AuthGuard>
         <ServerPrefetch url="/identity/v1/me" shouldSuccess>
-          <SidebarProvider defaultOpen={defaultOpen}>
-            <NavSidebar />
-            <main className="w-full">
-              <RealtimeStatusBanner />
-              {children}
-            </main>
-            <OrderNoticeDaemon />
-          </SidebarProvider>
+          <ServerPrefetch url="/stores/v1">
+            <SidebarProvider defaultOpen={defaultOpen}>
+              <NavSidebar />
+              <main className="w-full">
+                <RealtimeStatusBanner />
+                {children}
+              </main>
+              <OrderNoticeDaemon />
+            </SidebarProvider>
+          </ServerPrefetch>
         </ServerPrefetch>
       </AuthGuard>
     </section>

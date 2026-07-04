@@ -18,15 +18,13 @@ export type StoreRealtimeHandlers = {
 };
 
 export const useStoreOrderSyncDaemon = (
-  storeId: string | undefined,
+  storeId: string,
   handlers: StoreRealtimeHandlers
 ): void => {
   const { onCreatedAction, onUpdatedAction, onCancelledAction } = handlers;
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    if (!storeId) return;
-
     const socket = getRealtimeSocket();
 
     const invalidateOrders = () => {

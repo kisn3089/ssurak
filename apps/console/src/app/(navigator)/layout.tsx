@@ -10,7 +10,7 @@ export default function NavigatorLayout({
   return (
     <section className="antialiased">
       <nav className="flex justify-between px-6 items-center w-screen h-14">
-        <Link href="/dashboard" className="font-bold text-lg">
+        <Link href="/" className="font-bold text-lg">
           <TextLogo />
         </Link>
         <div className="flex flex-row items-center gap-4">
