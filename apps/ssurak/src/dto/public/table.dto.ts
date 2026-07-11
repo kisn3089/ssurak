@@ -20,7 +20,7 @@ export class TableDto {
 
   @ApiProperty({ description: "테이블 번호" })
   @Expose()
-  tableNumber: number;
+  tableNumber: string;
 
   @ApiProperty({ description: "테이블 이름" })
   @Expose()
@@ -212,7 +212,7 @@ export class BoardTableDto {
 
   @ApiProperty({ description: "테이블 번호" })
   @Expose()
-  tableNumber: number;
+  tableNumber: string;
 
   @ApiProperty({ description: "테이블 이름" })
   @Expose()

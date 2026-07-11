@@ -122,7 +122,7 @@ model Table {
   id          BigInt   @id @default(autoincrement())
   publicId    String   @unique @default(cuid(2)) @map("public_id")
   storeId     BigInt   @map("store_id")
-  tableNumber Int      @map("table_number")
+  tableNumber String   @map("table_number") @db.VarChar(10)
   /**
    * 테이블 이름 (예: "창가 테이블", "VIP룸")
    */

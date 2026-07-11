@@ -16,7 +16,7 @@ import { QRCodeSVG } from "qrcode.react";
 import { useState } from "react";
 
 type QrCodeModalProps = {
-  tableNumber: number;
+  tableNumber: string;
   qrCode: string;
   disabled?: boolean;
 };
@@ -75,7 +75,7 @@ export default function TableOrderQrCode({
           <SheetHeader>
             <SheetTitle className="text-center">테이블 QR</SheetTitle>
             <SheetDescription className="text-center">
-              {tableNumber}번 테이블 주문용 QR 코드입니다.
+              {tableNumber} 테이블 주문용 QR 코드입니다.
             </SheetDescription>
           </SheetHeader>
           <div className="flex items-center justify-center gap-2 mb-3">

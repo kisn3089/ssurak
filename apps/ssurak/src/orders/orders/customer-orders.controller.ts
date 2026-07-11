@@ -77,7 +77,7 @@ export class CustomerOrdersController {
     const notice: SyncNotice = {
       level: "success",
       message: {
-        owner: `${meta?.tableNumber}번 테이블에서 새 주문이 들어왔습니다.`,
+        owner: `${meta?.tableNumber} 테이블에서 새 주문이 들어왔습니다.`,
         customer: "주문이 완료되었습니다 🎉",
       },
     };
