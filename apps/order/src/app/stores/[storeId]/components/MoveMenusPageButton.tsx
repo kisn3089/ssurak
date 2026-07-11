@@ -1,6 +1,6 @@
 "use client";
 
-import TouchEventButton from "@spaceorder/ui/components/buttons/TouchEventButton";
+import { Button } from "@spaceorder/ui/components/buttons/button";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 
@@ -8,7 +8,7 @@ export default function MoveMenusPageButton() {
   const { storeId } = useParams<{ storeId: string }>();
 
   return (
-    <TouchEventButton
+    <Button
       asChild
       size={"lg"}
       className="w-full h-12 font-semibold rounded-3xl"
@@ -16,6 +16,6 @@ export default function MoveMenusPageButton() {
       <Link href={`/stores/${storeId}/menus`} className="w-full">
         주문하러 가기
       </Link>
-    </TouchEventButton>
+    </Button>
   );
 }

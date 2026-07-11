@@ -1,6 +1,6 @@
 "use client";
 
-import TouchEventButton from "@spaceorder/ui/components/buttons/TouchEventButton";
+import { Button } from "@spaceorder/ui/components/buttons/button";
 import {
   DrawerContent,
   DrawerDescription,
@@ -27,19 +27,15 @@ export default function MenuAddCartDrawer({
         <DrawerDescription>{description}</DrawerDescription>
       </DrawerHeader>
       <DrawerFooter className="flex flex-row justify-center gap-x-4 mb-4">
-        <TouchEventButton
-          asChild
-          variant="outline"
-          className="flex-1 py-5 rounded-3xl"
-        >
+        <Button asChild variant="outline" className="flex-1 py-5 rounded-3xl">
           <Link href={`/stores/${storeId}/carts`}>장바구니로 이동</Link>
-        </TouchEventButton>
-        <TouchEventButton
+        </Button>
+        <Button
           className="flex-1 py-5 rounded-3xl"
           onClick={() => router.push(`/stores/${storeId}/menus`)}
         >
           다른 메뉴 더 보기
-        </TouchEventButton>
+        </Button>
       </DrawerFooter>
     </DrawerContent>
   );
