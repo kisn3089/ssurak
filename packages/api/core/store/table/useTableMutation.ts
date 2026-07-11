@@ -12,7 +12,7 @@ export default function useTableMutation(storeId: string) {
     pathToQueryKey(`/orders/v1/stores/${storeId}/board`),
   ];
 
-  const invalidQueries = () => {
+  const invalidateQueries = () => {
     invalidQueryKeys.forEach((queryKey) => {
       queryClient.invalidateQueries({ queryKey });
     });
@@ -24,7 +24,7 @@ export default function useTableMutation(storeId: string) {
     CreateTableParams
   >({
     mutationFn: (args: CreateTableParams) => httpTables.createTable(args),
-    onSuccess: invalidQueries,
+    onSuccess: invalidateQueries,
   });
 
   const updateTable = useMutation<
@@ -33,7 +33,7 @@ export default function useTableMutation(storeId: string) {
     UpdateTableParams
   >({
     mutationFn: (args: UpdateTableParams) => httpTables.fetchUpdate(args),
-    onSuccess: invalidQueries,
+    onSuccess: invalidateQueries,
   });
 
   return { createTable, updateTable };
