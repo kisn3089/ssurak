@@ -42,7 +42,7 @@ export function TableOrderItem({ order, tableId }: TableOrderItemProps) {
       />
       {order.orderItems.map((orderItem) => (
         <TableOrder.MenuInfo
-          key={orderItem.menuName}
+          key={orderItem.publicId}
           menuName={orderItem.menuName}
           quantity={orderItem.quantity}
         />

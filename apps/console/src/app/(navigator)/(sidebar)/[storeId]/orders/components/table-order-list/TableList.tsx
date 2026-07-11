@@ -5,9 +5,9 @@ import { TableOrder } from "./table-order";
 import useSuspenseWithAuth from "@spaceorder/api/hooks/useSuspenseWithAuth";
 import { BoardTable } from "@spaceorder/ui/components/board-table";
 import SheetQrCode from "../SheetQrCode";
-import { useParams, usePathname } from "next/dist/client/components/navigation";
 import ConditionalLink from "@/app/(navigator)/components/ConditionalLink";
 import QrButton from "@spaceorder/ui/components/qr-scan/QrButton";
+import { useParams, usePathname } from "next/navigation";
 
 type TableListProps = {
   sanitizedTable: BoardTableWithSession;

@@ -51,8 +51,6 @@ export default function ErrorFallback({
 function DefaultErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
   const { signOut } = useAuthInfo();
 
-  console.log(error, isAxiosError(error));
-
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-3.5rem)] gap-2">
       <h2 className="text-xl font-semibold">오류가 발생했습니다.</h2>
