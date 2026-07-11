@@ -63,7 +63,7 @@ export default function AddTableForm({ children }: AddTableFormProps) {
       ...options
     );
 
-    if (existingTableNumbers.has(values.tableNumber)) {
+    if (existingTableNumbers.has(values.tableNumber?.trim())) {
       return {
         values: {},
         errors: {
@@ -131,9 +131,9 @@ export default function AddTableForm({ children }: AddTableFormProps) {
 
     const addTablePayload: CreateTablePayload = {
       tableNumber,
-      ...(seats ? { seats } : {}),
-      ...(floor ? { floor } : {}),
-      ...(section ? { section } : {}),
+      ...(seats !== undefined ? { seats } : {}),
+      ...(floor !== undefined ? { floor } : {}),
+      ...(section !== undefined ? { section } : {}),
       isActive,
     };
 

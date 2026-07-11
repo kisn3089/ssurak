@@ -53,6 +53,7 @@ export default function AddTableFields<Payload extends FieldValues>({
             key={field.id}
             id={field.id}
             label={field.label}
+            type={field.type}
             placeholder={field.placeholder}
             required={field.required}
             registration={field.registration}
