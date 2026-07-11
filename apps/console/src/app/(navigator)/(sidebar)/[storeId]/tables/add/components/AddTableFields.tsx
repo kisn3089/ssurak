@@ -39,11 +39,7 @@ export default function AddTableFields<Payload extends FieldValues>({
                   />
                 )}
               />
-              <FieldLabel
-                htmlFor={field.id}
-                className="font-normal"
-                defaultChecked
-              >
+              <FieldLabel htmlFor={field.id} className="font-normal">
                 {field.label}
               </FieldLabel>
             </Field>
