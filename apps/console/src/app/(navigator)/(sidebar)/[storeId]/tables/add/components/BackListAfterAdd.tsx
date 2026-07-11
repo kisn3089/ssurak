@@ -14,14 +14,13 @@ export default function BackListAfterAdd({
 
   return (
     <div className="pb-4 animate-tzRise max-w-xs mx-auto">
-      <Link href={`/${storeId}/tables`}>
-        <Button
-          type="button"
-          className="w-full max-w-xs rounded-xl font-bold h-11"
-        >
-          테이블 목록으로 돌아가기
-        </Button>
-      </Link>
+      <Button
+        asChild
+        type="button"
+        className="w-full max-w-xs rounded-xl font-bold h-11"
+      >
+        <Link href={`/${storeId}/tables`}>테이블 목록으로 돌아가기</Link>
+      </Button>
     </div>
   );
 }
