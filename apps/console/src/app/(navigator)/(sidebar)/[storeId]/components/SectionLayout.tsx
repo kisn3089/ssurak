@@ -4,7 +4,7 @@ type NarrowColumnProps = {
   description?: string;
 };
 
-export default function NarrowColumn({
+export default function SectionLayout({
   children,
   title,
   description,

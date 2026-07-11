@@ -3,7 +3,7 @@ type PreviewTableProps = {
 };
 export default function PreviewTable({ children }: PreviewTableProps) {
   return (
-    <div className="flex flex-col w-full @3xl:max-w-80 @3xl:sticky @3xl:top-0 @3xl:h-fit">
+    <div className="flex flex-col w-full @3xl:max-w-100 @3xl:sticky @3xl:top-[56px] @3xl:h-fit">
       <div>
         <h2 className="text-2xl font-bold mb-1.5">추가될 테이블 미리 확인</h2>
         <p className="text-neutral-600 dark:text-neutral-400 mb-8">
