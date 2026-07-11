@@ -7,17 +7,24 @@ import { HttpAxiosError } from "../../axios";
 export default function useTableMutation(storeId: string) {
   const queryClient = useQueryClient();
 
+  const invalidQueryKeys = [
+    pathToQueryKey(`/stores/v1/${storeId}/tables`),
+    pathToQueryKey(`/orders/v1/stores/${storeId}/board`),
+  ];
+
+  const invalidQueries = () => {
+    invalidQueryKeys.forEach((queryKey) => {
+      queryClient.invalidateQueries({ queryKey });
+    });
+  };
+
   const createTable = useMutation<
     PublicTable,
     HttpAxiosError,
     CreateTableParams
   >({
     mutationFn: (args: CreateTableParams) => httpTables.createTable(args),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: pathToQueryKey(`/stores/v1/${storeId}/tables`),
-      });
-    },
+    onSuccess: invalidQueries,
   });
 
   const updateTable = useMutation<
@@ -26,11 +33,7 @@ export default function useTableMutation(storeId: string) {
     UpdateTableParams
   >({
     mutationFn: (args: UpdateTableParams) => httpTables.fetchUpdate(args),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: pathToQueryKey(`/stores/v1/${storeId}/tables`),
-      });
-    },
+    onSuccess: invalidQueries,
   });
 
   return { createTable, updateTable };
