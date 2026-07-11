@@ -1,6 +1,5 @@
 "use client";
 
-import { CardContent } from "@spaceorder/ui/components/layouts/card";
 import { nextStatusMap, PublicOrderWithItem } from "@spaceorder/db";
 import useOrderByTable from "@spaceorder/api/core/order/order/useOrderByTable.mutate";
 import { TableOrder } from ".";

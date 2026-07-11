@@ -20,7 +20,10 @@ type ActionResponse =
       };
     };
 
-export default async function signInAction({ email, password }: SignInPayload): Promise<ActionResponse> {
+export default async function signInAction({
+  email,
+  password,
+}: SignInPayload): Promise<ActionResponse> {
   try {
     if (typeof email !== "string" || typeof password !== "string") {
       return {
