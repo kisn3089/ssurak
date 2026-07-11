@@ -1,67 +1,24 @@
-"use client";
-
-import { sidebarList } from "@/shared/config/sidebarList";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarTrigger,
 } from "@spaceorder/ui/components/layouts/sidebar";
-import UserNameDropDown from "../../components/UserNameDropDown";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import RealtimeStatusDot from "@/components/realtime/RealtimeStatusDot";
+import SidebarGroups from "./SidebarItemGroups";
+import SidebarFooterLayout from "./SidebarFooterLayout";
+import StoreSwitcher from "./StoreSwitcher";
 
 export default function NavSidebar() {
-  const pathname = usePathname();
-
   return (
     <Sidebar collapsible="icon" variant="inset">
       <SidebarHeader>
-        <SidebarTrigger />
+        <StoreSwitcher />
       </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel className="whitespace-nowrap">
-            주문 관리
-          </SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {sidebarList.map((sidebarElement) => (
-                <SidebarMenuItem key={sidebarElement.title}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={pathname.includes(sidebarElement.url)}
-                  >
-                    <Link href={sidebarElement.url}>
-                      <sidebarElement.icon />
-                      <span>{sidebarElement.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        <SidebarGroups />
       </SidebarContent>
       <SidebarFooter>
-        <SidebarGroup>
-          <SidebarMenu>
-            <SidebarMenuItem key={"realtimeStatus"}>
-              <RealtimeStatusDot />
-            </SidebarMenuItem>
-            <SidebarMenuItem key={"userName"}>
-              <UserNameDropDown />
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarGroup>
+        <SidebarFooterLayout />
       </SidebarFooter>
     </Sidebar>
   );

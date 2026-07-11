@@ -1,0 +1,83 @@
+"use client";
+
+import useQueryWithAuth from "@spaceorder/api/hooks/useQueryWithAuth";
+import type { PublicStore } from "@spaceorder/db";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "@spaceorder/ui/components/forms/dropdown-menu";
+import {
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from "@spaceorder/ui/components/layouts/sidebar";
+import { ChevronsUpDown, Store } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
+
+export default function StoreSwitcher() {
+  const router = useRouter();
+  const { storeId } = useParams<{ storeId: string }>();
+  const { state } = useSidebar();
+
+  const { data: stores } = useQueryWithAuth<PublicStore[]>("/stores/v1");
+
+  const currentStore = stores?.find((store) => store.publicId === storeId);
+  const hasMultipleStores = (stores?.length ?? 0) > 1;
+
+  const handleSelect = (nextStoreId: string) => {
+    if (nextStoreId !== storeId) {
+      router.push(`/${nextStoreId}/orders`);
+    }
+  };
+
+  const trigger = (
+    <SidebarMenuButton
+      size="sm"
+      className={`h-10 rounded-lg transition-all duration-75 ${state === "expanded" ? "border border-border" : ""} ${hasMultipleStores ? "" : "pointer-events-none"}`}
+    >
+      <div className="flex aspect-square items-center justify-center">
+        <Store className="size-4" />
+      </div>
+      <span className="truncate font-semibold">
+        {currentStore?.name ?? "매장 선택"}
+      </span>
+      {hasMultipleStores && <ChevronsUpDown className="ml-auto size-4" />}
+    </SidebarMenuButton>
+  );
+
+  return (
+    <SidebarMenu>
+      <SidebarMenuItem>
+        {hasMultipleStores ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>{trigger}</DropdownMenuTrigger>
+            <DropdownMenuContent
+              className="w-(--radix-dropdown-menu-trigger-width)"
+              align="start"
+            >
+              <DropdownMenuRadioGroup
+                value={storeId}
+                onValueChange={handleSelect}
+              >
+                {stores?.map((store) => (
+                  <DropdownMenuRadioItem
+                    key={store.publicId}
+                    value={store.publicId}
+                  >
+                    {store.name}
+                  </DropdownMenuRadioItem>
+                ))}
+              </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          trigger
+        )}
+      </SidebarMenuItem>
+    </SidebarMenu>
+  );
+}

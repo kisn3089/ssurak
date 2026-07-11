@@ -19,15 +19,6 @@ const nextConfig: NextConfig = {
     "@spaceorder/auth",
     "@spaceorder/db",
   ],
-  async redirects() {
-    return [
-      {
-        source: "/",
-        destination: "/stores",
-        permanent: false,
-      },
-    ];
-  },
 };
 
 export default nextConfig;

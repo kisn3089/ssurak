@@ -45,7 +45,7 @@ export default function FormCard() {
     }
     setAuthInfo({ accessToken: signInResult.data.accessToken });
 
-    router.replace("/stores");
+    router.replace("/");
   };
 
   return (

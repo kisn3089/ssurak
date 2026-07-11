@@ -1,4 +1,4 @@
-import { LAST_ACCESSED_STORE_ID, OrderBoardByStore } from "@spaceorder/db";
+import { OrderBoardByStore } from "@spaceorder/db";
 import { useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { setTablesCache } from "../utils/setTablesCache";
@@ -13,9 +13,5 @@ export const useSetCacheByStoreBoard = () => {
     setTablesCache(tableBoard, queryClient, resolvedStoreId);
   };
 
-  const setStoreInLocalStorage = (storeId: string) => {
-    localStorage.setItem(LAST_ACCESSED_STORE_ID, storeId);
-  };
-
-  return { setCache, setStoreInLocalStorage };
+  return { setCache };
 };
