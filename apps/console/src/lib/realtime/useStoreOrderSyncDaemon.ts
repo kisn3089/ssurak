@@ -25,6 +25,8 @@ export const useStoreOrderSyncDaemon = (
   const queryClient = useQueryClient();
 
   useEffect(() => {
+    if (!storeId) return;
+
     const socket = getRealtimeSocket();
 
     const invalidateOrders = () => {
