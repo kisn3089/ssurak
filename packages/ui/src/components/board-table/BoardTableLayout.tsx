@@ -1,0 +1,19 @@
+import { Card } from "../layouts/card";
+
+type BoardTableLayoutProps = {
+  children: React.ReactNode;
+  className?: React.HTMLAttributes<HTMLDivElement>["className"];
+};
+
+export default function BoardTableLayout({
+  children,
+  className = "",
+}: BoardTableLayoutProps) {
+  return (
+    <Card
+      className={`cursor-pointer rounded-2xl h-full min-h-[220px] flex flex-col transition-shadow duration-300 bg-accent ${className}`}
+    >
+      {children}
+    </Card>
+  );
+}

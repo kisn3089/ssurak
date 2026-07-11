@@ -2,7 +2,7 @@ import ActivityRender from "@spaceorder/ui/components/activity-render/ActivityRe
 import { Item, ItemTitle } from "@spaceorder/ui/components/item";
 import { isTrigger } from "@spaceorder/ui/utils/menu/optionTrigger";
 import type { MenuOptionEntry } from "../menu-detail/menu-detail.type";
-import TouchEventButton from "../../buttons/TouchEventButton";
+import { Button } from "../../buttons/button";
 
 type OptionItemProps = {
   option: MenuOptionEntry;
@@ -26,7 +26,7 @@ export default function OptionItem({
           const selected = selectedOptions.get(key) === opt.key;
 
           return (
-            <TouchEventButton
+            <Button
               key={opt.key}
               variant={selected ? "default" : "outline"}
               className={`h-14 min-w-fit font-semibold border rounded-2xl`}
@@ -41,7 +41,7 @@ export default function OptionItem({
                   )}
                 </ActivityRender>
               </div>
-            </TouchEventButton>
+            </Button>
           );
         })}
       </div>
