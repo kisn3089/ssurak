@@ -1,23 +1,37 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { httpTables, UpdateTableParams } from "./httpTable";
+import { CreateTableParams, httpTables, UpdateTableParams } from "./httpTable";
 import { pathToQueryKey } from "../../../utils/pathToQueryKey";
+import { PublicTable } from "@spaceorder/db";
+import { HttpAxiosError } from "../../axios";
 
-/** 현재 사용하는 UI가 없다 */
 export default function useTableMutation(storeId: string) {
   const queryClient = useQueryClient();
-  const updateTable = useMutation({
-    mutationFn: async (args: UpdateTableParams) => {
-      return await httpTables.fetchUpdate(args);
-    },
+
+  const createTable = useMutation<
+    PublicTable,
+    HttpAxiosError,
+    CreateTableParams
+  >({
+    mutationFn: (args: CreateTableParams) => httpTables.createTable(args),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: pathToQueryKey(`/stores/v1/${storeId}/tables`),
       });
+    },
+  });
+
+  const updateTable = useMutation<
+    PublicTable,
+    HttpAxiosError,
+    UpdateTableParams
+  >({
+    mutationFn: (args: UpdateTableParams) => httpTables.fetchUpdate(args),
+    onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: pathToQueryKey(`/orders/v1/stores/${storeId}/board`),
+        queryKey: pathToQueryKey(`/stores/v1/${storeId}/tables`),
       });
     },
   });
 
-  return { updateTable };
+  return { createTable, updateTable };
 }

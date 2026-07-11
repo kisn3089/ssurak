@@ -26,11 +26,17 @@ export function updateAxiosAuthorizationHeader(token: string) {
   http.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 }
 
-type AxiosCustomError = {
-  errorCode: number;
+type HttpError = {
+  code: string;
   message: string;
+  error: string;
   status: number;
+  path: string;
+  timestamp: string;
+  details?: Record<string, string | string[] | undefined> | null;
 };
+
+export type HttpAxiosError = AxiosError<HttpError, AxiosRequestConfig>;
 
 type AuthCallbacks = {
   refreshAccessToken: () => Promise<{ accessToken: string }>;
@@ -60,7 +66,7 @@ function refreshAccessTokenOnce(
 
 http.interceptors.response.use(
   undefined,
-  async (error: AxiosError<AxiosCustomError, AxiosRequestConfig>) => {
+  async (error: AxiosError<HttpError, AxiosRequestConfig>) => {
     if (error instanceof AxiosError && error.config) {
       if (error.response?.status === 419 && authCallbacks) {
         try {

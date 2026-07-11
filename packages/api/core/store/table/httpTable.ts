@@ -1,9 +1,25 @@
 import { PublicTable } from "@spaceorder/db";
 import { http } from "../../axios/http";
-import { UpdateTablePayload } from "../../../schemas/model/table.schema";
+import {
+  CreateTablePayload,
+  UpdateTablePayload,
+} from "../../../schemas/model/table.schema";
 
 function prefix(storeId: string) {
   return `/stores/v1/${storeId}/tables`;
+}
+
+export type CreateTableParams = {
+  storeId: string;
+  createTablePayload: CreateTablePayload;
+};
+async function createTable({ storeId, createTablePayload }: CreateTableParams) {
+  const response = await http.post<PublicTable>(
+    prefix(storeId),
+    createTablePayload
+  );
+
+  return response.data;
 }
 
 export type FetchTableListParams = { storeId: string };
@@ -39,4 +55,4 @@ async function fetchUpdate({
   return response.data;
 }
 
-export const httpTables = { fetchList, fetchUnique, fetchUpdate };
+export const httpTables = { createTable, fetchList, fetchUnique, fetchUpdate };
