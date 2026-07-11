@@ -61,7 +61,7 @@ export class TokenService {
     });
 
     responseCookie.set(response, COOKIE_TABLE.ACCESS_TOKEN, accessToken, {
-      expires: expiresAt,
+      expires: expiresRefreshToken,
     });
 
     return { accessToken, expiresAt, refreshToken, tokenPayload };
