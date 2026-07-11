@@ -3,7 +3,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@spaceorder/ui/components/layouts/card";
-import FormCard from "./components/form-card/FormCard";
+import SignInFormCard from "./components/sign-in-form-card/SignInFormCard";
 
 export default async function SignInPage() {
   return (
@@ -14,7 +14,7 @@ export default async function SignInPage() {
             관리자 로그인
           </CardTitle>
         </CardHeader>
-        <FormCard />
+        <SignInFormCard />
       </Card>
     </div>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import AwaitFetch from "@/components/AwaitFetch";
+import AwaitFetch from "@/app/(navigator)/components/AwaitFetch";
 import { useSetCacheByStoreBoard } from "../hooks/useSetCacheByStoreBoard";
 import { useParams } from "next/navigation";
 

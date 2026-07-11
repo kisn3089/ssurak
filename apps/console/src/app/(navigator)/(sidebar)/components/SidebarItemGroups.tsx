@@ -33,7 +33,9 @@ export default function SidebarGroups() {
                     aria-disabled={!storeId}
                   >
                     <Link
-                      href={storeId ? `/${storeId}/${sidebarItem.segment}` : "#"}
+                      href={
+                        storeId ? `/${storeId}/${sidebarItem.segment}` : "#"
+                      }
                     >
                       <sidebarItem.icon />
                       <span>{sidebarItem.title}</span>

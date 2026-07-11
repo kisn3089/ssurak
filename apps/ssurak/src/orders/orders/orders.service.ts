@@ -262,6 +262,7 @@ export class OrdersService {
       where: { store: { ownerId: client.id, publicId: storeId } },
       include: orderSituationPayload(),
       omit: TABLE_OMIT,
+      orderBy: { createdAt: "asc" },
     });
   }
 

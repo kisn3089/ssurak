@@ -1,11 +1,11 @@
 "use client";
 
-import TableOrderList from "../table-order-list/TableOrderList";
+import TableList from "../table-order-list/TableList";
 import { OrderBoardByStore } from "@spaceorder/db";
 import useSuspenseWithAuth from "@spaceorder/api/hooks/useSuspenseWithAuth";
-import TableBoardLayout from "../table-order-list/TableOrderListLayout";
-import { GlobalTimerProvider } from "@/app/common/orders/GlobalTimerContext";
+import TableBoardLayout from "./TableOrderListLayout";
 import { useParams } from "next/navigation";
+import { GlobalTimerProvider } from "@spaceorder/ui/components/session-timer/GlobalTimerContext";
 
 export default function TableBoard() {
   const params = useParams<{ storeId: string }>();
@@ -18,7 +18,7 @@ export default function TableBoard() {
     <GlobalTimerProvider>
       <TableBoardLayout>
         {tables.map((sanitizedTable) => (
-          <TableOrderList
+          <TableList
             key={sanitizedTable.publicId}
             sanitizedTable={sanitizedTable}
           />

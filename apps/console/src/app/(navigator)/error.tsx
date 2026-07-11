@@ -1,6 +1,6 @@
 "use client";
 
-import ErrorFallback from "@/components/ErrorFallback";
+import ErrorFallback from "@/app/(navigator)/components/ErrorFallback";
 
 export default function NavigatorError({
   error,

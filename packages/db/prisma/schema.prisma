@@ -123,10 +123,6 @@ model Table {
   publicId    String   @unique @default(cuid(2)) @map("public_id")
   storeId     BigInt   @map("store_id")
   tableNumber String   @map("table_number") @db.VarChar(10)
-  /**
-   * 테이블 이름 (예: "창가 테이블", "VIP룸")
-   */
-  name        String?
   seats       Int      @default(4)
   /**
    * 층수 (1층, 2층 등)
@@ -138,7 +134,6 @@ model Table {
   section     String?
   isActive    Boolean  @default(true) @map("is_active")
   qrCode      String   @unique @default(cuid(2)) @map("qr_code")
-  description String?  @db.VarChar(500)
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 

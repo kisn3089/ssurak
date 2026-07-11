@@ -41,13 +41,13 @@ export default function SignInField({
         type={type}
         placeholder={placeholder}
         className={
-          errorMessage ? "border-red-600 focus-visible:ring-red-600" : ""
+          errorMessage ? "border-red-500 focus-visible:ring-red-500" : ""
         }
         {...register(type)}
         aria-invalid={errorMessage ? true : false}
       />
       <p
-        className={`${errorMessage ? `visible` : `invisible`} min-h-4 text-xs text-red-600`}
+        className={`${errorMessage ? `visible` : `invisible`} min-h-4 text-xs text-red-500`}
       >
         {errorMessage}
       </p>

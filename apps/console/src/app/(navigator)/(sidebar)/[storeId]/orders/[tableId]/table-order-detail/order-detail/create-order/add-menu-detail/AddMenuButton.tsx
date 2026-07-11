@@ -1,7 +1,7 @@
-import TouchEventButton from "@spaceorder/ui/components/buttons/TouchEventButton";
 import { useMenuDetailContext } from "@spaceorder/ui/components/menu/menu-detail/MenuDetailContext";
 import { transCurrencyFormat } from "@spaceorder/ui/utils/menu/priceFormatter";
 import { useCreateOrderContext } from "../CreateOrderProvider";
+import { Button } from "@spaceorder/ui/components/buttons/button";
 
 export default function AddMenuButton() {
   const {
@@ -31,19 +31,19 @@ export default function AddMenuButton() {
 
   return (
     <div className="p-2 w-full grid grid-cols-[1fr_3fr] gap-x-2 border-t border-border">
-      <TouchEventButton
+      <Button
         onClick={selectMenuClear}
         variant={"secondary"}
         className="h-12 font-bold tracking-wide rounded-2xl"
       >
         닫기
-      </TouchEventButton>
-      <TouchEventButton
+      </Button>
+      <Button
         className="h-12 font-bold tracking-wide rounded-2xl"
         onClick={addMenuToOrder}
       >
         {`${transCurrencyFormat(price)}원 - ${isEditing ? "변경" : "추가"}`}
-      </TouchEventButton>
+      </Button>
     </div>
   );
 }

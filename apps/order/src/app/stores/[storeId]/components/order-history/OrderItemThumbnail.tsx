@@ -1,5 +1,5 @@
 import MenuImage from "../../(navigator)/menus/components/MenuImage";
-import CountIcon from "../../(navigator)/common/CountIcon";
+import CountIcon from "@spaceorder/ui/components/CountIcon";
 
 type OrderItemThumbnailProps = {
   menuImageUrl: string | null;

@@ -9,14 +9,14 @@ export default function NavigatorLayout({
 }>) {
   return (
     <section className="antialiased">
-      <nav className="flex justify-between px-6 items-center w-screen h-14">
+      <header className="sticky top-0 bg-background z-20 flex justify-between px-6 items-center w-screen h-14">
         <Link href="/" className="font-bold text-lg">
           <TextLogo />
         </Link>
         <div className="flex flex-row items-center gap-4">
           <ToggleTheme />
         </div>
-      </nav>
+      </header>
       {children}
     </section>
   );

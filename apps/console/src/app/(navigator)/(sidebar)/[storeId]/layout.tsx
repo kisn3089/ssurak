@@ -1,5 +1,5 @@
 import type { PublicStore } from "@spaceorder/db";
-import ServerPrefetch from "@/components/ServerPrefetch";
+import ServerPrefetch from "@/app/(navigator)/components/ServerPrefetch";
 import PersistLastStore from "./components/PersistLastStore";
 
 /**

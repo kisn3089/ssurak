@@ -5,7 +5,7 @@ import {
 } from "@spaceorder/ui/components/table";
 import { useOrderDetailContext } from "../OrderDetailContext";
 import ActivityRender from "@spaceorder/ui/components/activity-render/ActivityRender";
-import LoadingSpinner from "@/components/LoadingSpinner";
+import LoadingSpinner from "@/app/(navigator)/components/LoadingSpinner";
 import { tableOrderColumns } from "../../tableOrderColumns";
 
 interface OrderTableBodyProps {

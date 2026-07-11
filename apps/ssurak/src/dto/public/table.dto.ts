@@ -22,10 +22,6 @@ export class TableDto {
   @Expose()
   tableNumber: string;
 
-  @ApiProperty({ description: "테이블 이름" })
-  @Expose()
-  name: string;
-
   @ApiProperty({ description: "좌석 수" })
   @Expose()
   seats: number;
@@ -45,10 +41,6 @@ export class TableDto {
   @ApiProperty({ description: "QR 코드" })
   @Expose()
   qrCode: string;
-
-  @ApiProperty({ description: "설명" })
-  @Expose()
-  description: string;
 
   @ApiProperty({ description: "생성일" })
   @Expose()
@@ -214,10 +206,6 @@ export class BoardTableDto {
   @Expose()
   tableNumber: string;
 
-  @ApiProperty({ description: "테이블 이름" })
-  @Expose()
-  name: string;
-
   @ApiProperty({ description: "좌석 수" })
   @Expose()
   seats: number;
@@ -237,10 +225,6 @@ export class BoardTableDto {
   @ApiProperty({ description: "QR 코드" })
   @Expose()
   qrCode: string;
-
-  @ApiProperty({ description: "설명", nullable: true })
-  @Expose()
-  description: string | null;
 
   @ApiProperty({ description: "생성일" })
   @Expose()

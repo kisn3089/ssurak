@@ -7,7 +7,7 @@ import { Button } from "@spaceorder/ui/components/buttons/button";
 import { ConciergeBell } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import CountIcon from "../common/CountIcon";
+import CountIcon from "@spaceorder/ui/components/CountIcon";
 
 export default function CartLink() {
   const { storeId } = useParams<{ storeId: string }>();

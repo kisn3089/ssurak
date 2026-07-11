@@ -1,7 +1,7 @@
 "use server";
 
 import { AxiosError } from "axios";
-import { AccessToken, httpAuth } from "@spaceorder/api";
+import { AccessToken, httpAuth, SignInPayload } from "@spaceorder/api";
 import parseCookieFromResponse, {
   setCookieFromResponseHeader,
 } from "@spaceorder/api/utils/parseCookieFromResponse";
@@ -20,13 +20,11 @@ type ActionResponse =
       };
     };
 
-export default async function signInAction(
-  formData: FormData
-): Promise<ActionResponse> {
+export default async function signInAction({
+  email,
+  password,
+}: SignInPayload): Promise<ActionResponse> {
   try {
-    const email = formData.get("email");
-    const password = formData.get("password");
-
     if (typeof email !== "string" || typeof password !== "string") {
       return {
         success: false,

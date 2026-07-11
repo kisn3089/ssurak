@@ -1,16 +1,16 @@
+import { Button } from "@spaceorder/ui/components/buttons/button";
 import TableOrderDetailLayout from "./TableOrderDetailLayout";
-import TouchEventButton from "@spaceorder/ui/components/buttons/TouchEventButton";
 
 export default function EmptyOrderDetail() {
   return (
     <TableOrderDetailLayout
       renderPayment={
-        <TouchEventButton
+        <Button
           disabled
           className="h-[clamp(4rem,6vw,6rem)] font-bold text-xl tracking-wider  rounded-2xl"
         >
           결제
-        </TouchEventButton>
+        </Button>
       }
     >
       <EmptyOrder />

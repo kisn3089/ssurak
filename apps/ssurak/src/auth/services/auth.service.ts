@@ -72,16 +72,28 @@ export class AuthService {
   }
 
   async findUserByRole({ role, where }: FindUserByRoleParams): Promise<User> {
-    switch (role) {
-      case "owner":
-        return await this.ownerService.getUnique({ where });
-      case "admin":
-        return await this.adminService.getUnique({ where });
-      default:
-        throw new HttpException(
-          exceptionContentsIs("INVALID_ROLE"),
-          HttpStatus.BAD_REQUEST
-        );
+    try {
+      switch (role) {
+        case "owner": {
+          return await this.ownerService.getUnique({ where });
+        }
+
+        case "admin":
+          return await this.adminService.getUnique({ where });
+        default:
+          throw new HttpException(
+            exceptionContentsIs("INVALID_ROLE"),
+            HttpStatus.BAD_REQUEST
+          );
+      }
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === "P2025"
+      ) {
+        throw new UnauthorizedException(exceptionContentsIs("UNAUTHORIZED"));
+      }
+      throw error;
     }
   }
 
@@ -105,7 +117,7 @@ export class AuthService {
   async validateSignInPayload(
     { email, password }: SignInPayload,
     role: TokenPayload["role"]
-  ): Promise<User | undefined> {
+  ): Promise<User> {
     try {
       const user = await this.findUserByRole({ role, where: { email } });
 
@@ -126,6 +138,7 @@ export class AuthService {
           HttpStatus.UNAUTHORIZED
         );
       }
+      throw error;
     }
   }
 }
