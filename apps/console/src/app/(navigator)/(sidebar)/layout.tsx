@@ -2,9 +2,8 @@ import { SidebarProvider } from "@spaceorder/ui/components/layouts/sidebar";
 import { cookies } from "next/headers";
 import NavSidebar from "./components/NavSidebar";
 import AuthGuard from "@/providers/AuthGuard";
-import ServerPrefetch from "@/components/ServerPrefetch";
-import OrderNoticeDaemon from "@/components/realtime/OrderNoticeDaemon";
-import RealtimeStatusBanner from "@/components/realtime/RealtimeStatusBanner";
+import ServerPrefetch from "@/app/(navigator)/components/ServerPrefetch";
+import OrderNoticeDaemon from "@/app/(navigator)/(sidebar)/components/realtime/OrderNoticeDaemon";
 
 export default async function SidebarLayout({
   children,
@@ -21,10 +20,7 @@ export default async function SidebarLayout({
           <ServerPrefetch url="/stores/v1">
             <SidebarProvider defaultOpen={defaultOpen}>
               <NavSidebar />
-              <main className="w-full">
-                <RealtimeStatusBanner />
-                {children}
-              </main>
+              <main className="w-full">{children}</main>
               <OrderNoticeDaemon />
             </SidebarProvider>
           </ServerPrefetch>

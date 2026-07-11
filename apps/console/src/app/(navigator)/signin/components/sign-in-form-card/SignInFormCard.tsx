@@ -15,7 +15,7 @@ import { SignInPayload, signInPayloadSchema } from "@spaceorder/api";
 import { useAuthInfo } from "@spaceorder/auth";
 import { Spinner } from "@spaceorder/ui/components/spinner";
 
-export default function FormCard() {
+export default function SignInFormCard() {
   const { setAuthInfo } = useAuthInfo();
 
   const router = useRouter();
@@ -26,6 +26,7 @@ export default function FormCard() {
     formState: { errors, isSubmitting },
   } = useForm<SignInPayload>({
     resolver: zodResolver(signInPayloadSchema),
+    mode: "all",
     defaultValues: {
       email: "",
       password: "",
@@ -33,11 +34,7 @@ export default function FormCard() {
   });
 
   const onSubmit = async ({ email, password }: SignInPayload) => {
-    const formData = new FormData();
-    formData.append("email", email);
-    formData.append("password", password);
-
-    const signInResult = await signInAction(formData);
+    const signInResult = await signInAction({ email, password });
 
     if (!signInResult.success) {
       setError("password", { message: signInResult.error?.message });
@@ -49,14 +46,14 @@ export default function FormCard() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form noValidate onSubmit={handleSubmit(onSubmit)}>
       <CardContent>
         <div className="flex flex-col gap-2">
           <SignInField
             id="email"
             label="이메일"
             type="email"
-            placeholder="m@example.com"
+            placeholder="demo@ssurak.com"
             errorMessage={errors.email && errors.email?.message}
             register={register}
           />

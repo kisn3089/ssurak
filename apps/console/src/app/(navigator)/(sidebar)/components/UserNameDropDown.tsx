@@ -4,11 +4,11 @@ import {
   SidebarMenuButton,
   useSidebar,
 } from "@spaceorder/ui/components/layouts/sidebar";
-import UserInfoDropdown from "../(sidebar)/components/UserInfoDropdown";
 import { ShieldUser } from "lucide-react";
-import UserName from "../(sidebar)/components/UserName";
 import { Suspense } from "react";
 import { Spinner } from "@spaceorder/ui/components/spinner";
+import UserInfoDropdown from "./UserInfoDropdown";
+import UserName from "./UserName";
 
 export default function UserNameDropDown() {
   const { open } = useSidebar();

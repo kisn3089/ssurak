@@ -1,5 +1,6 @@
 import { useAuthInfo } from "@spaceorder/auth";
 import { Button } from "@spaceorder/ui/components/buttons/button";
+import { isAxiosError } from "axios";
 import { useEffect } from "react";
 import { FallbackProps } from "react-error-boundary";
 
@@ -49,6 +50,8 @@ export default function ErrorFallback({
 
 function DefaultErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
   const { signOut } = useAuthInfo();
+
+  console.log(error, isAxiosError(error));
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-3.5rem)] gap-2">

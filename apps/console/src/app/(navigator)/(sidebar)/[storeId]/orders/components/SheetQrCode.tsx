@@ -11,20 +11,20 @@ import {
   SheetTrigger,
 } from "@spaceorder/ui/components/layouts/sheet";
 import { toast } from "@spaceorder/ui/components/sonner";
-import { Copy, QrCode } from "lucide-react";
+import { Copy } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import { useState } from "react";
 
 type QrCodeModalProps = {
   tableNumber: string;
   qrCode: string;
-  disabled?: boolean;
+  children?: React.ReactNode;
 };
 
-export default function TableOrderQrCode({
+export default function SheetQrCode({
   tableNumber,
   qrCode,
-  disabled,
+  children,
 }: QrCodeModalProps) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -44,7 +44,6 @@ export default function TableOrderQrCode({
       return;
     }
 
-    const url = qrUrl;
     const copiedSuccess = () =>
       toast.success("URL이 클립보드에 복사되었습니다!", {
         position: "top-center",
@@ -55,22 +54,13 @@ export default function TableOrderQrCode({
       console.error("Clipboard write failed: ", err);
     };
 
-    navigator.clipboard.writeText(url).then(copiedSuccess, copiedError);
+    navigator.clipboard.writeText(qrUrl).then(copiedSuccess, copiedError);
   };
 
   return (
     <Sheet modal={false} open={isOpen} onOpenChange={setIsOpen}>
       <div onClick={preventEvent}>
-        <SheetTrigger asChild>
-          <Button
-            variant={"outline"}
-            size={"icon-sm"}
-            className="transition-none"
-            disabled={disabled}
-          >
-            <QrCode />
-          </Button>
-        </SheetTrigger>
+        <SheetTrigger asChild>{children}</SheetTrigger>
         <SheetContent side="top" className="gap-0">
           <SheetHeader>
             <SheetTitle className="text-center">테이블 QR</SheetTitle>

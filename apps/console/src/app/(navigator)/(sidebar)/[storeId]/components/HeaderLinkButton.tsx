@@ -1,11 +1,11 @@
-import TouchEventButton from "@spaceorder/ui/components/buttons/TouchEventButton";
+import { Button } from "@spaceorder/ui/components/buttons/button";
 import Link from "next/link";
 import { ComponentProps } from "react";
 
 type HeaderLinkButtonProps = {
   linkTo: string;
   icon?: React.ReactNode;
-} & ComponentProps<typeof TouchEventButton>;
+} & ComponentProps<typeof Button>;
 
 export default function HeaderLinkButton({
   children,
@@ -21,9 +21,7 @@ export default function HeaderLinkButton({
   );
   return (
     <Link href={linkTo} className="w-fit">
-      <TouchEventButton swallowEvent={false} {...props}>
-        {iconElement}
-      </TouchEventButton>
+      <Button {...props}>{iconElement}</Button>
     </Link>
   );
 }

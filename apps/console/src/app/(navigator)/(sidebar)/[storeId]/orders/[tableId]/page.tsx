@@ -3,9 +3,9 @@
 import { use } from "react";
 import { ErrorBoundary, FallbackProps } from "react-error-boundary";
 import TableOrderDetail from "./table-order-detail/TableOrderDetail";
-import ErrorFallback from "@/components/ErrorFallback";
+import ErrorFallback from "@/app/(navigator)/components/ErrorFallback";
 import { Suspense } from "react";
-import LoadingSpinner from "@/components/LoadingSpinner";
+import LoadingSpinner from "@/app/(navigator)/components/LoadingSpinner";
 import OrdersPageLayout from "../components/OrdersPageLayout";
 
 export default function TableOrderDetailPage({

@@ -4,8 +4,9 @@ import TableBoard from "./components/table-board/TableBoard";
 import AwaitOrdersSummary from "./components/AwaitOrdersSummary";
 import GridLayout from "./components/GridLayout";
 import OrderSyncDaemon from "./components/OrderSyncDaemon";
-import ServerPrefetch from "@/components/ServerPrefetch";
+import ServerPrefetch from "@/app/(navigator)/components/ServerPrefetch";
 import { setTablesCache } from "./utils/setTablesCache";
+import RealtimeStatusBanner from "@/app/(navigator)/(sidebar)/components/realtime/RealtimeStatusBanner";
 
 export const metadata: Metadata = {
   title: "주문 관리",
@@ -22,20 +23,23 @@ export default async function OrdersLayout({
   const { storeId } = await params;
 
   return (
-    <GridLayout>
-      <ServerPrefetch<OrderBoardByStore>
-        url={`/orders/v1/stores/${storeId}/board`}
-        shouldSuccess
-        onSuccess={(data, queryClient) =>
-          setTablesCache(data, queryClient, storeId)
-        }
-      >
-        <AwaitOrdersSummary>
-          <OrderSyncDaemon />
-          <TableBoard />
-          {children}
-        </AwaitOrdersSummary>
-      </ServerPrefetch>
-    </GridLayout>
+    <>
+      <RealtimeStatusBanner />
+      <GridLayout>
+        <ServerPrefetch<OrderBoardByStore>
+          url={`/orders/v1/stores/${storeId}/board`}
+          shouldSuccess
+          onSuccess={(data, queryClient) =>
+            setTablesCache(data, queryClient, storeId)
+          }
+        >
+          <AwaitOrdersSummary>
+            <OrderSyncDaemon />
+            <TableBoard />
+            {children}
+          </AwaitOrdersSummary>
+        </ServerPrefetch>
+      </GridLayout>
+    </>
   );
 }

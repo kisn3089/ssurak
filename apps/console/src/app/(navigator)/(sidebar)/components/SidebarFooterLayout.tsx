@@ -1,12 +1,12 @@
-import RealtimeStatusDot from "@/components/realtime/RealtimeStatusDot";
+import RealtimeStatusDot from "@/app/(navigator)/(sidebar)/components/realtime/RealtimeStatusDot";
 import {
   SidebarGroup,
   SidebarMenu,
   SidebarMenuItem,
   SidebarTrigger,
 } from "@spaceorder/ui/components/layouts/sidebar";
-import UserNameDropDown from "../../components/UserNameDropDown";
 import { Button } from "@spaceorder/ui/components/buttons/button";
+import UserNameDropDown from "./UserNameDropDown";
 
 export default function SidebarFooterLayout() {
   return (

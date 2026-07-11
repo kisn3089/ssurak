@@ -4,10 +4,10 @@ import {
   AddedMenuEntry,
   useCreateOrderContext,
 } from "../../CreateOrderProvider";
-import TouchEventButton from "@spaceorder/ui/components/buttons/TouchEventButton";
 import TouchFeedback from "@spaceorder/ui/components/animate-ui/components/TouchFeedback";
 import { syncOptions } from "@utils/syncMenuOption";
 import { transCurrencyFormat } from "@spaceorder/ui/utils/menu/priceFormatter";
+import { Button } from "@spaceorder/ui/components/buttons/button";
 
 type AddedMenuProps = {
   entry: AddedMenuEntry;
@@ -46,14 +46,14 @@ export default function AddedMenu({ entry }: AddedMenuProps) {
             <p className="font-semibold">{snapshot.menuName}</p>
             <div className="flex gap-x-2 items-center">
               <p className="tabular-nums">{snapshot.quantity}개</p>
-              <TouchEventButton
+              <Button
                 size={"icon-sm"}
                 variant={"secondary"}
                 className="border border-border"
                 onClick={deleteAddedMenu}
               >
                 <X width={14} />
-              </TouchEventButton>
+              </Button>
             </div>
           </div>
           <div className="flex justify-between pt-1">

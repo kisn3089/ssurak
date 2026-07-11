@@ -1,6 +1,6 @@
 import { sideMenuItem } from "@/shared/config/sidebarGroup";
-import PageTitle from "../../components/PageTitle";
-import HeaderLinkButton from "../../components/HeaderLinkButton";
+import PageTitle from "../components/PageTitle";
+import HeaderLinkButton from "../components/HeaderLinkButton";
 import { Plus } from "lucide-react";
 
 export default function MenusSettingPage() {

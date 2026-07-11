@@ -5,7 +5,7 @@ import { useOrderDetailContext } from "./OrderDetailContext";
 import PaymentDialogControlbar from "./PaymentDialogControlbar";
 import { Dispatch, SetStateAction } from "react";
 import { transCurrencyFormat } from "@spaceorder/ui/utils/menu/priceFormatter";
-import TouchEventButton from "@spaceorder/ui/components/buttons/TouchEventButton";
+import { Button } from "@spaceorder/ui/components/buttons/button";
 
 export function OrderDetailPayment() {
   const {
@@ -27,9 +27,9 @@ export function OrderDetailPayment() {
       description="해당 테이블의 주문 내역이 초기화됩니다."
       renderFooter={showPaymentController}
     >
-      <TouchEventButton className="h-[clamp(4rem,6vw,6rem)] font-bold text-xl tracking-wider rounded-2xl">
+      <Button className="h-[clamp(4rem,6vw,6rem)] font-bold text-xl tracking-wider rounded-2xl">
         {`${formattedPrice}원 결제`}
-      </TouchEventButton>
+      </Button>
     </AlertDialogWrapper>
   );
 }

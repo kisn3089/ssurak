@@ -7,6 +7,8 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
+import { isAxiosError } from "axios";
+import { notFound, redirect } from "next/navigation";
 
 type ServerPrefetchProps<T> = {
   url: string;
@@ -45,8 +47,29 @@ export default async function ServerPrefetch<T>({
    * @see {@link file://./(navigator)/error.tsx}
    */
   if (shouldSuccess) {
-    const data = await queryClient.fetchQuery({ queryKey, queryFn: fetchData });
-    onSuccess?.(data, queryClient);
+    try {
+      const data = await queryClient.fetchQuery({
+        queryKey,
+        queryFn: fetchData,
+      });
+      onSuccess?.(data, queryClient);
+    } catch (error) {
+      if (isAxiosError(error)) {
+        if (error.response?.status === 401) {
+          redirect("/signin");
+        } else if (error.response?.status === 404) {
+          notFound();
+        } else if (error.response?.status === 419) {
+          console.info(
+            "Access token expired. Please refresh the page to continue..."
+          );
+          return;
+        } else {
+          console.error(error);
+        }
+      }
+      throw error;
+    }
   } else {
     await queryClient.prefetchQuery({ queryKey, queryFn: fetchData });
   }
