@@ -1,19 +1,20 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { PublicMenu, StoreContext } from "@spaceorder/db/types";
-import useSuspenseWithSession from "@spaceorder/api/hooks/useSuspenseWithSession";
+import { Menu } from "@ssurak/api/types/menu/menu.interface";
+import { StoreContextResponse } from "@ssurak/api/types/store/store.interface";
+import useSuspenseWithSession from "@ssurak/api/hooks/useSuspenseWithSession";
 import MenuDetailAddCart from "./components/MenuDetailAddCart";
-import { MenuDetail } from "@spaceorder/ui/components/menu/menu-detail";
+import { MenuDetail } from "@ssurak/ui/components/menu/menu-detail";
 import MenuImage from "../components/MenuImage";
-import { ItemDescription } from "@spaceorder/ui/components/item";
+import { ItemDescription } from "@ssurak/ui/components/item";
 
 export default function MenuDetailPage() {
   const { menuId } = useParams<{ menuId: string }>();
 
   const { data: menu } = useSuspenseWithSession<
-    StoreContext,
-    PublicMenu | undefined
+    StoreContextResponse,
+    Menu | undefined
   >("/stores/v1/sessions/me/store-context", {
     queryOptions: {
       select: (storeContext) =>

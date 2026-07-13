@@ -1,7 +1,7 @@
-import { useMenuDetailContext } from "@spaceorder/ui/components/menu/menu-detail/MenuDetailContext";
-import { transCurrencyFormat } from "@spaceorder/ui/utils/menu/priceFormatter";
+import { useMenuDetailContext } from "@ssurak/ui/components/menu/menu-detail/MenuDetailContext";
+import { transCurrencyFormat } from "@ssurak/ui/utils/menu/priceFormatter";
 import { useCreateOrderContext } from "../CreateOrderProvider";
-import { Button } from "@spaceorder/ui/components/buttons/button";
+import { Button } from "@ssurak/ui/components/buttons/button";
 
 export default function AddMenuButton() {
   const {

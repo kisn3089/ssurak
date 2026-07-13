@@ -1,9 +1,9 @@
 "use client";
 
 import { useCartSyncDaemon } from "@/lib/realtime/useCartSyncDaemon";
-import { pathToQueryKey } from "@spaceorder/api/utils";
-import { CartSyncEvent } from "@spaceorder/db/types";
-import { toastByLevel } from "@spaceorder/ui/components/sonner";
+import { pathToQueryKey } from "@ssurak/api/utils/pathToQueryKey";
+import { CartSyncEvent } from "@ssurak/api/types/realtime/syncNotice.interface";
+import { toastByLevel } from "@ssurak/ui/components/sonner";
 import { useQueryClient } from "@tanstack/react-query";
 
 export default function CartSyncDaemon() {

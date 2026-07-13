@@ -1,13 +1,10 @@
 {
-  "extends": "@spaceorder/tsconfig/nextjs.json",
+  "extends": "@ssurak/tsconfig/nextjs.json",
   "compilerOptions": {
     "paths": {
       "@/*": ["./src/*"],
       "@utils/*": ["./utils/*"],
-      "@spaceorder/ui/*": ["../../packages/ui/src/*"],
-      "@spaceorder/auth/*": ["../../packages/auth/*"],
-      "@spaceorder/api/*": ["../../packages/api/*"],
-      "@spaceorder/db/*": ["../../packages/db/*"]
+      "@ssurak/ui/*": ["../../packages/ui/src/*"]
     },
     "plugins": [
       {
@@ -15,11 +12,13 @@
       }
     ],
     "incremental": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "types": ["node", "vitest/globals"]
   },
   "include": [
     "next-env.d.ts",
-    "next.config.ts",
+    "next.config.mts",
+    "vitest.config.mts",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"

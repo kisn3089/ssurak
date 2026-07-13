@@ -1,15 +1,15 @@
 "use client";
 
-import { CardHeader } from "@spaceorder/ui/components/layouts/card";
-import type { PublicCartItem } from "@spaceorder/db/types";
+import { CardHeader } from "@ssurak/ui/components/layouts/card";
+import type { CartItem } from "@ssurak/api/types/cart/cart.interface";
 import MenuImage from "../../menus/components/MenuImage";
 import { useCart } from "./CartProvider";
 import CartMenuContent from "./CartMenuContent";
 import DeleteMenuButton from "./DeleteMenuButton";
-import MenuCounter from "@spaceorder/ui/components/menu/menu-detail/MenuCounter";
+import MenuCounter from "@ssurak/ui/components/menu/menu-detail/MenuCounter";
 
 type CartMenuProps = {
-  menu: PublicCartItem;
+  menu: CartItem;
 };
 
 export default function CartMenu({ menu }: CartMenuProps) {

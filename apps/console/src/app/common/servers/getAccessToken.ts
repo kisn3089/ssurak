@@ -1,6 +1,6 @@
 "use server";
 
-import { COOKIE_TABLE } from "@spaceorder/db/constants";
+import { COOKIE_TABLE } from "@ssurak/api/utils/cookieTable.const";
 import { getServerCookie } from "./cookies";
 
 export async function getAccessToken() {

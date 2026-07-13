@@ -2,8 +2,8 @@ import {
   Tabs,
   TabsContent,
   TabsContents,
-} from "@spaceorder/ui/components/animate-ui/components/tabs";
-import { Button } from "@spaceorder/ui/components/buttons/button";
+} from "@ssurak/ui/components/animate-ui/components/tabs";
+import { Button } from "@ssurak/ui/components/buttons/button";
 import {
   Card,
   CardContent,
@@ -11,9 +11,9 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@spaceorder/ui/components/layouts/card";
-import { Input } from "@spaceorder/ui/components/forms/input";
-import { Label } from "@spaceorder/ui/components/forms/label";
+} from "@ssurak/ui/components/layouts/card";
+import { Input } from "@ssurak/ui/components/forms/input";
+import { Label } from "@ssurak/ui/components/forms/label";
 import AnimationTabList from "./TabList";
 
 export default function AnimationTabs() {

@@ -1,7 +1,7 @@
-import { MenuDetail } from "@spaceorder/ui/components/menu/menu-detail";
+import { MenuDetail } from "@ssurak/ui/components/menu/menu-detail";
 import { useCreateOrderContext } from "../CreateOrderProvider";
 import AddMenuButton from "./AddMenuButton";
-import { Card, CardHeader } from "@spaceorder/ui/components/layouts/card";
+import { Card, CardHeader } from "@ssurak/ui/components/layouts/card";
 import AddedMenuList from "./added-menu-list/AddedMenuList";
 import CreateOrderButton, {
   CloseDialogProps,

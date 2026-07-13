@@ -1,10 +1,6 @@
-import {
-  TableBody,
-  TableCell,
-  TableRow,
-} from "@spaceorder/ui/components/table";
+import { TableBody, TableCell, TableRow } from "@ssurak/ui/components/table";
 import { useOrderDetailContext } from "../OrderDetailContext";
-import ActivityRender from "@spaceorder/ui/components/activity-render/ActivityRender";
+import ActivityRender from "@ssurak/ui/components/activity-render/ActivityRender";
 import LoadingSpinner from "@/app/(navigator)/components/LoadingSpinner";
 import { tableOrderColumns } from "../../tableOrderColumns";
 

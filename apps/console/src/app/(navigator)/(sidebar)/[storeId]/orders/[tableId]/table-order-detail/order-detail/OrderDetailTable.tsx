@@ -4,9 +4,10 @@ import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { tableOrderColumns } from "../tableOrderColumns";
 import { useOrderDetailContext } from "./OrderDetailContext";
 import { OrderTable } from "./order-table";
-import { OrderStatus, PublicOrderItem } from "@spaceorder/db/index";
+import { OrderStatus } from "@ssurak/api/types/order/order.interface";
+import { OrderItem } from "@ssurak/api/types/orderItem/orderItem.interface";
 
-export type OrderItemWithOrder = PublicOrderItem & {
+export type OrderItemWithOrder = OrderItem & {
   totalPrice: number;
   orderId: string;
   orderStatus: OrderStatus;

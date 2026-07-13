@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { COOKIE_TABLE } from "@spaceorder/db/constants";
+import { COOKIE_TABLE } from "@ssurak/api/utils/cookieTable.const";
 import { getStores } from "@/app/common/servers/getStores";
 import { getServerCookie } from "@/app/common/servers/cookies";
 

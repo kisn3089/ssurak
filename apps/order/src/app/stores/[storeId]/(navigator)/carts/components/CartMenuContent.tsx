@@ -1,9 +1,9 @@
-import { CardContent, CardTitle } from "@spaceorder/ui/components/layouts/card";
+import { CardContent, CardTitle } from "@ssurak/ui/components/layouts/card";
 import CartMenuOptions from "./CartMenuOptions";
-import { PublicCartItem } from "@spaceorder/db/types";
-import { transCurrencyFormat } from "@spaceorder/ui/utils/menu/priceFormatter";
+import { CartItem } from "@ssurak/api/types/cart/cart.interface";
+import { transCurrencyFormat } from "@ssurak/ui/utils/menu/priceFormatter";
 
-export default function CartMenuContent({ menu }: { menu: PublicCartItem }) {
+export default function CartMenuContent({ menu }: { menu: CartItem }) {
   return (
     <div className="flex flex-col">
       <CardTitle className="text-lg flex-1">{menu.menuName}</CardTitle>

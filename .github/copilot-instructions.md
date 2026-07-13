@@ -1,311 +1,217 @@
-# GitHub Copilot Instructions for space-order
+# GitHub Copilot Instructions — ssurak frontend
 
 ## Project Overview
 
-This is a **Turborepo monorepo** for a restaurant ordering system using **pnpm workspaces**. The project includes Next.js frontend applications, a NestJS backend API, and shared packages with a centralized database package.
+**프론트엔드 전용 저장소입니다.** Turborepo + **pnpm workspaces** 기반 모노레포로, Next.js 앱 2개와 공유 패키지로 구성됩니다.
+
+백엔드(NestJS · Prisma · MySQL · Redis · Socket.IO)는 별도 저장소(<https://github.com/kisn3089/ssurak-backend>)에 있습니다. 이 저장소는 백엔드와 **REST + Socket.IO로만** 통신하며 DB나 Prisma에 직접 접근하지 않습니다. `@ssurak/db` 패키지는 더 이상 존재하지 않습니다.
 
 ## Tech Stack & Versions
 
 ### Package Manager & Runtime
 
-- **pnpm**: 9.0.0+ (REQUIRED - always use pnpm, never npm or yarn)
-- **Node.js**: >=18
+- **pnpm**: 9.0.0+ (REQUIRED — 절대 npm/yarn 사용 금지)
+- **Node.js**: >= 22
+- **TypeScript**: 6.0.3
+- **Turborepo**: 2.6.x
 
-### Frontend Apps (apps/)
+### Apps (apps/)
 
-#### order (Customer-facing app)
+#### order — 고객용 주문 앱
 
-- **Framework**: Next.js 14.2.33 with App Router
-- **React**: 18.3.1
-- **React Compiler**: ENABLED via `reactCompiler: true`
-- **Styling**: Tailwind CSS v4 with PostCSS (`@tailwindcss/postcss`)
+- **Framework**: Next.js 16 (App Router), React 19
+- **React Compiler**: ENABLED (`reactCompiler: true`)
+- **Styling**: Tailwind CSS v4 + PostCSS (`@tailwindcss/postcss`)
 - **Module Type**: ESM (`"type": "module"`)
-- **Port**: 3000 (default)
-- **Path Alias**: `@/*` maps to `./src/*`
+- **Port**: 3000
+- **Workspace Dependencies**: `@ssurak/api`, `@ssurak/ui`
 
-#### console (Admin app)
+#### console — 매장 관리자용 콘솔 앱
 
-- **Framework**: Next.js 14.2.33 with App Router
-- **React**: 18.3.1
-- **React Compiler**: ENABLED via `reactCompiler: true`
-- **Styling**: Tailwind CSS v4.1.11 with PostCSS
-- **Data Fetching**: @tanstack/react-query 5.90.11
-- **Form Handling**: react-hook-form 7.53.0 with @hookform/resolvers
-- **Icons**: lucide-react 0.475.0
-- **Theme**: next-themes 0.4.6
+- **Framework**: Next.js 16 (App Router), React 19
+- **React Compiler**: ENABLED (`reactCompiler: true`)
+- **Styling**: Tailwind CSS v4
+- **Data Fetching**: `@tanstack/react-query` v5
+- **Data Table**: `@tanstack/react-table` v8
+- **Form**: `react-hook-form` + `@hookform/resolvers` + zod
+- **Realtime**: `socket.io-client`
 - **Module Type**: ESM (`"type": "module"`)
 - **Port**: 3001
-- **Workspace Dependencies**: `@spaceorder/api`, `@spaceorder/db`, `@spaceorder/ui`, `@spaceorder/auth`
+- **Workspace Dependencies**: `@ssurak/api`, `@ssurak/auth`, `@ssurak/ui`
 
-### Backend App (apps/)
-
-#### ssurak (API server)
-
-- **Framework**: NestJS 11.0.1 with Express platform
-- **Runtime**: Node.js with TypeScript
-- **Build Tool**: NestJS CLI with SWC builder (faster compilation)
-- **Dev Mode**: nodemon with ts-node/register for hot-reload
-- **Config**: `ConfigModule` loads from root `.env` (`envFilePath: '../../.env'`)
-- **Module Type**: CommonJS (no `"type": "module"`)
-- **Target**: ES2023, module NodeNext
-- **Port**: 8080
-- **Testing**: Jest with ts-jest
-- **Key Dependencies**:
-  - `@nestjs/jwt`, `@nestjs/passport` - JWT authentication
-  - `@nestjs/swagger` 11.2.3 - API documentation
-  - `@nestjs/config` 4.0.2 - Configuration management
-  - `passport` 0.7.0 with jwt and local strategies
-  - `bcrypt` 6.0.0 - Password hashing
-  - `class-validator` 0.14.2, `class-transformer` 0.5.1 - DTO validation
-  - `nestjs-zod` 5.0.1, `zod` 3.25.76 - Zod validation
-  - `cookie-parser` 1.4.7 - Cookie handling
+두 앱 모두 `transpilePackages: ["@ssurak/ui", "@ssurak/api", "@ssurak/auth"]`, 경로 별칭 `@/*` → `./src/*`.
 
 ### Shared Packages (packages/)
 
-#### @spaceorder/db (Database SSOT)
+#### @ssurak/api
 
-- **ORM**: Prisma 6.19.0
-- **Client**: @prisma/client 6.19.0
-- **Database**: MySQL
-- **Purpose**: Centralized Prisma schema, types, and client (Single Source of Truth)
-- **Models**: Admin, Owner, Store, Menu, Order, OrderItem
-- **Enums**: AdminRole (SUPER, SUPPORT, VIEWER), OrderStatus (PENDING, ACCEPTED, PREPARING, COMPLETED, CANCELLED)
+- **역할**: 백엔드와의 계약 전담 — 도메인 타입, axios 클라이언트, React Query 훅, Zod 스키마
+- **구성**: `src/types/`, `src/core/`, `src/hooks/`, `src/schemas/`, `src/utils/`
+- **Dependencies**: `@ssurak/auth`, axios, `@tanstack/react-query`, zod, react
 
-#### @spaceorder/api
+#### @ssurak/auth
 
-- **HTTP Client**: axios 1.13.2
-- **React Query**: @tanstack/react-query 5.90.11
-- **Purpose**: Frontend API client with React Query hooks
-- **Dependencies**: `@spaceorder/db`, `@spaceorder/auth`, `react` 18.3.1
+- **역할**: JWT 토큰 타입·유틸(jwt-decode), 인증 Provider
+- **Dependencies**: 없음 (리프 패키지)
 
-#### @spaceorder/auth
+#### @ssurak/ui
 
-- **Validation**: zod 3.25.76
-- **Purpose**: Authentication utilities, Zod schemas, hooks
-- **Dependencies**: `react` 18.3.1
+- **Component Library**: Radix UI (`@radix-ui/react-*`), Shadcn 스타일
+- **Styling**: Tailwind CSS v4, `class-variance-authority`, `clsx`, `tailwind-merge`
+- **Icons**: `lucide-react`, **Animation**: `motion`
 
-#### @spaceorder/ui
+#### @ssurak/lintconfig
 
-- **React**: 18.3.1
-- **Styling**: Tailwind CSS v4.1.11 with PostCSS
-- **Component Library**: Radix UI (@radix-ui/react-\*)
-- **Animation**: motion 12.23.24
-- **Utilities**:
-  - class-variance-authority 0.7.1 - Component variants
-  - clsx 2.1.1, tailwind-merge 3.3.1 - Class name utilities
-  - lucide-react 0.475.0 - Icons
-  - tw-animate-css 1.3.6 - Tailwind animations
+- ESLint 9 FlatConfig — base.js, next.js, react-internal.js
 
-#### @spaceorder/lintconfig
+#### @ssurak/tsconfig
 
-- **ESLint**: 9 FlatConfig format
-- **Configs**: base.js, next.js, react-internal.js
-- **Plugins**: @eslint/js, typescript-eslint, eslint-plugin-react, eslint-plugin-react-hooks, @next/eslint-plugin-next, eslint-plugin-turbo
+- base.json, nextjs.json, react-library.json
 
-#### @spaceorder/tsconfig
+### Workspace Dependencies
 
-- **Configs**: base.json (ES2022, strict mode), nextjs.json, react-library.json
+```text
+order   → @ssurak/api, @ssurak/ui
+console → @ssurak/api, @ssurak/auth, @ssurak/ui
+@ssurak/api → @ssurak/auth
+```
+
+로컬 패키지는 `workspace:*` 프로토콜로 참조합니다. `@ssurak/api` → `@ssurak/auth`는 **단방향**입니다. 두 패키지가 공유하는 타입(예: `TokenPayload`)은 순환 참조를 피하기 위해 리프인 `auth`에 둡니다.
 
 ## Coding Standards & Guidelines
 
+### 도메인 타입은 API 응답 기준으로 선언
+
+타입은 `packages/api/src/types/<entity>/<entity>.interface.ts`에 직접 선언합니다. DB 스키마가 아니라 **실제 API 응답**을 기준으로 합니다.
+
+1. 서버 내부용 `id`는 클라이언트로 내려오지 않으므로 **선언하지 않습니다.** 식별자는 `publicId`(cuid2)입니다.
+2. 날짜는 `Date`가 아니라 **ISO `string`** 입니다.
+3. nullable 필드는 `?` 옵셔널이 아니라 **`string | null`** 로 선언합니다 (JSON wire format 일치).
+4. 엔티티 이름을 그대로 씁니다 (`Menu`, `Table`, `Order`). `XResponse`는 복합 응답에만 (`OrderWithItemsResponse` 등).
+5. 파생 응답은 유틸리티 타입(`Omit`, `Pick`, 교차 타입)으로 만듭니다 — 필드를 복붙하지 않습니다.
+
+Enum은 런타임 값으로도 쓰이므로 **const object 패턴**으로 선언합니다:
+
+```typescript
+export const OrderStatus = {
+  PENDING: "PENDING",
+  ACCEPTED: "ACCEPTED",
+  PREPARING: "PREPARING",
+  COMPLETED: "COMPLETED",
+  CANCELLED: "CANCELLED",
+} as const;
+export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus];
+```
+
+### 배럴 금지 — 서브패스로 import
+
+`index.ts` 배럴 파일을 만들지 않습니다. 각 패키지는 `package.json`의 `exports` 서브패스 맵으로 `./src/**`를 노출하고, 소비자는 심볼이 정의된 모듈을 직접 import합니다.
+
+**✅ Good:**
+
+```typescript
+import { OrderStatus } from "@ssurak/api/types/order/order.interface";
+import { httpOrder } from "@ssurak/api/core/order/order/httpOrder";
+import useSuspenseWithAuth from "@ssurak/api/hooks/useSuspenseWithAuth";
+```
+
+**❌ Bad:**
+
+```typescript
+import { OrderStatus, httpOrder } from "@ssurak/api";
+```
+
+### HTTP 함수는 body를 반환
+
+`packages/api/src/core/`의 http 함수는 응답 body를 벗겨서 도메인 타입을 반환합니다. 이 함수들은 React Query의 `queryFn`/`mutationFn`으로 들어가고 반환값이 그대로 캐시에 저장되는데, `AxiosResponse`는 직렬화가 불가능하고(`config`에 어댑터·transform 함수, `request` 객체) `config.headers`에 `Authorization`까지 담고 있어 서버 prefetch + `dehydrate()` 경계를 넘지 못합니다.
+
+**✅ Good:**
+
+```typescript
+async function fetchList({ storeId }: FetchTableListParams): Promise<Table[]> {
+  const response = await http.get<Table[]>(prefix(storeId));
+  return response.data;
+}
+```
+
+`AxiosResponse<T>`를 반환하는 건 **호출부가 응답 헤더(주로 `Set-Cookie`)를 필요로 할 때뿐입니다** — 현재 `httpAuth.createAccessToken`, `httpAuth.refreshAccessToken`, `httpSession.createSession` 세 개뿐입니다.
+
 ### TypeScript Rules
 
-1. **NEVER use type assertions (`as`)**
-   - Type assertions bypass TypeScript's type checking
-   - Use proper type design instead:
-     - Generic type parameters with defaults: `<T = DefaultType>`
-     - Intersection types: `Type1 & Type2`
-     - Union types: `Type1 | Type2`
-     - Conditional types when needed
+1. **타입 단언(`as`)으로 타입 에러를 해결하지 마세요.** 제네릭 기본값, 교차/유니온 타입, 타입 좁히기로 해결합니다.
 
    **❌ Bad:**
 
    ```typescript
-   return await prisma.menu.findFirst(...) as T;
+   const menus = response.data as Menu[];
    ```
 
    **✅ Good:**
 
    ```typescript
-   async getMenuById<T = PublicMenu>(...): Promise<PublicMenu & T> {
-     return await prisma.menu.findFirst(...);
-   }
+   const response = await http.get<Menu[]>(`${prefix}/menus`);
+   return response.data;
    ```
 
-2. **Strict Type Safety**
-   - Enable TypeScript strict mode
-   - No implicit any
-   - Proper null/undefined handling
+   (const object enum 선언의 `as const`는 예외입니다.)
 
-3. **Naming Conventions**
-   - Avoid non-intuitive acronyms in type, function, method, or variable names
-   - Use clear, descriptive names
+2. **Strict Type Safety** — strict mode, no implicit any, null/undefined 명시적 처리
+
+3. **Naming** — 직관적이지 않은 축약어를 타입·함수·변수 이름에 쓰지 않습니다.
 
 ### Code Quality
 
-1. **Avoid Over-engineering**
-   - Only make changes directly requested or clearly necessary
-   - Keep solutions simple and focused
-   - Don't add features beyond what was asked
-
-2. **Security**
-   - Check for OWASP top 10 vulnerabilities:
-     - Command injection
-     - XSS
-     - SQL injection
-   - Validate at system boundaries (user input, external APIs)
-   - Don't add unnecessary validation for internal code
-
-3. **Comments & Documentation**
-   - Commit messages: English only
-   - Code comments: Korean or English
-   - Add comments only where logic isn't self-evident
-   - Don't add docstrings to unchanged code
-
-4. **React Best Practices**
-   - Utilize React Compiler features (enabled in Next.js apps)
-   - Suggest custom hooks for complex logic when appropriate
-   - Keep components focused and modular
+1. **과설계 지양** — 요청받은 것과 명백히 필요한 것만 변경합니다.
+2. **보안** — 시스템 경계(사용자 입력, 외부 API)에서 검증합니다. XSS 등 OWASP Top 10을 확인하되, 내부 코드에 불필요한 검증을 추가하지 않습니다.
+3. **주석/문서** — 커밋 메시지는 영어, 코드 주석은 한국어 또는 영어. 로직이 자명하지 않은 곳에만 주석을 답니다.
+4. **React** — React Compiler가 활성화되어 있으니 컴파일러 친화적 패턴을 씁니다. 복잡한 로직은 커스텀 훅으로 분리합니다.
 
 ### Language & Style
 
-- **Korean with "존댓말" (formal tone)** for code review comments
-- **Keep technical terms in English**
-- **Write concise, clear sentences**
-- **Use bullet points for clarity**
+- 코드 리뷰 코멘트는 **한국어 존댓말**
+- 기술 용어는 영어 그대로
+- 간결하고 명확한 문장, 필요하면 불릿 사용
 
 ## Common Commands
 
-### Development
-
 ```bash
-pnpm dev                    # Run all apps
-pnpm dev:order              # Run order app (port 3000)
-pnpm dev:console          # Run console app (port 3001)
-pnpm dev:ssurak           # Run ssurak API (port 8080)
+# Development (백엔드 API가 8080에 떠 있어야 함 — 별도 저장소)
+pnpm dev                 # 두 앱 모두
+pnpm dev:order           # order (3000)
+pnpm dev:console         # console (3001)
+
+# Build & Quality
+pnpm build               # 전체 빌드
+pnpm lint                # ESLint (--max-warnings 0)
+pnpm format              # Prettier
+
+# 패키지 지정
+pnpm build --filter=@ssurak/order
+pnpm lint --filter=@ssurak/ui
 ```
 
-### Database (Prisma)
-
-```bash
-pnpm --filter=@spaceorder/db prisma:generate    # Generate Prisma Client
-pnpm --filter=@spaceorder/db prisma:migrate     # Run migrations
-pnpm --filter=@spaceorder/db prisma:studio      # Open Prisma Studio
-pnpm --filter=@spaceorder/db prisma:seed        # Seed database
-```
-
-### Build & Quality
-
-```bash
-pnpm build                  # Build all apps and packages
-pnpm lint                   # Lint all packages
-pnpm check-types            # Type check all packages
-pnpm format                 # Format all files
-
-# Package-specific
-pnpm build --filter=ssurak
-pnpm lint --filter=order
-```
-
-### Testing (ssurak)
-
-```bash
-pnpm --filter=ssurak test              # Run unit tests
-pnpm --filter=ssurak test:watch        # Watch mode
-pnpm --filter=ssurak test:e2e          # E2E tests
-pnpm --filter=ssurak test:cov          # Coverage report
-```
-
-## Key Technical Context
-
-### Module Systems
-
-- **Frontend apps (order, console)**: ESM (`"type": "module"`)
-- **Backend app (ssurak)**: CommonJS (no `"type": "module"`)
-
-### React Compiler
-
-- **Enabled** in both Next.js apps via `reactCompiler: true` in next.config.js
-- Consider compiler-friendly patterns when writing React code
-
-### Database Architecture
-
-- **Single Source of Truth**: `@spaceorder/db` package
-- All apps import types from `@spaceorder/db`
-- Database configuration in root `.env` file only
-- Never duplicate DATABASE_URL across multiple .env files
-
-### Workspace Dependencies
-
-- Use `workspace:*` protocol for local packages
-- Apps depend on shared packages:
-  - `console` → `@spaceorder/api`, `@spaceorder/db`, `@spaceorder/ui`, `@spaceorder/auth`
-  - `ssurak` → `@spaceorder/db`, `@spaceorder/api`, `@spaceorder/auth`
-  - `@spaceorder/api` → `@spaceorder/db`, `@spaceorder/auth`
-
-### NestJS Patterns
-
-- Use `@ZodValidation()` decorator for DTO validation
-- JWT authentication with access/refresh tokens
-- Cookie-based refresh token handling
-- Current user via `@Client()` decorator
-- Prisma exception filters for error handling
-
-### Path Aliases
-
-- **Frontend apps**: `@/*` maps to `./src/*`
-- **Workspace packages**: Import via `@spaceorder/[package-name]`
-
-## Docker
-
-Root `docker-compose.yml` defines all services for local development:
-
-```bash
-docker compose up -d              # Start all services
-docker compose up -d mysql        # Start only MySQL
-docker compose down               # Stop all services
-docker compose logs -f ssurak   # View backend logs
-```
-
-**Services:**
-
-- `mysql` - MySQL 8.0 database (port: `DB_PORT`, default 3306)
-- `ssurak` - NestJS backend API (port: `SERVER_PORT`, default 8080)
-- `console` - Admin Next.js app (port: 3001)
-- `order` - Customer Next.js app (port: 3000)
+⚠️ `pnpm check-types`는 현재 `@ssurak/ui`에만 스크립트가 있어 나머지를 검증하지 않습니다. 타입 검증은 해당 패키지에서 `npx tsc --noEmit`을 직접 실행하세요.
 
 ## Environment Variables
 
-### Root `.env` (Central configuration)
+루트 `.env`가 아니라 **앱별 `.env`** 를 사용합니다 (`apps/*/.env.example` 참고).
 
 ```env
-# Database
-DB_ROOT_PASSWORD=***
-DB_PORT=3306
-DB_NAME=spaceorder
-DB_USER=spaceorder
-DB_PASSWORD=***
-DATABASE_URL="mysql://..."
+# order, console 공통
+NEXT_PUBLIC_API_SSURAK_URL=http://localhost:8080       # 브라우저 클라이언트용
+NEXT_PUBLIC_SSURAK_INTERNAL_URL=http://localhost:8080  # 서버 컴포넌트/라우트 핸들러용
 
-# Server
-SERVER_PORT=8080
-SSURAK=http://localhost:8080
-
-# JWT
-JWT_ACCESS_TOKEN_SECRET=***
-JWT_ACCESS_TOKEN_EXPIRATION_MS=3600000
-JWT_REFRESH_TOKEN_SECRET=***
-JWT_REFRESH_TOKEN_EXPIRATION_MS=604800000
-JWT_ISSUER=***
-JWT_AUDIENCE=***
+# console 전용
+NEXT_PUBLIC_ORDER_APP_URL=http://localhost:3000        # 테이블 QR 코드 생성
+COOKIE_DOMAIN=.ssurak.com                              # production 전용
 ```
 
 ## Important Notes
 
-1. **Always use pnpm** (never npm or yarn)
-2. **Run commands from repository root** unless working with package-specific scripts
-3. **Use `--filter=<package-name>`** for package-specific operations
-4. **Run `prisma:generate`** after schema changes
-5. **Type imports** always from `@spaceorder/db` for database types
-6. **ESLint strict mode** with `--max-warnings 0`
-7. **Turborepo caching** speeds up builds (configured in `turbo.json`)
+1. **항상 pnpm 사용** (npm/yarn 금지)
+2. **패키지별 스크립트가 아니면 저장소 루트에서 실행**
+3. **`--filter=<package-name>`** 으로 특정 패키지만 대상 지정
+4. **타입은 `@ssurak/api/types/...`에서** import — `@ssurak/db`는 더 이상 없습니다
+5. **배럴 없음** — 항상 서브패스로 직접 import
+6. **ESLint strict** — `--max-warnings 0`
+7. **husky pre-push**가 `pnpm build`를 실행하므로 빌드가 깨지면 push가 막힙니다

@@ -1,25 +1,25 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Button } from "@spaceorder/ui/components/buttons/button";
+import { Button } from "@ssurak/ui/components/buttons/button";
 import {
-  nextStatusMap,
   OrderStatus,
-  PublicOrderWithItem,
-} from "@spaceorder/db";
+  OrderWithItemsResponse,
+} from "@ssurak/api/types/order/order.interface";
+import { nextStatusMap } from "@ssurak/api/utils/OrderStateMap.const";
 
-import { Spinner } from "@spaceorder/ui/components/spinner";
+import { Spinner } from "@ssurak/ui/components/spinner";
 import useOrderByTable, {
   UpdateOrderByTable,
-} from "@spaceorder/api/core/order/order/useOrderByTable.mutate";
-import { UpdateOrderByTablePayload } from "@spaceorder/api/core/order/order/httpOrder";
+} from "@ssurak/api/core/order/order/useOrderByTable.mutate";
+import { UpdateOrderByTablePayload } from "@ssurak/api/core/order/order/httpOrder";
 
-type FilteredPendingStatus = Omit<PublicOrderWithItem, "status"> & {
+type FilteredPendingStatus = Omit<OrderWithItemsResponse, "status"> & {
   status: typeof OrderStatus.PENDING;
 };
 
 type TableOrderAcceptAllButtonProps = {
-  orders: PublicOrderWithItem[] | undefined;
+  orders: OrderWithItemsResponse[] | undefined;
   tableId: string;
 };
 

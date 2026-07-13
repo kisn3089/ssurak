@@ -4,17 +4,17 @@ import {
   Tabs,
   TabsContent,
   TabsContents,
-} from "@spaceorder/ui/components/animate-ui/components/tabs";
+} from "@ssurak/ui/components/animate-ui/components/tabs";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-} from "@spaceorder/ui/components/layouts/card";
+} from "@ssurak/ui/components/layouts/card";
 import CategoryTabList from "./CategoryTabList";
 import { useCreateOrderContext } from "../CreateOrderProvider";
-import { transCurrencyFormat } from "@spaceorder/ui/utils/menu/priceFormatter";
-import TouchFeedback from "@spaceorder/ui/components/animate-ui/components/TouchFeedback";
+import { transCurrencyFormat } from "@ssurak/ui/utils/menu/priceFormatter";
+import TouchFeedback from "@ssurak/ui/components/animate-ui/components/TouchFeedback";
 
 export default function CategoryList() {
   const {

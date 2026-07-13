@@ -1,11 +1,12 @@
 "use client";
 
-import { nextStatusMap, PublicOrderWithItem } from "@spaceorder/db";
-import useOrderByTable from "@spaceorder/api/core/order/order/useOrderByTable.mutate";
+import { OrderWithItemsResponse } from "@ssurak/api/types/order/order.interface";
+import { nextStatusMap } from "@ssurak/api/utils/OrderStateMap.const";
+import useOrderByTable from "@ssurak/api/core/order/order/useOrderByTable.mutate";
 import { TableOrder } from ".";
 
 interface TableOrderItemProps {
-  order: PublicOrderWithItem;
+  order: OrderWithItemsResponse;
   tableId: string;
 }
 

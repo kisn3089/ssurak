@@ -6,12 +6,12 @@ import type {
   SelectedOptions,
 } from "./menu-detail.type";
 import { MenuDetailContext, MenuDetailContextValue } from "./MenuDetailContext";
-import { deleteNoneTriggeredOptions } from "@spaceorder/ui/utils/menu/optionTrigger";
+import { deleteNoneTriggeredOptions } from "@ssurak/ui/utils/menu/optionTrigger";
 import {
   totalPrice,
   toDefaultSelection,
   toOptionEntries,
-} from "@spaceorder/ui/utils/menu/optionSelection";
+} from "@ssurak/ui/utils/menu/optionSelection";
 
 export function MenuDetailProvider({
   menu,

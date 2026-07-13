@@ -4,10 +4,10 @@ import {
   AddedMenuEntry,
   useCreateOrderContext,
 } from "../../CreateOrderProvider";
-import TouchFeedback from "@spaceorder/ui/components/animate-ui/components/TouchFeedback";
+import TouchFeedback from "@ssurak/ui/components/animate-ui/components/TouchFeedback";
 import { syncOptions } from "@utils/syncMenuOption";
-import { transCurrencyFormat } from "@spaceorder/ui/utils/menu/priceFormatter";
-import { Button } from "@spaceorder/ui/components/buttons/button";
+import { transCurrencyFormat } from "@ssurak/ui/utils/menu/priceFormatter";
+import { Button } from "@ssurak/ui/components/buttons/button";
 
 type AddedMenuProps = {
   entry: AddedMenuEntry;

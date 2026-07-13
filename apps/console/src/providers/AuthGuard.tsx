@@ -2,10 +2,11 @@
 
 import React, { ReactNode, useEffect } from "react";
 import { refreshAccessToken } from "../app/common/servers/refreshAccessToken";
-import { isExpired, useAuthInfo } from "@spaceorder/auth";
+import { useAuthInfo } from "@ssurak/auth/providers/AuthenticationProvider";
+import { isExpired } from "@ssurak/auth/utils/decodedToken";
 import { getAccessToken } from "@/app/common/servers/getAccessToken";
 import { useQueryClient } from "@tanstack/react-query";
-import { updateAxiosAuthorizationHeader } from "@spaceorder/api";
+import { updateAxiosAuthorizationHeader } from "@ssurak/api/core/axios/http";
 
 type AuthGuardProps = {
   children: ReactNode;

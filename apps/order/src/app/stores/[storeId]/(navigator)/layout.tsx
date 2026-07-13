@@ -1,15 +1,15 @@
-import { COOKIE_TABLE } from "@spaceorder/db/constants/cookieTable.const";
+import { COOKIE_TABLE } from "@ssurak/api/utils/cookieTable.const";
 import {
   dehydrate,
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import { pathToQueryKey } from "@spaceorder/api/utils/pathToQueryKey";
+import { pathToQueryKey } from "@ssurak/api/utils/pathToQueryKey";
 import NavLogoLink from "./components/NavLogoLink";
 import NavTableNumber from "./components/NavTableNumber";
-import { StoreContext } from "@spaceorder/db/types/session.type";
-import { Cart } from "@spaceorder/db/types/cart.type";
-import { PublicOrderWithItem } from "@spaceorder/db/types/publicModel.type";
+import { StoreContextResponse } from "@ssurak/api/types/store/store.interface";
+import { Cart } from "@ssurak/api/types/cart/cart.interface";
+import { OrderWithItemsResponse } from "@ssurak/api/types/order/order.interface";
 import { cookies } from "next/headers";
 import SyncDaemon from "./components/daemon/SyncDaemon";
 
@@ -38,7 +38,10 @@ export default async function NavigatorLayout({
       queryClient.prefetchQuery({
         queryKey: pathToQueryKey(STORE_CONTEXT_PATH),
         queryFn: async () =>
-          fetchWithSessionToken<StoreContext>(STORE_CONTEXT_PATH, sessionToken),
+          fetchWithSessionToken<StoreContextResponse>(
+            STORE_CONTEXT_PATH,
+            sessionToken
+          ),
         staleTime: 60 * 1000,
       }),
       queryClient.prefetchQuery({
@@ -52,7 +55,7 @@ export default async function NavigatorLayout({
       queryClient.prefetchQuery({
         queryKey: pathToQueryKey(ORDER_HISTORY),
         queryFn: async () =>
-          fetchWithSessionToken<PublicOrderWithItem<"Wide">[]>(
+          fetchWithSessionToken<OrderWithItemsResponse[]>(
             ORDER_HISTORY,
             sessionToken,
             {

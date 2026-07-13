@@ -1,10 +1,11 @@
 "use server";
 
 import { AxiosError } from "axios";
-import { AccessToken, httpAuth, SignInPayload } from "@spaceorder/api";
+import { AccessToken, SignInPayload } from "@ssurak/api/core/auth/auth.type";
+import { httpAuth } from "@ssurak/api/core/auth/httpAuth";
 import parseCookieFromResponse, {
   setCookieFromResponseHeader,
-} from "@spaceorder/api/utils/parseCookieFromResponse";
+} from "@ssurak/api/utils/parseCookieFromResponse";
 import { setServerCookie } from "@/app/common/servers/cookies";
 
 type ActionResponse =

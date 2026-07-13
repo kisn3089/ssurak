@@ -1,8 +1,4 @@
-import {
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@spaceorder/ui/components/table";
+import { TableHead, TableHeader, TableRow } from "@ssurak/ui/components/table";
 import { flexRender, Header, Table } from "@tanstack/react-table";
 
 type OrderTableHeaderProps<TData> = { table: Table<TData> };

@@ -1,4 +1,4 @@
-import { Badge } from "@spaceorder/ui/components/forms/badge";
+import { Badge } from "@ssurak/ui/components/forms/badge";
 
 export default function OptionTags({
   options,

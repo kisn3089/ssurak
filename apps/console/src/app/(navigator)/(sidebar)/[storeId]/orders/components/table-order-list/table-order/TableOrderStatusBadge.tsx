@@ -1,5 +1,5 @@
-import { Badge } from "@spaceorder/ui/components/forms/badge";
-import { BADGE_BY_ORDER_STATUS } from "@spaceorder/ui/constants/badgeByOrderStatus.const";
+import { Badge } from "@ssurak/ui/components/forms/badge";
+import { BADGE_BY_ORDER_STATUS } from "@ssurak/ui/constants/badgeByOrderStatus.const";
 
 type TableOrderStatusBadgeProps = {
   orderStatus: keyof typeof BADGE_BY_ORDER_STATUS;

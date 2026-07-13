@@ -1,6 +1,6 @@
 "use client";
 
-import { COOKIE_TABLE } from "@spaceorder/db/constants";
+import { COOKIE_TABLE } from "@ssurak/api/utils/cookieTable.const";
 import { useEffect } from "react";
 
 type PersistLastStoreProps = {

@@ -1,6 +1,6 @@
-import { Button } from "@spaceorder/ui/components/buttons/button";
-import { Separator } from "@spaceorder/ui/components/forms/separator";
-import { Spinner } from "@spaceorder/ui/components/spinner";
+import { Button } from "@ssurak/ui/components/buttons/button";
+import { Separator } from "@ssurak/ui/components/forms/separator";
+import { Spinner } from "@ssurak/ui/components/spinner";
 import { CircleAlert } from "lucide-react";
 import { ComponentProps, ReactNode } from "react";
 

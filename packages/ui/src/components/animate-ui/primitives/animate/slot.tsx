@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { motion, isMotionComponent, type HTMLMotionProps } from "motion/react";
-import { cn } from "@spaceorder/ui/lib/utils";
+import { cn } from "@ssurak/ui/lib/utils";
 
 type AnyProps = Record<string, unknown>;
 

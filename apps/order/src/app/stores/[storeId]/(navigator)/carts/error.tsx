@@ -1,6 +1,6 @@
 "use client";
 
-import { Exception } from "@spaceorder/api/types";
+import { Exception } from "@ssurak/api/types/exception.interface";
 import { AxiosError } from "axios";
 import ErrorFallbackView from "../common/ErrorFallbackView";
 

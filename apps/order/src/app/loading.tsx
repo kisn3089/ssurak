@@ -1,4 +1,4 @@
-import { Spinner } from "@spaceorder/ui/components/spinner";
+import { Spinner } from "@ssurak/ui/components/spinner";
 
 export default function MenusLoading() {
   return (

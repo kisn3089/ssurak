@@ -1,6 +1,6 @@
 "use server";
 
-import { COOKIE_TABLE } from "@spaceorder/db/constants";
+import { COOKIE_TABLE } from "@ssurak/api/utils/cookieTable.const";
 import type { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import { cookies } from "next/headers";
 import { cookieOptions } from "../../../../utils/cookieOptions";

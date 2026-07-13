@@ -1,4 +1,4 @@
-import { http, resolveSsurakBaseURL } from "@spaceorder/api";
+import { http, resolveSsurakBaseURL } from "@ssurak/api/core/axios/http";
 import { io, Socket } from "socket.io-client";
 
 const REALTIME_URL = `${resolveSsurakBaseURL()}/events`;

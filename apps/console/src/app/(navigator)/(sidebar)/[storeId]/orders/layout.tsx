@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { OrderBoardByStore } from "@spaceorder/db";
+import { OrderBoardByStoreResponse } from "@ssurak/api/types/board/board.interface";
 import TableBoard from "./components/table-board/TableBoard";
 import AwaitOrdersSummary from "./components/AwaitOrdersSummary";
 import GridLayout from "./components/GridLayout";
@@ -26,7 +26,7 @@ export default async function OrdersLayout({
     <>
       <RealtimeStatusBanner />
       <GridLayout>
-        <ServerPrefetch<OrderBoardByStore>
+        <ServerPrefetch<OrderBoardByStoreResponse>
           url={`/orders/v1/stores/${storeId}/board`}
           shouldSuccess
           onSuccess={(data, queryClient) =>

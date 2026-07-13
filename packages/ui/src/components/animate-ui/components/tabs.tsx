@@ -13,8 +13,8 @@ import {
   type TabsTriggerProps as TabsTriggerPrimitiveProps,
   type TabsContentProps as TabsContentPrimitiveProps,
   type TabsContentsProps as TabsContentsPrimitiveProps,
-} from "@spaceorder/ui/components/animate-ui/primitives/animate/tabs";
-import { cn } from "@spaceorder/ui/lib/utils";
+} from "@ssurak/ui/components/animate-ui/primitives/animate/tabs";
+import { cn } from "@ssurak/ui/lib/utils";
 
 type TabsProps = TabsPrimitiveProps;
 

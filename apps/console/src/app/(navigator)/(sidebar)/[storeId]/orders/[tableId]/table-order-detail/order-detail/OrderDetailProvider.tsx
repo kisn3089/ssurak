@@ -1,16 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { sumFromObjects } from "@spaceorder/api";
-import useSuspenseWithAuth from "@spaceorder/api/hooks/useSuspenseWithAuth";
+import { sumFromObjects } from "@ssurak/api/utils/price";
+import useSuspenseWithAuth from "@ssurak/api/hooks/useSuspenseWithAuth";
 import {
   OrderDetailContext,
   type OrderDetailContextValue,
 } from "./OrderDetailContext";
 import { OrderItemWithOrder } from "./OrderDetailTable";
-import { ActiveSessionResponse } from "@spaceorder/db/types";
-import useOrderItem from "@spaceorder/api/core/order/order-item/useOrderItem.mutate";
-import { toast } from "@spaceorder/ui/components/sonner";
+import { ActiveSessionResponse } from "@ssurak/api/types/board/board.interface";
+import useOrderItem from "@ssurak/api/core/order/order-item/useOrderItem.mutate";
+import { toast } from "@ssurak/ui/components/sonner";
 
 interface OrderDetailProviderProps {
   params: { storeId: string; tableId: string };

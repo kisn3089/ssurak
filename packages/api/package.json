@@ -1,26 +1,31 @@
 {
-  "name": "@spaceorder/api",
+  "name": "@ssurak/api",
   "version": "0.1.0",
-  "main": "./index.ts",
-  "types": "./index.ts",
   "private": true,
+  "exports": {
+    "./core/TanstackProvider": "./src/core/TanstackProvider.tsx",
+    "./core/*": "./src/core/*.ts",
+    "./hooks/*": "./src/hooks/*.ts",
+    "./schemas/*": "./src/schemas/*.ts",
+    "./types/*": "./src/types/*.ts",
+    "./utils/*": "./src/utils/*.ts"
+  },
   "scripts": {
     "build": "tsc",
     "lint": "eslint . --fix"
   },
   "dependencies": {
-    "@spaceorder/db": "workspace:*",
-    "@spaceorder/auth": "workspace:*",
+    "@ssurak/auth": "workspace:*",
     "@tanstack/react-query": "^5.90.11",
     "axios": "^1.13.2",
-    "react": "18.3.1",
+    "react": "19.2.0",
     "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@spaceorder/lintconfig": "workspace:*",
-    "@spaceorder/tsconfig": "workspace:*",
+    "@ssurak/lintconfig": "workspace:*",
+    "@ssurak/tsconfig": "workspace:*",
     "@types/node": "^20",
-    "@types/react": "^18",
-    "typescript": "^5"
+    "@types/react": "^19",
+    "typescript": "6.0.3"
   }
 }

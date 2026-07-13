@@ -1,11 +1,12 @@
 "use server";
 
-import { AccessToken, httpAuth } from "@spaceorder/api";
-import { COOKIE_TABLE } from "@spaceorder/db/constants";
+import { AccessToken } from "@ssurak/api/core/auth/auth.type";
+import { httpAuth } from "@ssurak/api/core/auth/httpAuth";
+import { COOKIE_TABLE } from "@ssurak/api/utils/cookieTable.const";
 import { getServerCookie, setServerCookie } from "./cookies";
 import parseCookieFromResponse, {
   setCookieFromResponseHeader,
-} from "@spaceorder/api/utils/parseCookieFromResponse";
+} from "@ssurak/api/utils/parseCookieFromResponse";
 
 type RefreshAccessTokenResponse = AccessToken;
 

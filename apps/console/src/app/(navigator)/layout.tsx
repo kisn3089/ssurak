@@ -1,5 +1,5 @@
-import TextLogo from "@spaceorder/ui/components/TextLogo";
-import { ToggleTheme } from "@spaceorder/ui/components/theme/ToggleTheme";
+import TextLogo from "@ssurak/ui/components/TextLogo";
+import { ToggleTheme } from "@ssurak/ui/components/theme/ToggleTheme";
 import Link from "next/link";
 
 export default function NavigatorLayout({

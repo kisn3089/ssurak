@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { getRealtimeSocket, REALTIME_EVENT } from "./socket";
-import { OrderSyncEvent } from "@spaceorder/db/types";
+import { OrderSyncEvent } from "@ssurak/api/types/realtime/syncNotice.interface";
 
 export type UseTableOrderSyncDaemon = {
   onCreatedAction?: (event: OrderSyncEvent) => void;

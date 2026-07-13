@@ -1,20 +1,20 @@
-import { pathToQueryKey } from "@spaceorder/api/utils";
+import { pathToQueryKey } from "@ssurak/api/utils/pathToQueryKey";
 import {
   ActiveSessionResponse,
-  OrderBoardByStore,
-  PublicTable,
-} from "@spaceorder/db/types";
+  OrderBoardByStoreResponse,
+} from "@ssurak/api/types/board/board.interface";
+import { Table } from "@ssurak/api/types/table/table.interface";
 import { QueryClient } from "@tanstack/react-query";
 
 export function setTablesCache(
-  tableBoard: OrderBoardByStore,
+  tableBoard: OrderBoardByStoreResponse,
   queryClient: QueryClient,
   storeId: string
 ) {
   tableBoard.forEach((tableWithSessions) => {
     const { tableSessions, ...table } = tableWithSessions;
 
-    queryClient.setQueryData<PublicTable>(
+    queryClient.setQueryData<Table>(
       pathToQueryKey(`/stores/v1/${storeId}/tables/${table.publicId}`),
       table
     );

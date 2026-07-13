@@ -1,7 +1,7 @@
 import {
   Menu,
   MenuOptionEntry,
-} from "@spaceorder/ui/components/menu/menu-detail/menu-detail.type";
+} from "@ssurak/ui/components/menu/menu-detail/menu-detail.type";
 
 export function toOptionEntries<MenuLike extends Menu>(
   options: MenuLike["requiredOptions"] | MenuLike["customOptions"]

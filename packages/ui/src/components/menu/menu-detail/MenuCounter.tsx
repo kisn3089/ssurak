@@ -1,8 +1,8 @@
-import { Button } from "@spaceorder/ui/components/buttons/button";
+import { Button } from "@ssurak/ui/components/buttons/button";
 import {
   ButtonGroup,
   ButtonGroupText,
-} from "@spaceorder/ui/components/buttons/button-group";
+} from "@ssurak/ui/components/buttons/button-group";
 import { MinusIcon, PlusIcon } from "lucide-react";
 
 export default function MenuCounter({

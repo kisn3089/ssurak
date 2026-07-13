@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import { PlusIcon } from "lucide-react";
-import { Card } from "@spaceorder/ui/components/layouts/card";
+import { Card } from "@ssurak/ui/components/layouts/card";
 import CartMenu from "./CartMenu";
 import { useCart } from "./CartProvider";
 import { useParams } from "next/navigation";
-import { Button } from "@spaceorder/ui/components/buttons/button";
+import { Button } from "@ssurak/ui/components/buttons/button";
 
 export default function CartMenuList() {
   const { storeId } = useParams<{ storeId: string }>();

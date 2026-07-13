@@ -1,4 +1,4 @@
-import { Button } from "@spaceorder/ui/components/buttons/button";
+import { Button } from "@ssurak/ui/components/buttons/button";
 import { X } from "lucide-react";
 import { useCart } from "./CartProvider";
 

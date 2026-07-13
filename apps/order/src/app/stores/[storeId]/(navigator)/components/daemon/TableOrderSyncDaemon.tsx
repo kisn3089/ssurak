@@ -1,9 +1,9 @@
 "use client";
 
 import { useTableOrderSyncDaemon } from "@/lib/realtime/useTableOrderSyncDaemon";
-import { pathToQueryKey } from "@spaceorder/api/utils/pathToQueryKey";
-import { OrderSyncEvent } from "@spaceorder/db/types";
-import { toastByLevel } from "@spaceorder/ui/components/sonner";
+import { pathToQueryKey } from "@ssurak/api/utils/pathToQueryKey";
+import { OrderSyncEvent } from "@ssurak/api/types/realtime/syncNotice.interface";
+import { toastByLevel } from "@ssurak/ui/components/sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { Bell } from "lucide-react";
 

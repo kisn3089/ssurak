@@ -1,13 +1,13 @@
 "use client";
 
-import useSuspenseWithSession from "@spaceorder/api/hooks/useSuspenseWithSession";
-import { Cart } from "@spaceorder/db/types";
-import ActivityRender from "@spaceorder/ui/components/activity-render/ActivityRender";
-import { Button } from "@spaceorder/ui/components/buttons/button";
+import useSuspenseWithSession from "@ssurak/api/hooks/useSuspenseWithSession";
+import { Cart } from "@ssurak/api/types/cart/cart.interface";
+import ActivityRender from "@ssurak/ui/components/activity-render/ActivityRender";
+import { Button } from "@ssurak/ui/components/buttons/button";
 import { ConciergeBell } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import CountIcon from "@spaceorder/ui/components/CountIcon";
+import CountIcon from "@ssurak/ui/components/CountIcon";
 
 export default function CartLink() {
   const { storeId } = useParams<{ storeId: string }>();

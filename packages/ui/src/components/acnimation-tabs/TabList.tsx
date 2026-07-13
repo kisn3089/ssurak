@@ -1,7 +1,7 @@
 import {
   TabsList,
   TabsTrigger,
-} from "@spaceorder/ui/components/animate-ui/components/tabs";
+} from "@ssurak/ui/components/animate-ui/components/tabs";
 
 export default function AnimationTabList() {
   return (

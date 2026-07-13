@@ -1,4 +1,4 @@
-import { ItemMedia } from "@spaceorder/ui/components/item";
+import { ItemMedia } from "@ssurak/ui/components/item";
 import Image from "next/image";
 
 type MenuImageSize = "cover" | "item";

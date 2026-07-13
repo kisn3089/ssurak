@@ -1,10 +1,10 @@
-import useOrderByTable from "@spaceorder/api/core/order/order/useOrderByTable.mutate";
-import RequestButton from "@spaceorder/ui/components/buttons/RequestButton";
+import useOrderByTable from "@ssurak/api/core/order/order/useOrderByTable.mutate";
+import RequestButton from "@ssurak/ui/components/buttons/RequestButton";
 import { useParams } from "next/navigation";
 import { useCreateOrderContext } from "../../CreateOrderProvider";
-import { toast } from "@spaceorder/ui/components/sonner";
+import { toast } from "@ssurak/ui/components/sonner";
 import { isAxiosError } from "axios";
-import { transCurrencyFormat } from "@spaceorder/ui/utils/menu/priceFormatter";
+import { transCurrencyFormat } from "@ssurak/ui/utils/menu/priceFormatter";
 
 export type CloseDialogProps = {
   closeDialog: () => void;

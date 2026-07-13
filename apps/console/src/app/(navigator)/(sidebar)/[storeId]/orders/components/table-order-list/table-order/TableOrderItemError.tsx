@@ -1,5 +1,5 @@
-import { Button } from "@spaceorder/ui/components/buttons/button";
-import { Spinner } from "@spaceorder/ui/components/spinner";
+import { Button } from "@ssurak/ui/components/buttons/button";
+import { Spinner } from "@ssurak/ui/components/spinner";
 
 type TableOrderErrorProps = {
   onRetry: (e: React.MouseEvent<HTMLButtonElement>) => void;

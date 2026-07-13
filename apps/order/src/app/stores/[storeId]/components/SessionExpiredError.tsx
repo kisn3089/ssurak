@@ -1,4 +1,4 @@
-import QrScan from "@spaceorder/ui/components/qr-scan/QrScan";
+import QrScan from "@ssurak/ui/components/qr-scan/QrScan";
 
 export default function SessionExpiredError() {
   return (

@@ -1,8 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
-import "@spaceorder/ui/globals.css";
-import TanstackProvider from "@spaceorder/api/core/TanstackProvider";
-import { NextThemeProviders } from "@spaceorder/ui/components/theme/ThemeProviders";
+import "@ssurak/ui/globals.css";
+import TanstackProvider from "@ssurak/api/core/TanstackProvider";
+import { NextThemeProviders } from "@ssurak/ui/components/theme/ThemeProviders";
 
 const inter = Inter({
   variable: "--font-geist-sans",

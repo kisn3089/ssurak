@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuthInfo } from "@spaceorder/auth";
+import { useAuthInfo } from "@ssurak/auth/providers/AuthenticationProvider";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,7 +9,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from "@spaceorder/ui/components/forms/dropdown-menu";
+} from "@ssurak/ui/components/forms/dropdown-menu";
 import { PropsWithChildren } from "react";
 
 export default function UserInfoDropdown({ children }: PropsWithChildren) {

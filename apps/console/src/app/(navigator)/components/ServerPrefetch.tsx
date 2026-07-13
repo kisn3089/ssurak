@@ -1,7 +1,8 @@
 "use server";
 
 import { getAccessToken } from "@/app/common/servers/getAccessToken";
-import { http, pathToQueryKey } from "@spaceorder/api";
+import { http } from "@ssurak/api/core/axios/http";
+import { pathToQueryKey } from "@ssurak/api/utils/pathToQueryKey";
 import {
   dehydrate,
   HydrationBoundary,

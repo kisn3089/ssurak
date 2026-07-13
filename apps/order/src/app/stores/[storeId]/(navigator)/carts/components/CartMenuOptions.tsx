@@ -1,8 +1,8 @@
-import { PublicCartItem } from "@spaceorder/db/types";
+import { CartItem } from "@ssurak/api/types/cart/cart.interface";
 
 type CartMenuOptionsProps = {
-  required: PublicCartItem["requiredOptions"];
-  custom: PublicCartItem["customOptions"];
+  required: CartItem["requiredOptions"];
+  custom: CartItem["customOptions"];
 };
 export default function CartMenuOptions({
   required,

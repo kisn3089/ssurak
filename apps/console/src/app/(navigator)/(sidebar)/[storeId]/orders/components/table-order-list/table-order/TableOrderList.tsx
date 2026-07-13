@@ -1,10 +1,10 @@
 "use client";
 
 import { TableOrderItem } from "./TableOrderItem";
-import { PublicOrderWithItem } from "@spaceorder/db/types";
+import { OrderWithItemsResponse } from "@ssurak/api/types/order/order.interface";
 
 type TableOrderListProps = {
-  orders: PublicOrderWithItem[];
+  orders: OrderWithItemsResponse[];
   tableId: string;
 };
 

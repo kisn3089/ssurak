@@ -1,8 +1,8 @@
 "use client";
 
 import { useStoreOrderSyncDaemon } from "@/lib/realtime/useStoreOrderSyncDaemon";
-import { OrderSyncEvent } from "@spaceorder/db/types";
-import { toastByLevel } from "@spaceorder/ui/components/sonner";
+import { OrderSyncEvent } from "@ssurak/api/types/realtime/syncNotice.interface";
+import { toastByLevel } from "@ssurak/ui/components/sonner";
 import { useParams } from "next/navigation";
 
 /**

@@ -1,11 +1,11 @@
-import ActivityRender from "@spaceorder/ui/components/activity-render/ActivityRender";
-import { Button } from "@spaceorder/ui/components/buttons/button";
-import { TableCell } from "@spaceorder/ui/components/table";
+import ActivityRender from "@ssurak/ui/components/activity-render/ActivityRender";
+import { Button } from "@ssurak/ui/components/buttons/button";
+import { TableCell } from "@ssurak/ui/components/table";
 import { tableOrderColumns } from "../../tableOrderColumns";
 import { useOrderDetailContext } from "../OrderDetailContext";
 import { OrderItemWithOrder } from "../OrderDetailTable";
 import { Row } from "@tanstack/react-table";
-import RequestButton from "@spaceorder/ui/components/buttons/RequestButton";
+import RequestButton from "@ssurak/ui/components/buttons/RequestButton";
 
 interface OrderTableControlbarProps {
   row: Row<OrderItemWithOrder>;

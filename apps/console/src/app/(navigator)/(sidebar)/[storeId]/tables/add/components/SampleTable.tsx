@@ -1,6 +1,6 @@
-import { CardFooter } from "@spaceorder/ui/components/layouts/card";
-import QrButton from "@spaceorder/ui/components/qr-scan/QrButton";
-import { BoardTable } from "@spaceorder/ui/components/board-table";
+import { CardFooter } from "@ssurak/ui/components/layouts/card";
+import QrButton from "@ssurak/ui/components/qr-scan/QrButton";
+import { BoardTable } from "@ssurak/ui/components/board-table";
 import { TableOrder } from "../../../orders/components/table-order-list/table-order";
 
 type Table = {

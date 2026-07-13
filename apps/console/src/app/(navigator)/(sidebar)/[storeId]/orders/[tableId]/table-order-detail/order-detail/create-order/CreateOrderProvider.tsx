@@ -1,8 +1,9 @@
 "use client";
 
-import { CreateOrderByTablePayload } from "@spaceorder/api/core";
-import useSuspenseWithAuth from "@spaceorder/api/hooks/useSuspenseWithAuth";
-import { PublicCategoryWithMenus, PublicMenu } from "@spaceorder/db/types";
+import { CreateOrderByTablePayload } from "@ssurak/api/core/order/order/httpOrder";
+import useSuspenseWithAuth from "@ssurak/api/hooks/useSuspenseWithAuth";
+import { CategoryWithMenusResponse } from "@ssurak/api/types/category/category.interface";
+import { Menu } from "@ssurak/api/types/menu/menu.interface";
 import { generateFingerprint } from "@utils/fingerprint";
 import { useParams } from "next/navigation";
 import { createContext, useContext, useState } from "react";
@@ -11,9 +12,9 @@ type CreateOrderProviderProps = {
   children: React.ReactNode;
 };
 export type SnapshotMenu = CreateOrderByTablePayload["orderItems"][number] &
-  Pick<PublicMenu, "price"> & { menuName: string };
+  Pick<Menu, "price"> & { menuName: string };
 type MenuLike = Pick<
-  PublicMenu,
+  Menu,
   | "publicId"
   | "name"
   | "price"
@@ -34,7 +35,7 @@ export function CreateOrderProvider({ children }: CreateOrderProviderProps) {
     storeId: string;
     tableId: string;
   }>();
-  const { data: categories } = useSuspenseWithAuth<PublicCategoryWithMenus[]>(
+  const { data: categories } = useSuspenseWithAuth<CategoryWithMenusResponse[]>(
     `/stores/v1/${storeId}/menus`
   );
   const [selectedMenu, setSelectedMenu] = useState<MenuLike | null>(null);
@@ -167,7 +168,7 @@ export function CreateOrderProvider({ children }: CreateOrderProviderProps) {
 interface CreateOrderState {
   selectedMenu: MenuLike | null;
   editingMenu: SnapshotMenu | null;
-  categories: PublicCategoryWithMenus[];
+  categories: CategoryWithMenusResponse[];
   addedMenus: Map<string, AddedMenuEntry>;
 }
 

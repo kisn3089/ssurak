@@ -1,16 +1,19 @@
 "use client";
 
-import { ActiveSessionResponse, BoardTableWithSession } from "@spaceorder/db";
+import {
+  ActiveSessionResponse,
+  BoardTableWithSessionResponse,
+} from "@ssurak/api/types/board/board.interface";
 import { TableOrder } from "./table-order";
-import useSuspenseWithAuth from "@spaceorder/api/hooks/useSuspenseWithAuth";
-import { BoardTable } from "@spaceorder/ui/components/board-table";
+import useSuspenseWithAuth from "@ssurak/api/hooks/useSuspenseWithAuth";
+import { BoardTable } from "@ssurak/ui/components/board-table";
 import SheetQrCode from "../SheetQrCode";
 import ConditionalLink from "@/app/(navigator)/components/ConditionalLink";
-import QrButton from "@spaceorder/ui/components/qr-scan/QrButton";
+import QrButton from "@ssurak/ui/components/qr-scan/QrButton";
 import { useParams, usePathname } from "next/navigation";
 
 type TableListProps = {
-  sanitizedTable: BoardTableWithSession;
+  sanitizedTable: BoardTableWithSessionResponse;
 };
 
 export default function TableList({ sanitizedTable }: TableListProps) {

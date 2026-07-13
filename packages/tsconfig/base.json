@@ -15,7 +15,8 @@
     "skipLibCheck": true,
     "strict": true,
     "lib": ["es2024", "DOM", "DOM.Iterable"],
-    "target": "ES2024"
+    "target": "ES2024",
+    "types": ["node"]
   },
   "exclude": ["node_modules"]
 }

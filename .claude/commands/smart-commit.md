@@ -78,8 +78,8 @@ Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>
 
 **Scope 예시:**
 
-- `db`: @spaceorder/db 패키지
-- `api`: @spaceorder/api 패키지
+- `db`: @ssurak/db 패키지
+- `api`: @ssurak/api 패키지
 - `ssurak`: ssurak 앱
 - `order`: order 앱
 - `console`: console 앱

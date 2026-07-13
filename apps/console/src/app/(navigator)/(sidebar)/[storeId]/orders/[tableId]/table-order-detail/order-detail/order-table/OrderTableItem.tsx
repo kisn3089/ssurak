@@ -7,7 +7,7 @@
  * 따라서, 해당 컴포넌트에서는 메모이제이션을 적용하지 않도록 "use no memo" 지시어를 사용하였습니다.
  */
 
-import { TableCell } from "@spaceorder/ui/components/table";
+import { TableCell } from "@ssurak/ui/components/table";
 import { flexRender, Row } from "@tanstack/react-table";
 
 type OrderTableItemProps<TData> = {
