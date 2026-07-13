@@ -4,202 +4,203 @@ This file provides guidance to coding agents (Claude Code, etc.) when working wi
 
 ## Project Overview
 
-Turborepo monorepo for a restaurant ordering system using pnpm workspaces.
+**프론트엔드 전용 저장소입니다.** Turborepo + pnpm workspaces 기반 모노레포로, Next.js 앱 2개와 공유 패키지들로 구성됩니다.
+
+백엔드(NestJS · Prisma · MySQL · Redis · Socket.IO)는 별도 저장소로 분리되어 있습니다: <https://github.com/kisn3089/ssurak-backend>
+이 저장소는 백엔드와 **REST + Socket.IO로만** 통신하며, DB나 Prisma에 직접 접근하지 않습니다.
 
 **Apps:**
 
-- `@spaceorder/order` - Customer-facing Next.js 15 app (port 3000)
-- `@spaceorder/console` - Admin Next.js 15 app (port 3001)
-- `@spaceorder/ssurak` - NestJS 11 backend API (port 8080)
+- `@ssurak/order` - 고객용 주문 앱, Next.js 16 (port 3000)
+- `@ssurak/console` - 매장 관리자용 콘솔 앱, Next.js 16 (port 3001)
 
 **Shared Packages:**
 
-- `@spaceorder/db` - Prisma schema, types, and client (MySQL) - **Single Source of Truth for database**
-- `@spaceorder/api` - React Query hooks and axios HTTP client
-- `@spaceorder/auth` - Zod schemas and JWT utilities (jwt-decode)
-- `@spaceorder/ui` - Radix UI component library with Tailwind CSS v4
-- `@spaceorder/lintconfig` - ESLint 9 FlatConfig
-- `@spaceorder/tsconfig` - Shared TypeScript configs (base, nextjs, react-library)
+- `@ssurak/api` - 도메인 타입, axios HTTP 클라이언트, React Query 훅, Zod 스키마
+- `@ssurak/auth` - JWT 토큰 타입/유틸(jwt-decode), 인증 Provider
+- `@ssurak/ui` - Radix UI 기반 컴포넌트 라이브러리 (Tailwind CSS v4)
+- `@ssurak/lintconfig` - ESLint 9 FlatConfig
+- `@ssurak/tsconfig` - 공유 TypeScript 설정 (base, nextjs, react-library)
+
+**Package Dependencies:**
+
+```text
+order   → @ssurak/api, @ssurak/ui
+console → @ssurak/api, @ssurak/auth, @ssurak/ui
+@ssurak/api → @ssurak/auth
+```
+
+`@ssurak/api` → `@ssurak/auth` 방향은 단방향입니다. `auth`가 `api`를 참조하면 순환이 생기므로, 두 패키지가 공유하는 타입(예: `TokenPayload`)은 리프인 `auth`에 둡니다.
 
 ## Commands
 
-**Always use `pnpm`** (requires pnpm 9.0.0+, Node.js >=22)
+**항상 `pnpm`을 사용합니다** (pnpm 9.0.0+, Node.js >= 22)
 
 ```bash
 # Development
-pnpm dev                           # All apps (turbo)
-pnpm dev:order                     # Customer app (turbo --filter=@spaceorder/order, 3000)
-pnpm dev:console                   # Admin app (turbo --filter=@spaceorder/console, 3001)
-pnpm dev:ssurak                    # Backend API (docker compose -f docker-compose.dev.yml up -d)
+pnpm dev                           # 두 앱 모두 (turbo)
+pnpm dev:order                     # 고객 앱 (3000)
+pnpm dev:console                   # 콘솔 앱 (3001)
 
 # Build & Quality
-pnpm build                         # Build all (turbo)
-pnpm build:order                   # Build customer app
-pnpm build:console                 # Build admin app
-pnpm build:ssurak                  # Build backend
-pnpm check-types                   # Type check all
-pnpm lint                          # Lint all
-pnpm format                        # Prettier write across **/*.{ts,tsx,md}
+pnpm build                         # 전체 빌드 (turbo)
+pnpm build:order
+pnpm build:console
+pnpm lint                          # 전체 lint (--max-warnings 0)
+pnpm format                        # Prettier write (**/*.{ts,tsx,md})
+pnpm format:check
 
-# Database (from root)
-pnpm prisma:generate               # Generate Prisma client
-pnpm prisma:migrate                # Run dev migrations
-pnpm prisma:deploy                 # Apply migrations (deploy)
-pnpm prisma:studio                 # Open Prisma Studio
-pnpm prisma:seed                   # Seed database
-pnpm prisma:reset                  # Reset database
-
-# Testing (ssurak only)
-pnpm --filter=@spaceorder/ssurak test        # Run unit tests (jest)
-pnpm --filter=@spaceorder/ssurak test:watch  # Watch mode
-pnpm --filter=@spaceorder/ssurak test:cov    # Coverage report
-pnpm --filter=@spaceorder/ssurak test:e2e    # E2E tests
-
-# Filter syntax for specific packages
-pnpm build --filter=@spaceorder/order
-pnpm lint --filter=@spaceorder/ui
+# 특정 패키지만
+pnpm build --filter=@ssurak/order
+pnpm lint --filter=@ssurak/ui
 ```
+
+앱을 실행하려면 **백엔드가 떠 있어야 합니다.** 백엔드 저장소에서 API 서버(8080)와 MySQL/Redis를 먼저 띄우세요.
+
+> ⚠️ **`pnpm check-types`는 현재 `@ssurak/ui`에서만 동작합니다.** 다른 패키지에는 `check-types` 스크립트가 없어서 `turbo run check-types`가 사실상 아무것도 검증하지 않습니다. 타입 검증이 필요하면 해당 패키지에서 `npx tsc --noEmit`을 직접 실행하세요.
 
 ## Architecture
 
-### Database (SSOT)
+### 도메인 타입 (SSOT)
 
-All database configuration lives in the root `.env` file. The `@spaceorder/db` package is the single source of truth:
-
-```typescript
-// Import types and client
-import { PrismaClient } from "@spaceorder/db";
-import type {
-  Admin,
-  Order,
-  OrderStatus,
-  Table,
-  TableSession,
-} from "@spaceorder/db";
-```
-
-**Models:** Admin, Owner, Store, Category, Table, Menu, Order, OrderItem, TableSession
-
-**Enums:**
-
-- `AdminRole` - SUPER, SUPPORT, VIEWER
-- `OrderStatus` - PENDING, ACCEPTED, PREPARING, COMPLETED, CANCELLED
-- `TableSessionStatus` - WAITING_ORDER, ACTIVE, PAYMENT_PENDING, CLOSED
-
-**Key Design Patterns:**
-
-- BigInt primary keys with cuid2 public IDs
-- Soft delete for Menu (deletedAt)
-- JSON fields for menu options and order item snapshots
-
-Always run `pnpm prisma:generate` after schema changes.
-
-### Backend (ssurak)
-
-- CommonJS module system (not ESM)
-- **Config:** `ConfigModule` loads from root `.env` (`envFilePath: '../../.env'`)
-- **API Documentation:** Swagger UI at `/docs`
-- **Module groups** (`apps/ssurak/src`):
-  - `identity` - admin, me, owner
-  - `stores` - stores, menu, table, session
-  - `orders` - orders, order-item
-  - `carts` - customer + owner cart controllers
-  - `auth` - controllers, guards, strategies, services
-  - `realtime` - Socket.IO gateway with Redis adapter (`@socket.io/redis-adapter`), order/cart event services, WS auth
-  - `redis` - ioredis provider/module
-  - `common`, `decorators`, `dto`, `utils`, `prisma`, `internal`, `docs`
-- JWT access/refresh token auth with HTTP-only cookies
-- Custom decorators: `@ZodValidation()`, plus `client`, `jwt`, `session`, and `cache` decorators
-- Guards: LocalAuthGuard, JwtAuthGuard, JwtRefreshAuthGuard
-- Realtime: `@nestjs/websockets` + `@nestjs/platform-socket.io` + `socket.io`, scaled across instances via Redis adapter
-- BigInt serialization configured in `src/main.ts`
-
-### Frontend Apps
-
-- Next.js 15 with React 18.3, React Compiler enabled (`reactCompiler: true` in next.config)
-- ESM module system (`"type": "module"`)
-- Tailwind CSS v4 with PostCSS
-- `console` has `transpilePackages: ["@spaceorder/ui"]`
-- `console` uses `@tanstack/react-table` v8 for data tables, `@tanstack/react-query` v5 for server state, React Hook Form for forms, axios for HTTP
-
-### Package Dependencies
+백엔드 분리 이전에는 `@ssurak/db`(Prisma)에서 타입을 가져왔지만, 이제 **`packages/api/src/types/`에 직접 선언합니다.**
+엔티티별로 폴더를 두고 `<entity>.interface.ts`를 만듭니다.
 
 ```text
-order → @spaceorder/ui
-console → @spaceorder/api, @spaceorder/db, @spaceorder/ui, @spaceorder/auth
-ssurak → @spaceorder/db, @spaceorder/api
-@spaceorder/api → @spaceorder/db, @spaceorder/auth
+packages/api/src/types/
+├── admin/admin.interface.ts
+├── board/board.interface.ts
+├── cart/cart.interface.ts
+├── category/category.interface.ts
+├── menu/menu.interface.ts, menuOptions.interface.ts
+├── order/order.interface.ts
+├── orderItem/orderItem.interface.ts
+├── owner/owner.interface.ts
+├── realtime/syncNotice.interface.ts
+├── store/store.interface.ts
+├── table/table.interface.ts
+└── tableSession/tableSession.interface.ts
 ```
 
-## Git Hooks
+타입을 추가·수정할 때 지켜야 할 규칙:
 
-**husky** is configured with a pre-push hook that runs `pnpm build` to ensure all packages build successfully before pushing.
+1. **DB 스키마가 아니라 실제 API 응답을 기준으로 선언합니다.** 서버 내부용 `id`는 어떤 경우에도 클라이언트로 내려오지 않으므로 선언하지 않습니다. 식별자는 `publicId`(cuid2)입니다.
+2. **날짜는 `string`입니다** (`Date` 아님). JSON 직렬화를 거치므로 ISO 문자열로 도착합니다.
+3. **nullable 필드는 `string | null`로 선언합니다** (`?` 옵셔널 아님). JSON wire format과 일치시키기 위함입니다.
+4. **엔티티 이름을 그대로 씁니다** (`Menu`, `Table`, `Order`). `XResponse` 접미사는 복합 응답에만 씁니다 (`OrderWithItemsResponse`, `StoreContextResponse`, `CategoryWithMenusResponse`, `BoardTableWithSessionResponse` 등).
+5. **파생 응답은 유틸리티 타입으로 만듭니다** (`Omit`, `Pick`, 교차 타입). 필드를 복붙하지 않습니다.
 
-## TypeScript Standards
-
-**NEVER use type assertions (`as`)** to solve type errors. Use proper type design instead:
+**Enum은 const object 패턴으로 선언합니다** — 런타임 값으로도 쓰이기 때문입니다:
 
 ```typescript
-// Bad
-return data as T;
+export const OrderStatus = {
+  PENDING: "PENDING",
+  ACCEPTED: "ACCEPTED",
+  PREPARING: "PREPARING",
+  COMPLETED: "COMPLETED",
+  CANCELLED: "CANCELLED",
+} as const;
+export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus];
+```
 
-// Good - use generics with defaults, intersection types, or type narrowing
-async getMenuById<T = PublicMenu>(...): Promise<PublicMenu & T> {
-  return await prismaService.menu.findFirstOrThrow(...);
+`OrderStatus`(PENDING → ACCEPTED → PREPARING → COMPLETED, CANCELLED), `TableSessionStatus`(WAITING_ORDER → ACTIVE → PAYMENT_PENDING → CLOSED), `AdminRole`(SUPER, SUPPORT, VIEWER)이 여기에 해당합니다.
+
+### 모듈 시스템 — 배럴 없음
+
+**`index.ts` 배럴 파일을 만들지 않습니다.** 각 패키지는 `package.json`의 `exports` 서브패스 맵으로 `./src/**`를 직접 노출하고, 소비자는 심볼이 정의된 모듈을 그대로 import합니다.
+
+```typescript
+// ✅ Good — 정의된 모듈을 직접 가리킴
+import { OrderStatus } from "@ssurak/api/types/order/order.interface";
+import { httpOrder } from "@ssurak/api/core/order/order/httpOrder";
+import useSuspenseWithAuth from "@ssurak/api/hooks/useSuspenseWithAuth";
+import { useAuthInfo } from "@ssurak/auth/providers/AuthenticationProvider";
+
+// ❌ Bad — 배럴 경유 (더 이상 존재하지 않음)
+import { OrderStatus, httpOrder } from "@ssurak/api";
+```
+
+새 모듈을 추가할 때 `exports` 맵을 건드릴 필요는 없습니다. 이미 디렉터리 단위 와일드카드(`"./types/*": "./src/types/*.ts"` 등)로 열려 있습니다.
+
+### HTTP 레이어 (`packages/api/src/core/`)
+
+http 함수는 **기본적으로 응답 body를 벗겨서 도메인 타입을 반환합니다.**
+
+```typescript
+async function fetchList({ storeId }: FetchTableListParams): Promise<Table[]> {
+  const response = await http.get<Table[]>(prefix(storeId));
+  return response.data;
 }
 ```
 
-## Docker
+이 함수들은 React Query의 `queryFn`/`mutationFn`으로 바로 들어가고, 반환값이 그대로 캐시에 저장됩니다. 두 앱 모두 서버 prefetch + `dehydrate()`/`HydrationBoundary`를 쓰는데, `AxiosResponse`는 `config`(어댑터·transform 함수)와 `request`를 품고 있어 직렬화가 불가능하고 `config.headers`에 `Authorization`까지 들어 있습니다. **캐시에 봉투를 넣지 마세요.**
 
-Root `docker-compose.yml` defines all services for local development; `docker-compose.dev.yml` is used by `pnpm dev:ssurak`.
+`AxiosResponse<T>`를 반환하는 건 **호출부가 응답 메타데이터(주로 `Set-Cookie` 헤더)를 필요로 할 때뿐입니다.** 현재 `httpAuth.createAccessToken`, `httpAuth.refreshAccessToken`, `httpSession.createSession` 세 개만 해당하며, Next의 미들웨어/서버 액션이 httpOnly 쿠키를 옮겨 심기 위해 `res.headers["set-cookie"]`를 읽습니다.
 
-```bash
-docker compose up -d              # Start all services
-docker compose up -d mysql        # Start only MySQL
-docker compose down               # Stop all services
-docker compose logs -f ssurak     # View backend logs
+### Frontend Apps
+
+- Next.js 16 (App Router), React 19, React Compiler 활성화 (`reactCompiler: true`)
+- ESM (`"type": "module"`), Tailwind CSS v4 + PostCSS
+- 두 앱 모두 `transpilePackages: ["@ssurak/ui", "@ssurak/api", "@ssurak/auth"]`
+- 상태: `@tanstack/react-query` v5, 폼: React Hook Form + Zod, HTTP: axios
+- `console`은 데이터 테이블에 `@tanstack/react-table` v8 사용
+- 실시간: `socket.io-client` — 콘솔은 매장 룸(`store:{id}:admins`), 주문 앱은 테이블 룸(`store:{id}:table:{id}`) 구독
+- 경로 별칭: `@/*` → `./src/*`
+
+### 인증
+
+- 관리자: JWT access/refresh, HTTP-only 쿠키
+- 고객: 세션 토큰 (QR 스캔으로 발급)
+- 미들웨어(`apps/console/src/middleware.ts`)가 access 토큰 만료를 감지해 refresh하고, 응답의 `Set-Cookie`를 Next 쿠키 스토어로 옮깁니다.
+
+## TypeScript Standards
+
+**타입 에러를 해결하려고 타입 단언(`as`)을 쓰지 마세요.** 제네릭 기본값, 교차 타입, 타입 좁히기 등 올바른 타입 설계로 해결합니다.
+
+```typescript
+// ❌ Bad
+const data = response.data as Menu[];
+
+// ✅ Good — 제네릭으로 응답 타입을 명시
+const response = await http.get<Menu[]>(`${prefix}/menus`);
+return response.data;
 ```
 
-**Services:**
-
-- `mysql` - MySQL 8.0 database (port: `DB_PORT`, default 3306)
-- `ssurak` - NestJS backend API (port: `SERVER_PORT`, default 8080)
-- `console` - Admin Next.js app (port: 3001)
-- `order` - Customer Next.js app (port: 3000)
-- `prisma-studio` - Database GUI (port: 5555)
-- Redis - used by the realtime Socket.IO adapter
+- strict mode, no implicit any
+- 직관적이지 않은 축약어를 타입·함수·변수 이름에 쓰지 않습니다.
 
 ## Environment Variables
 
-Central config in root `.env` file (see `.env.example`):
+**앱별 `.env` 파일을 사용합니다** (루트 `.env` 아님). 각 앱의 `.env.example`을 복사해서 시작하세요.
 
-**Database:**
+| Variable                          | 사용처         | 설명                                                      |
+| --------------------------------- | -------------- | --------------------------------------------------------- |
+| `NEXT_PUBLIC_API_SSURAK_URL`      | order, console | 백엔드 API URL (브라우저 클라이언트용)                    |
+| `NEXT_PUBLIC_SSURAK_INTERNAL_URL` | order, console | 백엔드 API URL (서버 컴포넌트/라우트 핸들러용)            |
+| `NEXT_PUBLIC_ORDER_APP_URL`       | console        | 고객 앱 URL (테이블 QR 코드 생성에 사용)                  |
+| `COOKIE_DOMAIN`                   | console        | 인증 쿠키 도메인 (서브도메인 공유, production에서만 적용) |
 
-- `DB_ROOT_PASSWORD` - MySQL root password
-- `DB_PORT` - MySQL port (default: 3306)
-- `DB_NAME` - Database name
-- `DB_USER` - Database user
-- `DB_PASSWORD` - Database password
-- `DATABASE_URL` - Prisma connection string
+## Docker
 
-**Server:**
+루트에는 docker-compose가 없습니다. 각 앱이 자체 프로덕션 이미지 정의를 가집니다:
 
-- `SERVER_PORT` - Backend port (default: 8080)
-- `SSURAK_URL` - Backend API URL for frontend apps
+- `apps/console/Dockerfile` + `apps/console/docker-compose.yml` + `nginx.conf` (nginx → console:3001, 호스트 81)
+- `apps/order/Dockerfile` + `apps/order/docker-compose.prod.yml` + `nginx.conf` (nginx → order:3000, 호스트 80)
 
-**JWT:**
+빌드 컨텍스트는 모노레포 루트(`context: ../../`)입니다.
 
-- `JWT_ACCESS_TOKEN_SECRET`, `JWT_ACCESS_TOKEN_EXPIRATION_MS` (default: 1 hour)
-- `JWT_REFRESH_TOKEN_SECRET`, `JWT_REFRESH_TOKEN_EXPIRATION_MS` (default: 7 days)
-- `JWT_ISSUER` - Token issuer URL
-- `JWT_AUDIENCE` - Token audience identifier
+DB/Redis/API 컨테이너는 백엔드 저장소의 docker-compose가 담당합니다.
+
+## Git Hooks
+
+**husky** pre-push 훅이 `pnpm build`를 실행합니다. 빌드가 깨지면 push가 막힙니다.
 
 ## Troubleshooting
 
-| Issue                       | Solution                                                            |
-| --------------------------- | ------------------------------------------------------------------- |
-| Prisma Client not generated | `pnpm prisma:generate`                                              |
-| Type imports not working    | Ensure `@spaceorder/db` is in `dependencies`, not `devDependencies` |
-| Module resolution errors    | `pnpm install` at root                                              |
-| Hot-reload not working      | Check nodemon is watching `src/` directory                          |
-| Build fails on push         | husky pre-push hook runs `pnpm build` - fix build errors first      |
+| Issue                   | Solution                                                                    |
+| ----------------------- | --------------------------------------------------------------------------- |
+| 모듈 해석 에러          | 루트에서 `pnpm install`                                                     |
+| `@ssurak/*` import 실패 | 배럴은 없습니다. 서브패스로 직접 import하세요 (`@ssurak/api/types/...`)     |
+| API 호출이 전부 실패    | 백엔드가 떠 있는지 확인 (별도 저장소, 8080) 및 `NEXT_PUBLIC_API_SSURAK_URL` |
+| 타입 에러가 안 잡힘     | `pnpm check-types`는 `ui`만 검사합니다. 해당 패키지에서 `npx tsc --noEmit`  |
+| push 시 빌드 실패       | husky pre-push가 `pnpm build`를 돌립니다. 빌드 에러부터 고치세요            |

@@ -1,6 +1,14 @@
-# ssurak
+# ssurak — Frontend
 
 > **오프라인 주문의 형태를 재설계하다.**
+
+📦 **이 저장소는 프론트엔드 전용입니다.** 고객용 주문 앱(`order`)과 매장 관리자용 콘솔 앱(`console`), 그리고 두 앱이 공유하는 패키지를 담고 있습니다. 관련 저장소는 아래와 같습니다.
+
+| Repository                                                     | 내용                                       |
+| -------------------------------------------------------------- | ------------------------------------------ |
+| **`ssurak-frontend`**                                          | Next.js 앱(order · console) + 공유 패키지  |
+| [`ssurak-backend`](https://github.com/kisn3089/ssurak-backend) | NestJS API, Prisma/MySQL, Redis, Socket.IO |
+| [`ssurak-infra`](https://github.com/kisn3089/ssurak-infra)     | Kubernetes + Istio 인프라                  |
 
 카페나 음식점에서 주문할 때, 직접 대면으로 주문하거나 키오스크, 테이블에 비치된 전용 디바이스를 사용합니다.
 
@@ -80,7 +88,7 @@ ssurak은 오프라인 주문을 소프트웨어와 접목시켜 **고객과 사
 
 ## Architecture
 
-ssurak은 QR 코드 기반 테이블 주문 시스템으로, 고객용 주문 앱(order)과 매장 관리자용 콘솔 앱(console), 그리고 백엔드 API(ssurak)로 구성됩니다. 모노레포 구조로 공통 패키지를 공유하여 일관된 타입과 비즈니스 로직을 유지합니다.
+ssurak은 QR 코드 기반 테이블 주문 시스템으로, 고객용 주문 앱(order)과 매장 관리자용 콘솔 앱(console), 그리고 백엔드 API(ssurak)로 구성됩니다. 아래 다이어그램은 **시스템 전체**를 보여주며, 이 저장소가 담당하는 범위는 order·console 두 앱입니다. 두 앱은 백엔드와 REST + Socket.IO로만 통신하고 DB에 직접 접근하지 않습니다.
 
 ### Deployment Architecture
 
@@ -131,53 +139,80 @@ _Kubernetes 클러스터 위에 Istio 서비스 메시를 도입하여 트래픽
 
 ## Tech Stack
 
-| Category             | Technology                                 |
-| -------------------- | ------------------------------------------ |
-| **Monorepo**         | Turborepo + pnpm workspaces                |
-| **Frontend**         | Next.js 15(App), React 18, Tailwind CSS v4 |
-| **Backend**          | NestJS 11, Passport.js, Swagger            |
-| **Database**         | MySQL 8.0, Prisma ORM                      |
-| **Realtime**         | Socket.IO, Redis 7 (Pub/Sub Adapter)       |
-| **Cache / Lock**     | Redis 7 (Cart Store), Redlock              |
-| **UI Components**    | Shadcn UI, Lucide Icons                    |
-| **State Management** | TanStack Query (React Query)               |
-| **Form**             | React Hook Form, Zod                       |
-| **DevOps**           | Docker, Docker Compose, Cloudflare Tunnel  |
-| **Hosting**          | Vercel (frontend), Home Server (backend)   |
+### 이 저장소
+
+| Category             | Technology                               |
+| -------------------- | ---------------------------------------- |
+| **Monorepo**         | Turborepo + pnpm workspaces              |
+| **Framework**        | Next.js 16 (App Router), React 19        |
+| **Compiler**         | React Compiler (`reactCompiler: true`)   |
+| **Styling**          | Tailwind CSS v4, Shadcn UI, Lucide Icons |
+| **State Management** | TanStack Query (React Query) v5          |
+| **Data Table**       | TanStack Table v8 (console)              |
+| **Form**             | React Hook Form, Zod                     |
+| **HTTP / Realtime**  | axios, socket.io-client                  |
+| **DevOps**           | Docker, Nginx                            |
+| **Hosting**          | Vercel                                   |
+
+### 백엔드 ([`ssurak-backend`](https://github.com/kisn3089/ssurak-backend))
+
+| Category         | Technology                           |
+| ---------------- | ------------------------------------ |
+| **Backend**      | NestJS 11, Passport.js, Swagger      |
+| **Database**     | MySQL 8.0, Prisma ORM                |
+| **Realtime**     | Socket.IO, Redis 7 (Pub/Sub Adapter) |
+| **Cache / Lock** | Redis 7 (Cart Store), Redlock        |
+| **DevOps**       | Docker Compose, Cloudflare Tunnel    |
+| **Hosting**      | Home Server                          |
 
 ## Project Structure
 
 ```text
-ssurak/
+frontend/
 ├── apps/
-│   ├── order/          # 고객용 주문 앱 (Next.js, port 3000)
-│   ├── console/        # 관리자용 콘솔 앱 (Next.js, port 3001)
-│   └── ssurak/         # 백엔드 API 서버 (NestJS, port 8080)
+│   ├── order/          # 고객용 주문 앱 (Next.js 16, port 3000)
+│   │   ├── Dockerfile
+│   │   ├── docker-compose.prod.yml
+│   │   └── nginx.conf
+│   └── console/        # 관리자용 콘솔 앱 (Next.js 16, port 3001)
+│       ├── Dockerfile
+│       ├── docker-compose.yml
+│       └── nginx.conf
 ├── packages/
-│   ├── db/             # Prisma 스키마 및 클라이언트 (SSOT)
-│   ├── api/            # React Query hooks, Axios HTTP 클라이언트
-│   ├── auth/           # Zod 스키마, JWT 유틸리티
-│   ├── ui/             # Radix UI 기반 공통 컴포넌트
+│   ├── api/            # 도메인 타입, Axios 클라이언트, React Query 훅, Zod 스키마
+│   ├── auth/           # JWT 토큰 타입/유틸, 인증 Provider
+│   ├── ui/             # Radix UI 기반 공통 컴포넌트 (Tailwind v4)
 │   ├── lintconfig/     # ESLint 9 FlatConfig
 │   └── tsconfig/       # 공유 TypeScript 설정
-├── docs/                   # 프로젝트 문서 및 이미지
-├── scripts/                # 셸 스크립트 (start_all.sh)
-├── docker-compose.dev.yml  # 로컬 개발 Docker 설정 (전체 스택)
-└── docker-compose.yml      # 운영(홈 서버) Docker 설정 (MySQL/Redis/API/Cloudflared)
+├── docs/               # 문서 및 아키텍처 이미지
+└── turbo.json
 ```
 
-### Backend Modules (ssurak)
+### Shared Packages
+
+`@ssurak/api`가 백엔드와의 계약을 전담합니다. 백엔드 분리 이후 Prisma 타입 대신 **API 응답 형태를 직접 선언**합니다 — 서버 내부용 `id`는 응답에 포함되지 않으므로 선언하지 않고, 식별자는 `publicId`(cuid2)이며 날짜는 ISO `string`입니다.
 
 ```text
-apps/ssurak/src/
-├── auth/          # 로그인, JWT 발급/검증, 가드/전략
-├── identity/      # admin · owner · me 도메인
-├── stores/        # store · table · menu · session 도메인
-├── orders/        # order · order-item 도메인
-├── carts/         # Redis 기반 세션 장바구니
-├── realtime/      # Socket.IO Gateway, Redis Adapter, 이벤트 브로드캐스트
-├── redis/         # Redis 클라이언트/Redlock 프로바이더
-└── internal/      # 내부 서비스 간 통신 클라이언트
+packages/api/src/
+├── types/          # 엔티티별 응답 타입 (menu, order, table, cart, board, ...)
+├── core/           # 도메인별 HTTP 함수 + React Query mutation 훅
+│   ├── axios/      # axios 인스턴스, 인증 인터셉터
+│   ├── auth/       # 로그인 / 토큰 갱신
+│   ├── identity/   # admin · owner · me
+│   ├── store/      # store · table · session
+│   ├── order/      # order · order-item
+│   └── cart/       # 세션 장바구니
+├── hooks/          # useQueryWithAuth, useSuspenseWithSession, ...
+├── schemas/        # Zod 스키마 (폼 · 페이로드 검증)
+└── utils/
+```
+
+배럴(`index.ts`)을 두지 않고, `package.json`의 `exports` 서브패스 맵으로 모듈을 직접 노출합니다.
+
+```typescript
+import { OrderStatus } from "@ssurak/api/types/order/order.interface";
+import { httpOrder } from "@ssurak/api/core/order/order/httpOrder";
+import useSuspenseWithAuth from "@ssurak/api/hooks/useSuspenseWithAuth";
 ```
 
 ## Getting Started
@@ -186,7 +221,7 @@ apps/ssurak/src/
 
 - Node.js >= 22
 - pnpm >= 9.0.0
-- Docker & Docker Compose
+- **실행 중인 백엔드 API (8080).** [`ssurak-backend`](https://github.com/kisn3089/ssurak-backend)를 클론해 API 서버와 MySQL·Redis를 먼저 띄우세요. 이 저장소만으로는 앱이 데이터를 받지 못합니다.
 
 ### Quick Start
 
@@ -197,81 +232,68 @@ git clone https://github.com/kisn3089/space-order
 cd space-order
 ```
 
-#### 2. Start the services
+#### 2. Install dependencies
 
 ```bash
-./scripts/start_all.sh
+pnpm install
 ```
 
-#### 3. Test Demo Process
+#### 3. Configure environment
+
+각 앱의 `.env.example`을 복사합니다. 로컬 기본값(백엔드 `http://localhost:8080`)이 채워져 있습니다.
+
+```bash
+cp apps/order/.env.example apps/order/.env
+cp apps/console/.env.example apps/console/.env
+```
+
+#### 4. Run the dev servers
+
+```bash
+pnpm dev             # order(3000) + console(3001) 동시 실행
+```
+
+#### 5. Test Demo Process
 
 - Open http://localhost:3001
   - Email: demo@ssurak.com
   - Password: demo1234!
 
-### Stop the services
-
-```bash
-./scripts/start_all.sh --stop
-```
-
 ### Access Services
 
-| Service           | URL                        | Description      |
-| ----------------- | -------------------------- | ---------------- |
-| **order**         | http://localhost:3000      | 고객용 주문 앱   |
-| **console**       | http://localhost:3001      | 관리자용 콘솔 앱 |
-| **ssurak**        | http://localhost:8080      | 백엔드 API       |
-| **Swagger Docs**  | http://localhost:8080/docs | API 문서         |
-| **Prisma Studio** | http://localhost:5555      | 데이터베이스 GUI |
+| Service          | URL                        | Description                  |
+| ---------------- | -------------------------- | ---------------------------- |
+| **order**        | http://localhost:3000      | 고객용 주문 앱 (이 저장소)   |
+| **console**      | http://localhost:3001      | 관리자용 콘솔 앱 (이 저장소) |
+| **ssurak**       | http://localhost:8080      | 백엔드 API (별도 저장소)     |
+| **Swagger Docs** | http://localhost:8080/docs | API 문서 (백엔드 실행 시)    |
 
 ## Development
 
-### Local Development (without Docker)
-
 ```bash
-# 의존성 설치
-pnpm install
-
-# MySQL & Redis 실행 (Docker 필요)
-docker compose -f docker-compose.dev.yml up -d mysql redis
-
-# Prisma 클라이언트 생성
-pnpm prisma:generate
-
-# 모든 앱 개발 서버 실행
-pnpm dev
-
-# 개별 앱 실행
+# 개발 서버
+pnpm dev             # 두 앱 모두
 pnpm dev:order       # 고객 앱 (3000)
 pnpm dev:console     # 관리자 앱 (3001)
-pnpm dev:ssurak      # 백엔드 API (8080)
-```
-
-### Database Commands
-
-```bash
-pnpm prisma:generate   # Prisma 클라이언트 생성
-pnpm prisma:migrate    # 마이그레이션 실행
-pnpm prisma:studio     # Prisma Studio 실행
-pnpm prisma:seed       # 시드 데이터 삽입
-pnpm prisma:reset      # 데이터베이스 리셋
 ```
 
 ### Build & Quality
 
 ```bash
 pnpm build         # 전체 빌드
-pnpm check-types   # 타입 체크
-pnpm lint          # ESLint 검사
+pnpm lint          # ESLint 검사 (--max-warnings 0)
 pnpm format        # Prettier 포맷팅
 ```
 
-## Database Schema
+> ⚠️ `pnpm check-types`는 현재 `@ssurak/ui`에만 스크립트가 정의되어 있어 나머지 패키지를 검증하지 않습니다. 타입 검증은 해당 패키지에서 `npx tsc --noEmit`으로 실행하세요.
 
-### Models
+husky pre-push 훅이 `pnpm build`를 실행하므로, 빌드가 깨진 상태로는 push할 수 없습니다.
 
-| Model            | Description                                 |
+## Domain Types
+
+백엔드 분리 이후 프론트엔드는 Prisma 타입을 참조하지 않고, **API 응답 형태를 `packages/api/src/types/`에 직접 선언**합니다. 서버 내부용 `id`는 응답에 포함되지 않으므로 선언하지 않으며, 식별자는 `publicId`(cuid2), 날짜는 ISO `string`입니다.
+
+| Type             | Description                                 |
 | ---------------- | ------------------------------------------- |
 | **Admin**        | 시스템 관리자 (SUPER, SUPPORT, VIEWER 역할) |
 | **Owner**        | 매장 사장님                                 |
@@ -281,6 +303,9 @@ pnpm format        # Prettier 포맷팅
 | **Order**        | 주문                                        |
 | **OrderItem**    | 주문 항목 (옵션 스냅샷 포함)                |
 | **TableSession** | 테이블 세션 (주문 그룹화)                   |
+| **Cart**         | 세션 장바구니 (백엔드에서 Redis에 저장)     |
+
+복합 응답은 유틸리티 타입으로 파생시킵니다 — `OrderWithItemsResponse`, `CategoryWithMenusResponse`, `StoreContextResponse`, `BoardTableWithSessionResponse` 등.
 
 > 진행 중인 장바구니(Cart)는 영속 모델이 아니라 세션 단위로 **Redis**에 저장되며, 주문 확정 시 Order/OrderItem으로 전환됩니다.
 
@@ -300,36 +325,13 @@ WAITING_ORDER → ACTIVE → PAYMENT_PENDING → CLOSED
 
 ## Environment Variables
 
-| Variable                     | Description                          | Default                    |
-| ---------------------------- | ------------------------------------ | -------------------------- |
-| `SERVER_PORT`                | 백엔드 서버 포트                     | 8080                       |
-| `DB_PORT`                    | MySQL 포트                           | 3306                       |
-| `DB_NAME`                    | 데이터베이스 이름                    | spaceorder                 |
-| `DB_USER`                    | 데이터베이스 사용자                  | -                          |
-| `DB_PASSWORD`                | 데이터베이스 비밀번호                | -                          |
-| `DATABASE_URL`               | Prisma 연결 문자열                   | -                          |
-| `REDIS_HOST`                 | Redis 호스트                         | localhost                  |
-| `REDIS_PORT`                 | Redis 포트                           | 6379                       |
-| `REDIS_PASSWORD`             | Redis 비밀번호                       | -                          |
-| `JWT_ACCESS_TOKEN_SECRET`    | Access 토큰 시크릿                   | -                          |
-| `JWT_REFRESH_TOKEN_SECRET`   | Refresh 토큰 시크릿                  | -                          |
-| `COOKIE_DOMAIN`              | 인증 쿠키 도메인 (서브도메인 공유)   | .ssurak.com                |
-| `ORDER_APP_URL`              | 고객 앱 URL (CORS · WS Origin 식별)  | https://order.ssurak.com   |
-| `CONSOLE_APP_URL`            | 콘솔 앱 URL (CORS · WS Origin 식별)  | https://console.ssurak.com |
-| `CLOUDFLARE_TUNNEL_TOKEN`    | Cloudflare Tunnel 토큰               | -                          |
-| `NEXT_PUBLIC_API_SSURAK_URL` | 백엔드 API URL (브라우저 클라이언트) | http://localhost:8080      |
+루트 `.env`가 아니라 **앱별 `.env`** 를 사용합니다. 각 앱의 `.env.example`을 복사해서 시작하세요.
 
-## Docker Commands
+| Variable                          | 사용처         | Description                                         | Local Default           |
+| --------------------------------- | -------------- | --------------------------------------------------- | ----------------------- |
+| `NEXT_PUBLIC_API_SSURAK_URL`      | order, console | 백엔드 API URL (브라우저 클라이언트용)              | `http://localhost:8080` |
+| `NEXT_PUBLIC_SSURAK_INTERNAL_URL` | order, console | 백엔드 API URL (서버 컴포넌트/라우트 핸들러용)      | `http://localhost:8080` |
+| `NEXT_PUBLIC_ORDER_APP_URL`       | console        | 고객 앱 URL (테이블 QR 코드 생성)                   | `http://localhost:3000` |
+| `COOKIE_DOMAIN`                   | console        | 인증 쿠키 도메인 (서브도메인 공유, production 전용) | `.ssurak.com`           |
 
-로컬 개발은 `./scripts/start_all.sh`가 내부적으로 `docker-compose.dev.yml`(MySQL/Redis/API/Console/Order/Prisma Studio)을 사용합니다. 직접 제어하려면:
-
-```bash
-# 로컬 개발 (docker-compose.dev.yml)
-docker compose -f docker-compose.dev.yml up -d              # 전체 개발 스택 시작
-docker compose -f docker-compose.dev.yml up -d mysql redis  # MySQL, Redis만 시작
-docker compose -f docker-compose.dev.yml logs -f ssurak     # 백엔드 로그 확인
-docker compose -f docker-compose.dev.yml down               # 전체 중지
-
-# 운영 / 홈 서버 (docker-compose.yml: MySQL/Redis/API/Cloudflared, 프론트는 Vercel)
-docker compose up -d                                        # 백엔드 + Cloudflare Tunnel 시작
-```
+DB·Redis·JWT 시크릿 등 나머지 설정은 [`ssurak-backend`](https://github.com/kisn3089/ssurak-backend)에서 관리합니다.
