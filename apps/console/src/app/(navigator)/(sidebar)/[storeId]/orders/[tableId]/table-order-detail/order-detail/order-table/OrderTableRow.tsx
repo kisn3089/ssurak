@@ -1,8 +1,8 @@
-import { TableRow } from "@spaceorder/ui/components/table";
+import { TableRow } from "@ssurak/ui/components/table";
 import { useOrderDetailContext } from "../OrderDetailContext";
 import { OrderItemWithOrder } from "../OrderDetailTable";
 import { Row } from "@tanstack/react-table";
-import { OrderStatus } from "@spaceorder/db/index";
+import { OrderStatus } from "@ssurak/api/types/order/order.interface";
 
 interface OrderTableRowProps {
   children: React.ReactNode;

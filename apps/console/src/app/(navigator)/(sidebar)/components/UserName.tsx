@@ -1,10 +1,10 @@
 "use client";
 
-import useSuspenseWithAuth from "@spaceorder/api/hooks/useSuspenseWithAuth";
-import { PublicOwner } from "@spaceorder/db/types";
+import useSuspenseWithAuth from "@ssurak/api/hooks/useSuspenseWithAuth";
+import { Owner } from "@ssurak/api/types/owner/owner.interface";
 
 export default function UserName() {
-  const { data } = useSuspenseWithAuth<PublicOwner>(`/identity/v1/me`);
+  const { data } = useSuspenseWithAuth<Owner>(`/identity/v1/me`);
 
   return <span className="w-full text-center">{data.name}</span>;
 }

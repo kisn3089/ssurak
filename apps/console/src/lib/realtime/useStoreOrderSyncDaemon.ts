@@ -7,9 +7,9 @@ import {
   subscribeAdmin,
   unsubscribeAdmin,
 } from "./socket";
-import { OrderSyncEvent } from "@spaceorder/db/types";
+import { OrderSyncEvent } from "@ssurak/api/types/realtime/syncNotice.interface";
 import { useQueryClient } from "@tanstack/react-query";
-import { pathToQueryKey } from "@spaceorder/api/utils";
+import { pathToQueryKey } from "@ssurak/api/utils/pathToQueryKey";
 
 export type StoreRealtimeHandlers = {
   onCreatedAction?: (event: OrderSyncEvent) => void;

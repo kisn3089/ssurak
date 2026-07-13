@@ -2,8 +2,8 @@
 
 import { createContext, useContext } from "react";
 import { OrderItemWithOrder } from "./OrderDetailTable";
-import { PublicOrderWithItem } from "@spaceorder/db/types";
-import useOrderItem from "@spaceorder/api/core/order/order-item/useOrderItem.mutate";
+import { OrderWithItemsResponse } from "@ssurak/api/types/order/order.interface";
+import useOrderItem from "@ssurak/api/core/order/order-item/useOrderItem.mutate";
 
 /**
  * TableOrderDetail Compound Component의 Context 인터페이스
@@ -14,7 +14,7 @@ import useOrderItem from "@spaceorder/api/core/order/order-item/useOrderItem.mut
 
 // State
 export interface OrderDetailState {
-  orders: PublicOrderWithItem[];
+  orders: OrderWithItemsResponse[];
   orderItems: OrderItemWithOrder[];
   totalPrice: number;
   editingItem: OrderItemWithOrder | null;

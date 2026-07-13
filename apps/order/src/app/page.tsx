@@ -5,7 +5,7 @@ import GuideComment from "@/components/landing/GuideComment";
 import GuideStep from "@/components/landing/GuideStep";
 import LandingHeader from "@/components/landing/LandingHeader";
 import Title from "@/components/landing/Title";
-import QrScan from "@spaceorder/ui/components/qr-scan/QrScan";
+import QrScan from "@ssurak/ui/components/qr-scan/QrScan";
 
 export default function LandingPage() {
   return (

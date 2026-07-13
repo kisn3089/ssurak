@@ -1,5 +1,5 @@
 import styles from "@/components/landing/landing.module.css";
-import TextLogo from "@spaceorder/ui/components/TextLogo";
+import TextLogo from "@ssurak/ui/components/TextLogo";
 
 export default function LandingHeader() {
   return (

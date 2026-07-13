@@ -1,6 +1,6 @@
 "use client";
 
-import { Skeleton } from "@spaceorder/ui/components/skeleton";
+import { Skeleton } from "@ssurak/ui/components/skeleton";
 import TableBoardLayout from "./[storeId]/orders/components/table-board/TableOrderListLayout";
 import GridLayout from "./[storeId]/orders/components/GridLayout";
 

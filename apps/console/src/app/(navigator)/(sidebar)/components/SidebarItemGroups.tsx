@@ -8,7 +8,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@spaceorder/ui/components/layouts/sidebar";
+} from "@ssurak/ui/components/layouts/sidebar";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 

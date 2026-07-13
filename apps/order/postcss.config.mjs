@@ -1,1 +1,1 @@
-export { default } from "@spaceorder/ui/postcss.config";
+export { default } from "@ssurak/ui/postcss.config";

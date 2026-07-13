@@ -1,4 +1,4 @@
-import type { PublicStore } from "@spaceorder/db";
+import type { Store } from "@ssurak/api/types/store/store.interface";
 import ServerPrefetch from "@/app/(navigator)/components/ServerPrefetch";
 import PersistLastStore from "./components/PersistLastStore";
 
@@ -17,7 +17,7 @@ export default async function StoreScopeLayout({
   const { storeId } = await params;
 
   return (
-    <ServerPrefetch<PublicStore> url={`/stores/v1/${storeId}`} shouldSuccess>
+    <ServerPrefetch<Store> url={`/stores/v1/${storeId}`} shouldSuccess>
       <PersistLastStore storeId={storeId} />
       {children}
     </ServerPrefetch>

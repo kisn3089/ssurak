@@ -3,7 +3,7 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
-} from "@spaceorder/ui/components/layouts/sidebar";
+} from "@ssurak/ui/components/layouts/sidebar";
 import SidebarGroups from "./SidebarItemGroups";
 import SidebarFooterLayout from "./SidebarFooterLayout";
 import StoreSwitcher from "./StoreSwitcher";

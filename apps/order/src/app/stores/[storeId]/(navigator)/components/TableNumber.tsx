@@ -1,17 +1,17 @@
 "use client";
 
-import useSuspenseWithSession from "@spaceorder/api/hooks/useSuspenseWithSession";
-import { StoreContext } from "@spaceorder/db/types/session.type";
+import useSuspenseWithSession from "@ssurak/api/hooks/useSuspenseWithSession";
+import { StoreContextResponse } from "@ssurak/api/types/store/store.interface";
 
 export default function TableNumber() {
-  const { data: tableNumber } = useSuspenseWithSession<StoreContext, string>(
-    "/stores/v1/sessions/me/store-context",
-    {
-      queryOptions: {
-        select: (storeContext) => storeContext.table.tableNumber,
-      },
-    }
-  );
+  const { data: tableNumber } = useSuspenseWithSession<
+    StoreContextResponse,
+    string
+  >("/stores/v1/sessions/me/store-context", {
+    queryOptions: {
+      select: (storeContext) => storeContext.table.tableNumber,
+    },
+  });
 
   return (
     <span className="font-semibold flex items-baseline gap-x-2">

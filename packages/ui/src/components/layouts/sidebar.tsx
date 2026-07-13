@@ -5,18 +5,18 @@ import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import { PanelLeft } from "lucide-react";
 
-import { useIsMobile } from "@spaceorder/ui/hooks/use-mobile";
-import { cn } from "@spaceorder/ui/lib/utils";
-import { Button } from "@spaceorder/ui/components/buttons/button";
-import { Input } from "@spaceorder/ui/components/forms/input";
-import { Separator } from "@spaceorder/ui/components/forms/separator";
-import { Skeleton } from "@spaceorder/ui/components/skeleton";
+import { useIsMobile } from "@ssurak/ui/hooks/use-mobile";
+import { cn } from "@ssurak/ui/lib/utils";
+import { Button } from "@ssurak/ui/components/buttons/button";
+import { Input } from "@ssurak/ui/components/forms/input";
+import { Separator } from "@ssurak/ui/components/forms/separator";
+import { Skeleton } from "@ssurak/ui/components/skeleton";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@spaceorder/ui/components/forms/tooltip";
+} from "@ssurak/ui/components/forms/tooltip";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;

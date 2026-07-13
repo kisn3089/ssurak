@@ -1,7 +1,7 @@
 "use client";
 
-import { CardFooter } from "@spaceorder/ui/components/layouts/card";
-import ActivityRender from "@spaceorder/ui/components/activity-render/ActivityRender";
+import { CardFooter } from "@ssurak/ui/components/layouts/card";
+import ActivityRender from "@ssurak/ui/components/activity-render/ActivityRender";
 import { useBoardTableContext } from "./BoardTableContext";
 import SessionExpireTime from "../session-timer/SessionExpireTime";
 

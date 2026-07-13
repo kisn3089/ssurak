@@ -2,7 +2,7 @@ import {
   Card,
   CardHeader,
   CardTitle,
-} from "@spaceorder/ui/components/layouts/card";
+} from "@ssurak/ui/components/layouts/card";
 import SignInFormCard from "./components/sign-in-form-card/SignInFormCard";
 
 export default async function SignInPage() {

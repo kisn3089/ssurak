@@ -4,7 +4,7 @@ import { useGlobalTimer } from "./GlobalTimerContext";
 import {
   formatTime,
   isWithinThreshold,
-} from "@spaceorder/ui/utils/formatSessionTime";
+} from "@ssurak/ui/utils/formatSessionTime";
 
 export default function SessionExpireTime({
   expiresAt,

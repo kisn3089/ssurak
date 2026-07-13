@@ -3,10 +3,10 @@
 import {
   SidebarMenuButton,
   useSidebar,
-} from "@spaceorder/ui/components/layouts/sidebar";
+} from "@ssurak/ui/components/layouts/sidebar";
 import { ShieldUser } from "lucide-react";
 import { Suspense } from "react";
-import { Spinner } from "@spaceorder/ui/components/spinner";
+import { Spinner } from "@ssurak/ui/components/spinner";
 import UserInfoDropdown from "./UserInfoDropdown";
 import UserName from "./UserName";
 

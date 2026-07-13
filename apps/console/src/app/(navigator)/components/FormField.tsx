@@ -2,8 +2,8 @@ import {
   Field,
   FieldDescription,
   FieldLabel,
-} from "@spaceorder/ui/components/forms/field";
-import { Input } from "@spaceorder/ui/components/forms/input";
+} from "@ssurak/ui/components/forms/field";
+import { Input } from "@ssurak/ui/components/forms/input";
 import { UseFormRegisterReturn } from "react-hook-form";
 
 type FormFieldProps = {

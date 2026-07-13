@@ -1,17 +1,18 @@
 "use client";
 
-import useSuspenseWithSession from "@spaceorder/api/hooks/useSuspenseWithSession";
-import { PublicOrderWithItem } from "@spaceorder/db/types";
-import { Badge } from "@spaceorder/ui/components/forms/badge";
-import { BADGE_BY_ORDER_STATUS } from "@spaceorder/ui/constants/badgeByOrderStatus.const";
+import useSuspenseWithSession from "@ssurak/api/hooks/useSuspenseWithSession";
+import { OrderWithItemsResponse } from "@ssurak/api/types/order/order.interface";
+import { Badge } from "@ssurak/ui/components/forms/badge";
+import { BADGE_BY_ORDER_STATUS } from "@ssurak/ui/constants/badgeByOrderStatus.const";
 import OrderItemThumbnail from "./OrderItemThumbnail";
 
 export default function OrderHistory() {
-  const { data: orders } = useSuspenseWithSession<
-    PublicOrderWithItem<"Wide">[]
-  >("/orders/v1/sessions/orders", {
-    queryOptions: { refetchOnMount: "always" },
-  });
+  const { data: orders } = useSuspenseWithSession<OrderWithItemsResponse[]>(
+    "/orders/v1/sessions/orders",
+    {
+      queryOptions: { refetchOnMount: "always" },
+    }
+  );
 
   if (orders.length === 0) {
     return <div className="font-bold text-center">주문 내역이 없습니다!</div>;

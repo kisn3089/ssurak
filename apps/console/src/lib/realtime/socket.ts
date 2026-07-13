@@ -1,5 +1,5 @@
-import { http, resolveSsurakBaseURL } from "@spaceorder/api";
-import { toast } from "@spaceorder/ui/components/sonner";
+import { http, resolveSsurakBaseURL } from "@ssurak/api/core/axios/http";
+import { toast } from "@ssurak/ui/components/sonner";
 import { io, Socket } from "socket.io-client";
 
 const REALTIME_URL = `${resolveSsurakBaseURL()}/events`;

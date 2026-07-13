@@ -5,8 +5,8 @@ import {
   FieldLabel,
   FieldLegend,
   FieldSet,
-} from "@spaceorder/ui/components/forms/field";
-import { Switch } from "@spaceorder/ui/components/forms/switch";
+} from "@ssurak/ui/components/forms/field";
+import { Switch } from "@ssurak/ui/components/forms/switch";
 import { Controller, FieldValues } from "react-hook-form";
 import { FormFields } from "./AddTableFields.type";
 

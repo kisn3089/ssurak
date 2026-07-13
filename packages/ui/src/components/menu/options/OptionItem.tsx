@@ -1,6 +1,6 @@
-import ActivityRender from "@spaceorder/ui/components/activity-render/ActivityRender";
-import { Item, ItemTitle } from "@spaceorder/ui/components/item";
-import { isTrigger } from "@spaceorder/ui/utils/menu/optionTrigger";
+import ActivityRender from "@ssurak/ui/components/activity-render/ActivityRender";
+import { Item, ItemTitle } from "@ssurak/ui/components/item";
+import { isTrigger } from "@ssurak/ui/utils/menu/optionTrigger";
 import type { MenuOptionEntry } from "../menu-detail/menu-detail.type";
 import { Button } from "../../buttons/button";
 

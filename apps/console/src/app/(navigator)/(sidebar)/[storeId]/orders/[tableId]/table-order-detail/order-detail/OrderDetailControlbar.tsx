@@ -1,9 +1,9 @@
 "use client";
 
-import { DialogTrigger } from "@spaceorder/ui/components/layouts/dialog";
+import { DialogTrigger } from "@ssurak/ui/components/layouts/dialog";
 import { useParams } from "next/navigation";
 import CreateOrderDialog from "./create-order/CreateOrderDialog";
-import { Button } from "@spaceorder/ui/components/buttons/button";
+import { Button } from "@ssurak/ui/components/buttons/button";
 
 export function OrderDetailControlbar() {
   const { tableId } = useParams<{ tableId: string }>();

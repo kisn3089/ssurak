@@ -28,7 +28,7 @@ RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store \
 # Copy prisma schema and .env, then generate client
 COPY packages/db/prisma ./packages/db/prisma
 COPY .env ./.env
-RUN pnpm --filter=@spaceorder/db exec prisma generate
+RUN pnpm --filter=@ssurak/db exec prisma generate
 
 # Development stage
 FROM deps AS development
@@ -38,7 +38,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 EXPOSE 3001
 
-CMD ["sh", "-c", "corepack enable pnpm && pnpm dev --filter=@spaceorder/console"]
+CMD ["sh", "-c", "corepack enable pnpm && pnpm dev --filter=@ssurak/console"]
 
 # 2. Rebuild the source code only when needed
 FROM base AS builder

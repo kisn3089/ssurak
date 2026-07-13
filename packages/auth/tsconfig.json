@@ -1,9 +1,8 @@
 {
-  "extends": "@spaceorder/tsconfig/react-library.json",
+  "extends": "@ssurak/tsconfig/react-library.json",
   "compilerOptions": {
-    "outDir": "dist",
-    "paths": { "@spaceorder/auth/*": ["./*"] }
+    "noEmit": true
   },
-  "include": ["."],
+  "include": ["src"],
   "exclude": ["node_modules", "dist"]
 }

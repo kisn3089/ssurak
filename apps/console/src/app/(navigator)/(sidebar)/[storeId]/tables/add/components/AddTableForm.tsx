@@ -1,17 +1,17 @@
 "use client";
 
-import { Spinner } from "@spaceorder/ui/components/spinner";
+import { Spinner } from "@ssurak/ui/components/spinner";
 import AddTableFields from "./AddTableFields";
 import { useParams } from "next/navigation";
 import PreviewTable from "./PreviewTable";
 import SampleTable from "./SampleTable";
 import FormErrorWithRetry from "../../../components/FormErrorWithRetry";
-import { Button } from "@spaceorder/ui/components/buttons/button";
-import useTableMutation from "@spaceorder/api/core/store/table/useTableMutation";
+import { Button } from "@ssurak/ui/components/buttons/button";
+import useTableMutation from "@ssurak/api/core/store/table/useTableMutation";
 import {
   CreateTablePayload,
   createTablePayloadSchema,
-} from "@spaceorder/api/schemas/model";
+} from "@ssurak/api/schemas/model/table.schema";
 import {
   Resolver,
   useForm,
@@ -19,9 +19,9 @@ import {
   useWatch,
 } from "react-hook-form";
 import useResetPreviewOnEdit from "../hooks/useResetPreviewOnEdit";
-import { httpTableErrors } from "@spaceorder/api/core/store/table/httpTableErrors";
-import useSuspenseWithAuth from "@spaceorder/api/hooks/useSuspenseWithAuth";
-import { PublicTable } from "@spaceorder/db/types";
+import { httpTableErrors } from "@ssurak/api/core/store/table/httpTableErrors";
+import useSuspenseWithAuth from "@ssurak/api/hooks/useSuspenseWithAuth";
+import { Table } from "@ssurak/api/types/table/table.interface";
 import { staticAddTableFields } from "./staticAddTableFields";
 import { zodResolver } from "@hookform/resolvers/zod";
 import BackListAfterAdd from "./BackListAfterAdd";
@@ -49,7 +49,7 @@ export default function AddTableForm({ children }: AddTableFormProps) {
 
   const { storeId } = useParams<{ storeId: string }>();
   const { createTable } = useTableMutation(storeId);
-  const { data: tables } = useSuspenseWithAuth<PublicTable[]>(
+  const { data: tables } = useSuspenseWithAuth<Table[]>(
     `/stores/v1/${storeId}/tables`
   );
 

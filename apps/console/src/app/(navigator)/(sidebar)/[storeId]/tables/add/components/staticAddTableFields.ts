@@ -1,4 +1,4 @@
-import { CreateTablePayload } from "@spaceorder/api/schemas";
+import { CreateTablePayload } from "@ssurak/api/schemas/model/table.schema";
 import { StaticFormField } from "./AddTableFields.type";
 
 export const staticAddTableFields: StaticFormField<CreateTablePayload>[] = [

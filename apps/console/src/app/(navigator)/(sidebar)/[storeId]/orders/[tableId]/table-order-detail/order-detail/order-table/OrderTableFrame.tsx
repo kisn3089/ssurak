@@ -1,4 +1,4 @@
-import { Table } from "@spaceorder/ui/components/table";
+import { Table } from "@ssurak/ui/components/table";
 import { useOrderDetailContext } from "../OrderDetailContext";
 
 interface OrderTableFrameProps {

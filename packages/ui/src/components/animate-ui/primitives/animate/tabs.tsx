@@ -8,12 +8,12 @@ import {
   HighlightItem,
   type HighlightItemProps,
   type HighlightProps,
-} from "@spaceorder/ui/components/animate-ui/primitives/effects/highlight";
-import { getStrictContext } from "@spaceorder/ui/lib/get-strict-context";
+} from "@ssurak/ui/components/animate-ui/primitives/effects/highlight";
+import { getStrictContext } from "@ssurak/ui/lib/get-strict-context";
 import {
   Slot,
   type WithAsChild,
-} from "@spaceorder/ui/components/animate-ui/primitives/animate/slot";
+} from "@ssurak/ui/components/animate-ui/primitives/animate/slot";
 
 type TabsContextType = {
   activeValue: string;

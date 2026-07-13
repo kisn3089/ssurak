@@ -4,8 +4,8 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarTrigger,
-} from "@spaceorder/ui/components/layouts/sidebar";
-import { Button } from "@spaceorder/ui/components/buttons/button";
+} from "@ssurak/ui/components/layouts/sidebar";
+import { Button } from "@ssurak/ui/components/buttons/button";
 import UserNameDropDown from "./UserNameDropDown";
 
 export default function SidebarFooterLayout() {

@@ -1,16 +1,17 @@
 "use client";
 
-import useSuspenseWithSession from "@spaceorder/api/hooks/useSuspenseWithSession";
-import { PublicCategoryWithMenus, StoreContext } from "@spaceorder/db/types";
+import useSuspenseWithSession from "@ssurak/api/hooks/useSuspenseWithSession";
+import { CategoryWithMenusResponse } from "@ssurak/api/types/category/category.interface";
+import { StoreContextResponse } from "@ssurak/api/types/store/store.interface";
 import { useState } from "react";
 import useObservingCategory from "./hooks/useObservingCategory";
-import { Button } from "@spaceorder/ui/components/buttons/button";
+import { Button } from "@ssurak/ui/components/buttons/button";
 import CategoryMenuList from "./components/CategoryMenuList";
 
 export default function MenuListPage() {
   const { data: menuCategories } = useSuspenseWithSession<
-    StoreContext,
-    PublicCategoryWithMenus[]
+    StoreContextResponse,
+    CategoryWithMenusResponse[]
   >("/stores/v1/sessions/me/store-context", {
     queryOptions: {
       select: (storeContext) => storeContext.table.store.categories,

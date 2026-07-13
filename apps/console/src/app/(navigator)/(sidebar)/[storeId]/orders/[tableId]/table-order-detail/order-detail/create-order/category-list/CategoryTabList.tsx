@@ -1,13 +1,13 @@
-import { PublicCategoryWithMenus } from "@spaceorder/db/types";
+import { CategoryWithMenusResponse } from "@ssurak/api/types/category/category.interface";
 import {
   TabsList,
   TabsTrigger,
-} from "@spaceorder/ui/components/animate-ui/components/tabs";
+} from "@ssurak/ui/components/animate-ui/components/tabs";
 
 export default function CategoryTabList({
   categories,
 }: {
-  categories: PublicCategoryWithMenus[];
+  categories: CategoryWithMenusResponse[];
 }) {
   return (
     <TabsList>

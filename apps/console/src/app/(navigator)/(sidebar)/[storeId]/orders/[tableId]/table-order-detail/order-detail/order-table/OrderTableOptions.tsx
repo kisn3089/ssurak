@@ -1,6 +1,6 @@
-import { OptionSnapshotValue } from "@spaceorder/db/types/menuOptions.type";
-import ActivityRender from "@spaceorder/ui/components/activity-render/ActivityRender";
-import { TableCell } from "@spaceorder/ui/components/table";
+import { OptionSnapshotValue } from "@ssurak/api/types/menu/menuOptions.interface";
+import ActivityRender from "@ssurak/ui/components/activity-render/ActivityRender";
+import { TableCell } from "@ssurak/ui/components/table";
 import { OrderItemWithOrder } from "../OrderDetailTable";
 import OptionTags from "../create-order/add-menu-detail/OptionTags";
 

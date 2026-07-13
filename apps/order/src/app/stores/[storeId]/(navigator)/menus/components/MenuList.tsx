@@ -1,12 +1,12 @@
 import MenuCard from "@/app/stores/[storeId]/(navigator)/menus/components/MenuCard";
-import { PublicMenu } from "@spaceorder/db/types";
+import { Menu } from "@ssurak/api/types/menu/menu.interface";
 import { useState } from "react";
 
 export default function MenuList({
   menus,
   priority = false,
 }: {
-  menus: PublicMenu[];
+  menus: Menu[];
   priority: boolean;
 }) {
   const [touched, setTouched] = useState<string | null>(null);

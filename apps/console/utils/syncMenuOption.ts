@@ -1,5 +1,8 @@
-import { CreateOrderByTablePayload } from "@spaceorder/api/core";
-import { MenuCustomOption, MenuRequiredOption } from "@spaceorder/db/types";
+import { CreateOrderByTablePayload } from "@ssurak/api/core/order/order/httpOrder";
+import {
+  MenuCustomOption,
+  MenuRequiredOption,
+} from "@ssurak/api/types/menu/menuOptions.interface";
 
 export function syncOptions<
   MenuOption extends {

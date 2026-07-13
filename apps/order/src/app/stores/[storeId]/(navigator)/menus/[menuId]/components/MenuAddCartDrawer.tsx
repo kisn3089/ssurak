@@ -1,13 +1,13 @@
 "use client";
 
-import { Button } from "@spaceorder/ui/components/buttons/button";
+import { Button } from "@ssurak/ui/components/buttons/button";
 import {
   DrawerContent,
   DrawerDescription,
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-} from "@spaceorder/ui/components/layouts/drawer";
+} from "@ssurak/ui/components/layouts/drawer";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 

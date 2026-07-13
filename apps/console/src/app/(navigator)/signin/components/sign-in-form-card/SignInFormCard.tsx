@@ -1,19 +1,17 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@spaceorder/ui/components/buttons/button";
-import {
-  CardContent,
-  CardFooter,
-} from "@spaceorder/ui/components/layouts/card";
+import { Button } from "@ssurak/ui/components/buttons/button";
+import { CardContent, CardFooter } from "@ssurak/ui/components/layouts/card";
 import { useForm } from "react-hook-form";
 import SignInField from "../sign-in-field/SignInField";
 import Link from "next/link";
 import signInAction from "../../actions/signInAction";
 import { useRouter } from "next/navigation";
-import { SignInPayload, signInPayloadSchema } from "@spaceorder/api";
-import { useAuthInfo } from "@spaceorder/auth";
-import { Spinner } from "@spaceorder/ui/components/spinner";
+import { SignInPayload } from "@ssurak/api/core/auth/auth.type";
+import { signInPayloadSchema } from "@ssurak/api/schemas/signIn.schema";
+import { useAuthInfo } from "@ssurak/auth/providers/AuthenticationProvider";
+import { Spinner } from "@ssurak/ui/components/spinner";
 
 export default function SignInFormCard() {
   const { setAuthInfo } = useAuthInfo();

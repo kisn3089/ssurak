@@ -1,8 +1,8 @@
 "use client";
 
 import { useStoreOrderSyncDaemon } from "@/lib/realtime/useStoreOrderSyncDaemon";
-import { pathToQueryKey } from "@spaceorder/api/utils/pathToQueryKey";
-import { OrderSyncEvent } from "@spaceorder/db/types";
+import { pathToQueryKey } from "@ssurak/api/utils/pathToQueryKey";
+import { OrderSyncEvent } from "@ssurak/api/types/realtime/syncNotice.interface";
 import { useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 

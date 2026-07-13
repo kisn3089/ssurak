@@ -2,9 +2,9 @@
 
 import { ColumnDef, RowData } from "@tanstack/react-table";
 import { OrderItemWithOrder } from "./order-detail/OrderDetailTable";
-import ActivityRender from "@spaceorder/ui/components/activity-render/ActivityRender";
-import { transCurrencyFormat } from "@spaceorder/ui/utils/menu/priceFormatter";
-import { Button } from "@spaceorder/ui/components/buttons/button";
+import ActivityRender from "@ssurak/ui/components/activity-render/ActivityRender";
+import { transCurrencyFormat } from "@ssurak/ui/utils/menu/priceFormatter";
+import { Button } from "@ssurak/ui/components/buttons/button";
 
 declare module "@tanstack/react-table" {
   interface TableMeta<TData extends RowData> {

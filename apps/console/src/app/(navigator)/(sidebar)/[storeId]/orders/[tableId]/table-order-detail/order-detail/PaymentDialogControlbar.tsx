@@ -1,14 +1,14 @@
 import {
   HealthCheckResponse,
   httpMe,
-} from "@spaceorder/api/core/identity/me/httpMe";
-import { useCancelableAsync } from "@spaceorder/api/hooks/useCancelableAsync";
-import ActivityRender from "@spaceorder/ui/components/activity-render/ActivityRender";
+} from "@ssurak/api/core/identity/me/httpMe";
+import { useCancelableAsync } from "@ssurak/api/hooks/useCancelableAsync";
+import ActivityRender from "@ssurak/ui/components/activity-render/ActivityRender";
 import {
   AlertDialogAction,
   AlertDialogCancel,
-} from "@spaceorder/ui/components/alert-dialog/alert-dialog";
-import { Spinner } from "@spaceorder/ui/components/spinner";
+} from "@ssurak/ui/components/alert-dialog/alert-dialog";
+import { Spinner } from "@ssurak/ui/components/spinner";
 import { SetStateAction, useState } from "react";
 
 interface PaymentDialogControlbarProps {

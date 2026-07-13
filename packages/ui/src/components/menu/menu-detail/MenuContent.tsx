@@ -1,9 +1,5 @@
-import {
-  ItemContent,
-  ItemFooter,
-  ItemTitle,
-} from "@spaceorder/ui/components/item";
-import { transCurrencyFormat } from "@spaceorder/ui/utils/menu/priceFormatter";
+import { ItemContent, ItemFooter, ItemTitle } from "@ssurak/ui/components/item";
+import { transCurrencyFormat } from "@ssurak/ui/utils/menu/priceFormatter";
 import { Menu } from "./menu-detail.type";
 
 type MenuContentProps = {

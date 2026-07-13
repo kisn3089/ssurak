@@ -4,7 +4,7 @@ import { TableOrderAcceptAllButton } from "./TableOrderAcceptAllButton";
 import TableOrderItemError from "./TableOrderItemError";
 import TableOrderStatusBadge from "./TableOrderStatusBadge";
 import MenuInfo from "./MenuInfo";
-import TableOrderItemLayout from "@spaceorder/ui/components/board-table/TableOrderItemLayout";
+import TableOrderItemLayout from "@ssurak/ui/components/board-table/TableOrderItemLayout";
 
 export const TableOrder = {
   OrderList: TableOrderList,

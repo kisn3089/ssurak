@@ -1,9 +1,9 @@
 "use client";
 
 import { refreshAccessToken } from "@/app/common/servers/refreshAccessToken";
-import { setupAuthInterceptor } from "@spaceorder/api";
-import { useAuthInfo } from "@spaceorder/auth";
-import { toast } from "@spaceorder/ui/components/sonner";
+import { setupAuthInterceptor } from "@ssurak/api/core/axios/http";
+import { useAuthInfo } from "@ssurak/auth/providers/AuthenticationProvider";
+import { toast } from "@ssurak/ui/components/sonner";
 import React, { ReactNode, useEffect, useRef } from "react";
 
 export default function AxiosInterceptor({

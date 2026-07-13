@@ -1,7 +1,8 @@
 "use client";
 
-import useSuspenseWithSession from "@spaceorder/api/hooks/useSuspenseWithSession";
-import { PublicCategoryWithMenus, StoreContext } from "@spaceorder/db/types";
+import useSuspenseWithSession from "@ssurak/api/hooks/useSuspenseWithSession";
+import { CategoryWithMenusResponse } from "@ssurak/api/types/category/category.interface";
+import { StoreContextResponse } from "@ssurak/api/types/store/store.interface";
 import CategoryLine from "./CategoryLine";
 import MenuList from "./MenuList";
 
@@ -11,8 +12,8 @@ export default function CategoryMenuList({
   categoryRefs: React.MutableRefObject<Map<string, HTMLDivElement>>;
 }) {
   const { data: categories } = useSuspenseWithSession<
-    StoreContext,
-    PublicCategoryWithMenus[]
+    StoreContextResponse,
+    CategoryWithMenusResponse[]
   >("/stores/v1/sessions/me/store-context", {
     queryOptions: {
       select: (storeContext) => storeContext.table.store.categories,

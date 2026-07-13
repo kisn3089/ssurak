@@ -6,10 +6,10 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@spaceorder/ui/components/layouts/dialog";
+} from "@ssurak/ui/components/layouts/dialog";
 import CategoryList from "./category-list/CategoryList";
 import { Suspense, useState } from "react";
-import { Spinner } from "@spaceorder/ui/components/spinner";
+import { Spinner } from "@ssurak/ui/components/spinner";
 import { CreateOrderProvider } from "./CreateOrderProvider";
 import AddMenuDetail from "./add-menu-detail/AddMenuDetail";
 

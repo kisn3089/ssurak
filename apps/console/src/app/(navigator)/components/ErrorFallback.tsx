@@ -1,6 +1,5 @@
-import { useAuthInfo } from "@spaceorder/auth";
-import { Button } from "@spaceorder/ui/components/buttons/button";
-import { isAxiosError } from "axios";
+import { useAuthInfo } from "@ssurak/auth/providers/AuthenticationProvider";
+import { Button } from "@ssurak/ui/components/buttons/button";
 import { useEffect } from "react";
 import { FallbackProps } from "react-error-boundary";
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { Item } from "@spaceorder/ui/components/item";
+import { Item } from "@ssurak/ui/components/item";
 import MenuContent from "./MenuContent";
 import { useMenuDetailContext } from "./MenuDetailContext";
 import { MenuDetailCounter } from "./MenuDetailCounter";

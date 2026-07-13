@@ -1,21 +1,21 @@
 "use client";
 
-import { PublicMenu } from "@spaceorder/db/types";
+import { Menu } from "@ssurak/api/types/menu/menu.interface";
 import {
   Item,
   ItemContent,
   ItemDescription,
   ItemFooter,
   ItemTitle,
-} from "@spaceorder/ui/components/item";
+} from "@ssurak/ui/components/item";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import ActivityRender from "@spaceorder/ui/components/activity-render/ActivityRender";
+import ActivityRender from "@ssurak/ui/components/activity-render/ActivityRender";
 import MenuImage from "./MenuImage";
-import { transCurrencyFormat } from "@spaceorder/ui/utils/menu/priceFormatter";
+import { transCurrencyFormat } from "@ssurak/ui/utils/menu/priceFormatter";
 
 type MenuCardProps = {
-  menu: PublicMenu;
+  menu: Menu;
   priority?: boolean;
 };
 

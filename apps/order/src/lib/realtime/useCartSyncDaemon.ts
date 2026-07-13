@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { getRealtimeSocket, REALTIME_EVENT } from "./socket";
-import { CartSyncEvent } from "@spaceorder/db/types";
+import { CartSyncEvent } from "@ssurak/api/types/realtime/syncNotice.interface";
 
 export type UseCartSyncDaemon = {
   onCreated?: (event: CartSyncEvent) => void;

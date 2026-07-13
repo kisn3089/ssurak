@@ -1,21 +1,21 @@
 "use client";
 
-import useQueryWithAuth from "@spaceorder/api/hooks/useQueryWithAuth";
-import type { PublicStore } from "@spaceorder/db";
+import useQueryWithAuth from "@ssurak/api/hooks/useQueryWithAuth";
+import type { Store } from "@ssurak/api/types/store/store.interface";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
-} from "@spaceorder/ui/components/forms/dropdown-menu";
+} from "@ssurak/ui/components/forms/dropdown-menu";
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@spaceorder/ui/components/layouts/sidebar";
-import { ChevronsUpDown, Store } from "lucide-react";
+} from "@ssurak/ui/components/layouts/sidebar";
+import { ChevronsUpDown, Store as StoreIcon } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 
 export default function StoreSwitcher() {
@@ -23,7 +23,7 @@ export default function StoreSwitcher() {
   const { storeId } = useParams<{ storeId: string }>();
   const { state } = useSidebar();
 
-  const { data: stores } = useQueryWithAuth<PublicStore[]>("/stores/v1");
+  const { data: stores } = useQueryWithAuth<Store[]>("/stores/v1");
 
   const currentStore = stores?.find((store) => store.publicId === storeId);
   const hasMultipleStores = (stores?.length ?? 0) > 1;
@@ -40,7 +40,7 @@ export default function StoreSwitcher() {
       className={`h-10 rounded-lg transition-all duration-75 ${state === "expanded" ? "border border-border" : ""} ${hasMultipleStores ? "" : "pointer-events-none"}`}
     >
       <div className="flex aspect-square items-center justify-center">
-        <Store className="size-4" />
+        <StoreIcon className="size-4" />
       </div>
       <span className="truncate font-semibold">
         {currentStore?.name ?? "매장 선택"}

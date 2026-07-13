@@ -1,10 +1,10 @@
 "use client";
 
-import useQueryWithSession from "@spaceorder/api/hooks/useQueryWithSession";
-import { StoreContext } from "@spaceorder/db/types";
+import useQueryWithSession from "@ssurak/api/hooks/useQueryWithSession";
+import { StoreContextResponse } from "@ssurak/api/types/store/store.interface";
 
 export default function StoreName() {
-  const { data: storeName } = useQueryWithSession<StoreContext, string>(
+  const { data: storeName } = useQueryWithSession<StoreContextResponse, string>(
     "/stores/v1/sessions/me/store-context",
     {
       queryOptions: {

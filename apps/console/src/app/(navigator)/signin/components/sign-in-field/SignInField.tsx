@@ -1,7 +1,7 @@
 "use client";
 
-import { Input } from "@spaceorder/ui/components/forms/input";
-import { Label } from "@spaceorder/ui/components/forms/label";
+import { Input } from "@ssurak/ui/components/forms/input";
+import { Label } from "@ssurak/ui/components/forms/label";
 import { RegisterOptions, UseFormRegisterReturn } from "react-hook-form";
 
 type InputType = "email" | "password";

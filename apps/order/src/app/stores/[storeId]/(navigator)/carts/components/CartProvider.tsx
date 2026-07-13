@@ -1,20 +1,21 @@
 "use client";
 
 import { createContext, useContext } from "react";
-import useSuspenseWithSession from "@spaceorder/api/hooks/useSuspenseWithSession";
-import { CreateOrderRequest, useCartMutations } from "@spaceorder/api/core";
-import type { Cart, PublicCartItem } from "@spaceorder/db/types/cart.type";
-import useOrderByCustomer from "@spaceorder/api/core/order/order/useOrderByCustomer.mutate";
-import { PublicOrderWithItem } from "@spaceorder/db/types/publicModel.type";
+import useSuspenseWithSession from "@ssurak/api/hooks/useSuspenseWithSession";
+import { useCartMutations } from "@ssurak/api/core/cart/useCart.mutate";
+import { CreateOrderRequest } from "@ssurak/api/core/order/order/httpOrder";
+import type { Cart, CartItem } from "@ssurak/api/types/cart/cart.interface";
+import useOrderByCustomer from "@ssurak/api/core/order/order/useOrderByCustomer.mutate";
+import { OrderWithItemsResponse } from "@ssurak/api/types/order/order.interface";
 import { UseMutationResult } from "@tanstack/react-query";
-import { toast, toastByLevel } from "@spaceorder/ui/components/sonner";
+import { toast, toastByLevel } from "@ssurak/ui/components/sonner";
 import { useParams, useRouter } from "next/navigation";
 import { AxiosError, isAxiosError } from "axios";
 
 type CartState = {
-  menus: PublicCartItem[];
+  menus: CartItem[];
   createOrderMutate: UseMutationResult<
-    PublicOrderWithItem,
+    OrderWithItemsResponse,
     Error,
     CreateOrderRequest,
     unknown
