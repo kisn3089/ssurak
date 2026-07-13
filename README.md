@@ -228,8 +228,8 @@ import useSuspenseWithAuth from "@ssurak/api/hooks/useSuspenseWithAuth";
 #### 1. Clone the repository
 
 ```bash
-git clone https://github.com/kisn3089/space-order
-cd space-order
+git clone https://github.com/kisn3089/ssurak-frontend
+cd ssurak-frontend
 ```
 
 #### 2. Install dependencies
