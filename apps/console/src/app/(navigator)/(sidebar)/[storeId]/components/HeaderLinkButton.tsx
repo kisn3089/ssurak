@@ -1,4 +1,5 @@
 import { Button } from "@ssurak/ui/components/buttons/button";
+import { cn } from "@ssurak/ui/lib/utils";
 import Link from "next/link";
 import { ComponentProps } from "react";
 
@@ -11,6 +12,7 @@ export default function HeaderLinkButton({
   children,
   icon,
   linkTo,
+  className,
   ...props
 }: HeaderLinkButtonProps) {
   const iconElement = (
@@ -21,7 +23,9 @@ export default function HeaderLinkButton({
   );
   return (
     <Link href={linkTo} className="w-fit">
-      <Button {...props}>{iconElement}</Button>
+      <Button className={cn("font-semibold", className)} {...props}>
+        {iconElement}
+      </Button>
     </Link>
   );
 }

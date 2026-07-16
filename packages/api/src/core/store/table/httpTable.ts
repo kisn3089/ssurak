@@ -53,4 +53,15 @@ async function fetchUpdate({
   return response.data;
 }
 
-export const httpTables = { createTable, fetchList, fetchUnique, fetchUpdate };
+export type DeleteTableParams = { tableId: string } & FetchTableListParams;
+async function fetchDelete({ tableId, storeId }: DeleteTableParams) {
+  await http.delete(`${prefix(storeId)}/${tableId}`);
+}
+
+export const httpTables = {
+  createTable,
+  fetchList,
+  fetchUnique,
+  fetchUpdate,
+  fetchDelete,
+};

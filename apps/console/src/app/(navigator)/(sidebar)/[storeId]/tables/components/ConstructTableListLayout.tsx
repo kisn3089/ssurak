@@ -1,0 +1,18 @@
+interface ConstructTableListLayoutProps {
+  body: React.ReactNode;
+  children: React.ReactNode;
+}
+
+export default function ConstructTableListLayout({
+  children,
+  body,
+}: ConstructTableListLayoutProps) {
+  return (
+    <div className="mt-8 border border-border rounded-sm">
+      <table className="w-full table-fixed text-sm">
+        <thead>{children}</thead>
+        <tbody>{body}</tbody>
+      </table>
+    </div>
+  );
+}
