@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "메뉴 - TADER",
+  title: "메뉴 - ssurak",
   description: "메뉴를 확인하고 주문해보세요.",
 };
 
