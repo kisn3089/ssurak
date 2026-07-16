@@ -14,6 +14,7 @@ export default function TableOrderDetailPage({
   params: Promise<{ storeId: string; tableId: string }>;
 }) {
   const { storeId, tableId } = use(params);
+
   return (
     <OrdersPageLayout>
       <ErrorBoundary FallbackComponent={ErrorFallbackComponent}>

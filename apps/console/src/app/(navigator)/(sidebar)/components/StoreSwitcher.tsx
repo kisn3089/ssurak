@@ -13,7 +13,6 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  useSidebar,
 } from "@ssurak/ui/components/layouts/sidebar";
 import { ChevronsUpDown, Store as StoreIcon } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
@@ -21,7 +20,6 @@ import { useParams, useRouter } from "next/navigation";
 export default function StoreSwitcher() {
   const router = useRouter();
   const { storeId } = useParams<{ storeId: string }>();
-  const { state } = useSidebar();
 
   const { data: stores } = useQueryWithAuth<Store[]>("/stores/v1");
 
@@ -37,7 +35,7 @@ export default function StoreSwitcher() {
   const trigger = (
     <SidebarMenuButton
       size="sm"
-      className={`h-10 rounded-lg transition-all duration-75 ${state === "expanded" ? "border border-border" : ""} ${hasMultipleStores ? "" : "pointer-events-none"}`}
+      className={`h-10 rounded-lg transition-all duration-75 ${hasMultipleStores ? "" : "pointer-events-none"}`}
     >
       <div className="flex aspect-square items-center justify-center">
         <StoreIcon className="size-4" />
