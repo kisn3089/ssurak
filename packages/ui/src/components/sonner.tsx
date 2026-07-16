@@ -8,7 +8,7 @@ import {
   TriangleAlert,
 } from "lucide-react";
 import { useTheme } from "next-themes";
-import { ExternalToast, Toaster as Sonner, toast } from "sonner";
+import { ExternalToast, Toaster as Sonner, toast, useSonner } from "sonner";
 
 type ToastLevel = "info" | "success" | "error";
 export const toastByLevel = (
@@ -50,4 +50,4 @@ const Toaster = ({ ...props }: ToasterProps) => {
   );
 };
 
-export { Toaster, toast };
+export { Toaster, toast, useSonner };
