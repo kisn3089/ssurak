@@ -15,6 +15,7 @@ export default defineConfig({
     alias: {
       "@": path.resolve(__dirname, "src"),
       "@utils": path.resolve(__dirname, "utils"),
+      "@ssurak/ui": path.resolve(__dirname, "../../packages/ui/src"),
     },
   },
   test: {
