@@ -4,7 +4,6 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import { pathToQueryKey } from "@ssurak/api/utils/pathToQueryKey";
 import NavLogoLink from "./components/NavLogoLink";
 import NavTableNumber from "./components/NavTableNumber";
 import { StoreContextResponse } from "@ssurak/api/types/store/store.interface";
@@ -12,6 +11,7 @@ import { Cart } from "@ssurak/api/types/cart/cart.interface";
 import { OrderWithItemsResponse } from "@ssurak/api/types/order/order.interface";
 import { cookies } from "next/headers";
 import SyncDaemon from "./components/daemon/SyncDaemon";
+import { makeQueryKey } from "@ssurak/api/utils/makeQueryKey";
 
 const STORE_CONTEXT_PATH = "/stores/v1/sessions/me/store-context";
 const CART_LIST_PATH = "/carts/v1/sessions/carts";
@@ -36,7 +36,7 @@ export default async function NavigatorLayout({
   if (sessionToken) {
     await Promise.all([
       queryClient.prefetchQuery({
-        queryKey: pathToQueryKey(STORE_CONTEXT_PATH),
+        queryKey: makeQueryKey(STORE_CONTEXT_PATH),
         queryFn: async () =>
           fetchWithSessionToken<StoreContextResponse>(
             STORE_CONTEXT_PATH,
@@ -45,7 +45,7 @@ export default async function NavigatorLayout({
         staleTime: 60 * 1000,
       }),
       queryClient.prefetchQuery({
-        queryKey: pathToQueryKey(CART_LIST_PATH),
+        queryKey: makeQueryKey(CART_LIST_PATH),
         queryFn: async () =>
           fetchWithSessionToken<Cart>(CART_LIST_PATH, sessionToken, {
             throwError: false,
@@ -53,7 +53,7 @@ export default async function NavigatorLayout({
         staleTime: 60 * 1000,
       }),
       queryClient.prefetchQuery({
-        queryKey: pathToQueryKey(ORDER_HISTORY),
+        queryKey: makeQueryKey(ORDER_HISTORY),
         queryFn: async () =>
           fetchWithSessionToken<OrderWithItemsResponse[]>(
             ORDER_HISTORY,

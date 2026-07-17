@@ -2,7 +2,7 @@
 
 import { getAccessToken } from "@/app/common/servers/getAccessToken";
 import { http } from "@ssurak/api/core/axios/http";
-import { pathToQueryKey } from "@ssurak/api/utils/pathToQueryKey";
+import { makeQueryKey } from "@ssurak/api/utils/makeQueryKey";
 import {
   dehydrate,
   HydrationBoundary,
@@ -30,7 +30,7 @@ export default async function ServerPrefetch<T>({
 }: ServerPrefetchProps<T>) {
   const queryClient = new QueryClient();
   const accessToken = await getAccessToken();
-  const queryKey = pathToQueryKey(url);
+  const queryKey = makeQueryKey(url);
 
   const fetchData = async (): Promise<T> => {
     return http

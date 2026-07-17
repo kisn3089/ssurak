@@ -4,10 +4,10 @@ import {
   type UpdateCartItemPayload,
   httpCart,
 } from "./httpCart";
-import { pathToQueryKey } from "../../utils/pathToQueryKey";
+import { makeQueryKey } from "../../utils/makeQueryKey";
 import { Cart } from "../../types/cart/cart.interface";
 
-const cartQueryKey = pathToQueryKey("/carts/v1/sessions/carts");
+const cartQueryKey = makeQueryKey("/carts/v1/sessions/carts");
 
 export function useCartMutations() {
   const queryClient = useQueryClient();

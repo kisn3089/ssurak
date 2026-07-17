@@ -1,8 +1,8 @@
 "use client";
 
 import { useCartSyncDaemon } from "@/lib/realtime/useCartSyncDaemon";
-import { pathToQueryKey } from "@ssurak/api/utils/pathToQueryKey";
 import { CartSyncEvent } from "@ssurak/api/types/realtime/syncNotice.interface";
+import { makeQueryKey } from "@ssurak/api/utils/makeQueryKey";
 import { toastByLevel } from "@ssurak/ui/components/sonner";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -11,7 +11,7 @@ export default function CartSyncDaemon() {
 
   const synchronize = ({ notice }: CartSyncEvent) => {
     void queryClient.invalidateQueries({
-      queryKey: pathToQueryKey("/carts/v1/sessions/carts"),
+      queryKey: makeQueryKey("/carts/v1/sessions/carts"),
     });
 
     const { level, message } = notice || {};

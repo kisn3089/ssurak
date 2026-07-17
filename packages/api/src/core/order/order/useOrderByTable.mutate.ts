@@ -4,12 +4,12 @@ import {
   httpOrder,
   UpdateOrderByTablePayload,
 } from "./httpOrder";
-import { pathToQueryKey } from "../../../utils/pathToQueryKey";
+import { makeQueryKey } from "../../../utils/makeQueryKey";
 import { ActiveSessionResponse } from "../../../types/board/board.interface";
 import { mapSessionOrders } from "../sessionCache";
 
 function tableOrdersQueryKey(tableId: string) {
-  return pathToQueryKey(`/orders/v1/tables/${tableId}/active-session`);
+  return makeQueryKey(`/orders/v1/tables/${tableId}/active-session`);
 }
 
 type CreateOrderByTable = {
