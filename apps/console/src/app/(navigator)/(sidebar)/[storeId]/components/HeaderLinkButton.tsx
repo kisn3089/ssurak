@@ -22,7 +22,7 @@ export default function HeaderLinkButton({
     </>
   );
   return (
-    <Link href={linkTo} className="w-fit">
+    <Link tabIndex={-1} href={linkTo} className="w-fit">
       <Button className={cn("font-semibold", className)} {...props}>
         {iconElement}
       </Button>
