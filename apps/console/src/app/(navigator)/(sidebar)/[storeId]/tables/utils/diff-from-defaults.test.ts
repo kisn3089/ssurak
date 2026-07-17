@@ -13,7 +13,13 @@ const defaults: TableFormValues = {
 describe("diffFromDefaults", () => {
   it("변경이 없으면 빈 객체를 반환한다", () => {
     const result = diffFromDefaults(
-      { tableNumber: "1-1", seats: 4, floor: 1, section: "메인 홀", isActive: true },
+      {
+        tableNumber: "1-1",
+        seats: 4,
+        floor: 1,
+        section: "메인 홀",
+        isActive: true,
+      },
       defaults
     );
 
@@ -22,7 +28,13 @@ describe("diffFromDefaults", () => {
 
   it("변경된 필드만 포함한다", () => {
     const result = diffFromDefaults(
-      { tableNumber: "2-2", seats: 4, floor: 1, section: "메인 홀", isActive: true },
+      {
+        tableNumber: "2-2",
+        seats: 4,
+        floor: 1,
+        section: "메인 홀",
+        isActive: true,
+      },
       defaults
     );
 
@@ -31,7 +43,13 @@ describe("diffFromDefaults", () => {
 
   it("옵셔널 필드를 비우면 값 해제 의미의 null을 보낸다", () => {
     const result = diffFromDefaults(
-      { tableNumber: "1-1", seats: undefined, floor: 1, section: undefined, isActive: true },
+      {
+        tableNumber: "1-1",
+        seats: undefined,
+        floor: 1,
+        section: undefined,
+        isActive: true,
+      },
       defaults
     );
 
@@ -40,7 +58,13 @@ describe("diffFromDefaults", () => {
 
   it("floor를 0으로 바꾸면 null이 아닌 0을 보낸다", () => {
     const result = diffFromDefaults(
-      { tableNumber: "1-1", seats: 4, floor: 0, section: "메인 홀", isActive: true },
+      {
+        tableNumber: "1-1",
+        seats: 4,
+        floor: 0,
+        section: "메인 홀",
+        isActive: true,
+      },
       defaults
     );
 
@@ -51,7 +75,13 @@ describe("diffFromDefaults", () => {
     const emptySection: TableFormValues = { ...defaults, section: undefined };
 
     const result = diffFromDefaults(
-      { tableNumber: "1-1", seats: 4, floor: 1, section: undefined, isActive: true },
+      {
+        tableNumber: "1-1",
+        seats: 4,
+        floor: 1,
+        section: undefined,
+        isActive: true,
+      },
       emptySection
     );
 
@@ -60,7 +90,13 @@ describe("diffFromDefaults", () => {
 
   it("isActive 토글을 감지한다", () => {
     const result = diffFromDefaults(
-      { tableNumber: "1-1", seats: 4, floor: 1, section: "메인 홀", isActive: false },
+      {
+        tableNumber: "1-1",
+        seats: 4,
+        floor: 1,
+        section: "메인 홀",
+        isActive: false,
+      },
       defaults
     );
 

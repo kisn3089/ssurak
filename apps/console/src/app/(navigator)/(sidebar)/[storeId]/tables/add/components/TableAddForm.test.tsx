@@ -14,9 +14,13 @@ vi.mock("next/navigation", () => ({
 }));
 
 vi.mock("next/link", () => ({
-  default: ({ href, children }: { href: string; children: React.ReactNode }) => (
-    <a href={href}>{children}</a>
-  ),
+  default: ({
+    href,
+    children,
+  }: {
+    href: string;
+    children: React.ReactNode;
+  }) => <a href={href}>{children}</a>,
 }));
 
 const TABLES_URL = `${API_BASE_URL}/stores/v1/store-1/tables`;
@@ -27,13 +31,16 @@ function captureCreateRequests() {
 
   server.use(
     http.get(TABLES_URL, () => HttpResponse.json([buildTable()])),
-    http.post<PathParams, CreateTablePayload>(TABLES_URL, async ({ request }) => {
-      const body = await request.json();
-      captured.push(body);
-      return HttpResponse.json(buildTable({ publicId: "table-new" }), {
-        status: 201,
-      });
-    })
+    http.post<PathParams, CreateTablePayload>(
+      TABLES_URL,
+      async ({ request }) => {
+        const body = await request.json();
+        captured.push(body);
+        return HttpResponse.json(buildTable({ publicId: "table-new" }), {
+          status: 201,
+        });
+      }
+    )
   );
 
   return captured;
