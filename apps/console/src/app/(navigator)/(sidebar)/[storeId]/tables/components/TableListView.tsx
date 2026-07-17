@@ -41,21 +41,23 @@ export default function TableListView({ tableList }: TableListViewProps) {
             aria-disabled={isActioning}
             key={table.publicId}
           >
-            <TableInfoRow>
+            <TableInfoRow className="line-clamp-1">
               <Link
-                className="underline underline-offset-1 cursor-pointer"
+                className="underline underline-offset-1 cursor-pointer focus-visible:outline-none focus-visible:underline-offset-1 focus-visible:decoration-blue-500 focus-visible:text-blue-500"
                 href={`tables/${table.publicId}`}
               >
                 {table.tableNumber}
               </Link>
             </TableInfoRow>
             {metaOptionalInfo.map((info, index) => (
-              <TableInfoRow key={index}>{info ?? ""}</TableInfoRow>
+              <TableInfoRow key={index} className="line-clamp-1">
+                {info ?? ""}
+              </TableInfoRow>
             ))}
-            <TableInfoRow overflowVisible>
+            <TableInfoRow>
               {activeBadge[table.isActive ? "active" : "inactive"]}
             </TableInfoRow>
-            <TableInfoRow className="text-right">
+            <TableInfoRow className="w-fit ml-auto">
               <TableActions tableForAction={table} />
             </TableInfoRow>
           </tr>
