@@ -15,7 +15,7 @@ const formDefaultValues = {
   isActive: true,
 };
 
-export default function AddTableForm() {
+export default function TableAddForm() {
   const { storeId } = useParams<{ storeId: string }>();
   const { createTable } = useTableMutation(storeId);
 
