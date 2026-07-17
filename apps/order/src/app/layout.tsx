@@ -20,7 +20,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "주문 서비스 - TADER",
+  title: "주문 서비스 - ssurak",
   description: "고객이 주문하는 애플리케이션 서비스입니다.",
 };
 

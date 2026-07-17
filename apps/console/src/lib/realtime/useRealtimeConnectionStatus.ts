@@ -17,6 +17,10 @@ export function useRealtimeConnectionStatus(): RealtimeConnectionStatus {
 
   useEffect(() => {
     const socket = getRealtimeSocket();
+
+    // 리스너 부착 전에 이미 connect가 발화했을 수 있으므로 현재 상태로 동기화
+    setStatus(socket.connected ? "connected" : "disconnected");
+
     const onConnect = () => setStatus("connected");
     const onDisconnect = () => setStatus("disconnected");
     const onReconnectAttempt = () => setStatus("connecting");

@@ -1,5 +1,11 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
 
+declare module "@tanstack/react-query" {
+  interface Register {
+    defaultError: HttpAxiosError;
+  }
+}
+
 const isServer = typeof window === "undefined";
 
 export const resolveSsurakBaseURL = (): string => {

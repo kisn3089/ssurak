@@ -1,8 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { CreateTableParams, httpTables, UpdateTableParams } from "./httpTable";
+import {
+  CreateTableParams,
+  DeleteTableParams,
+  httpTables,
+  UpdateTableParams,
+} from "./httpTable";
 import { pathToQueryKey } from "../../../utils/pathToQueryKey";
-import { Table } from "../../../types/table/table.interface";
-import { HttpAxiosError } from "../../axios/http";
 
 export default function useTableMutation(storeId: string) {
   const queryClient = useQueryClient();
@@ -18,15 +21,23 @@ export default function useTableMutation(storeId: string) {
     });
   };
 
-  const createTable = useMutation<Table, HttpAxiosError, CreateTableParams>({
-    mutationFn: (args: CreateTableParams) => httpTables.createTable(args),
+  const createTable = useMutation({
+    mutationFn: (args: Omit<CreateTableParams, "storeId">) =>
+      httpTables.createTable({ storeId, ...args }),
     onSuccess: invalidateQueries,
   });
 
-  const updateTable = useMutation<Table, HttpAxiosError, UpdateTableParams>({
-    mutationFn: (args: UpdateTableParams) => httpTables.fetchUpdate(args),
+  const updateTable = useMutation({
+    mutationFn: (args: Omit<UpdateTableParams, "storeId">) =>
+      httpTables.fetchUpdate({ storeId, ...args }),
     onSuccess: invalidateQueries,
   });
 
-  return { createTable, updateTable };
+  const deleteTable = useMutation({
+    mutationFn: (args: Omit<DeleteTableParams, "storeId">) =>
+      httpTables.fetchDelete({ storeId, ...args }),
+    onSuccess: invalidateQueries,
+  });
+
+  return { createTable, updateTable, deleteTable };
 }

@@ -1,12 +1,13 @@
 import { Button } from "@ssurak/ui/components/buttons/button";
 import Link from "next/link";
+import { use } from "react";
 
 type AddMenuPageProps = {
   params: Promise<{ storeId: string }>;
 };
 
-export default async function AddMenuPage({ params }: AddMenuPageProps) {
-  const { storeId } = await params;
+export default function AddMenuPage({ params }: AddMenuPageProps) {
+  const { storeId } = use(params);
 
   return (
     <div>

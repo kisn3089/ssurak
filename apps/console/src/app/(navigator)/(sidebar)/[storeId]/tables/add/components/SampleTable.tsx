@@ -12,14 +12,19 @@ type Table = {
 };
 type SampleTableProps = {
   table: Table;
+  children?: React.ReactNode;
   isSuccess?: boolean;
 };
 
-export default function SampleTable({ table, isSuccess }: SampleTableProps) {
+export default function SampleTable({
+  table,
+  children,
+  isSuccess,
+}: SampleTableProps) {
   return (
     <BoardTable.Provider table={table}>
       <BoardTable.Layout
-        className={`pointer-events-none max-w-xs mx-auto overflow-hidden ${table.disabled ? "opacity-50" : "opacity-100"} ${isSuccess ? "animate-tzCard border-[#c3ecd1] bg-[#f1faf4] mb-3" : ""}`}
+        className={`pointer-events-none overflow-hidden ${table.disabled ? "opacity-50" : "opacity-100"} ${isSuccess ? "animate-tzCard border-[#c3ecd1] bg-[#f1faf4] mb-3" : ""}`}
       >
         <BoardTable.Header
           className={isSuccess ? "border-[#c3ecd1] bg-green-50" : ""}
@@ -39,7 +44,7 @@ export default function SampleTable({ table, isSuccess }: SampleTableProps) {
         <BoardTable.Content
           className={`min-h-52 ${isSuccess ? "border-[#d6ecdd] flex" : ""}`}
         >
-          <BoardTable.SuccessContent isSuccess={isSuccess} />
+          {children}
           {!isSuccess && (
             <div className="flex flex-col gap-y-1 p-2">
               <TableOrder.ItemLayout>

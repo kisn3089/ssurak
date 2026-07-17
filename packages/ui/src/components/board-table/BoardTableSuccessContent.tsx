@@ -2,8 +2,10 @@ import { Check } from "lucide-react";
 import { useBoardTableContext } from "./BoardTableContext";
 
 export default function BoardTableSuccessContent({
+  successText,
   isSuccess,
 }: {
+  successText: string;
   isSuccess?: boolean;
 }) {
   const { tableNumber, floor, seats, section } = useBoardTableContext(
@@ -33,11 +35,8 @@ export default function BoardTableSuccessContent({
         </span>
       </span>
       <div className="flex flex-col gap-y-1">
-        <p className="text-lg font-extrabold">테이블이 추가되었습니다</p>
+        <p className="text-lg font-extrabold">{successText}</p>
         {summary && <p className="text-sm text-muted-foreground">{summary}</p>}
-        <p className="text-sm text-muted-foreground">
-          매장 테이블 목록에 추가되었어요.
-        </p>
       </div>
     </div>
   );

@@ -16,6 +16,7 @@ const STYLE_BY_STATUS = {
 
 export default function RealtimeStatusBanner() {
   const status = useRealtimeConnectionStatus();
+
   if (status === "connected") return null;
 
   return (

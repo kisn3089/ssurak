@@ -3,5 +3,7 @@ export default function MainLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <div className="pt-4 pl-4 pr-6">{children}</div>;
+  return (
+    <div className="mx-auto max-w-2xl md:max-w-5xl pt-8 px-6">{children}</div>
+  );
 }

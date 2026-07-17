@@ -7,20 +7,21 @@ import OrderSyncDaemon from "./components/OrderSyncDaemon";
 import ServerPrefetch from "@/app/(navigator)/components/ServerPrefetch";
 import { setTablesCache } from "./utils/setTablesCache";
 import RealtimeStatusBanner from "@/app/(navigator)/(sidebar)/components/realtime/RealtimeStatusBanner";
+import { use } from "react";
 
 export const metadata: Metadata = {
   title: "주문 관리",
   description: "주문 목록을 확인하고 관리하세요.",
 };
 
-export default async function OrdersLayout({
+export default function OrdersLayout({
   children,
   params,
 }: Readonly<{
   children: React.ReactNode;
   params: Promise<{ storeId: string }>;
 }>) {
-  const { storeId } = await params;
+  const { storeId } = use(params);
 
   return (
     <>

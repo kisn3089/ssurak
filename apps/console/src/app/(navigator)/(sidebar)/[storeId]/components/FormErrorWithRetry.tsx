@@ -4,13 +4,11 @@ import { Info } from "lucide-react";
 type FormErrorAndRetryProps = {
   title: string;
   errorMessage?: string;
-  onRetry: () => void;
 };
 
 export default function FormErrorWithRetry({
   title,
   errorMessage,
-  onRetry,
 }: FormErrorAndRetryProps) {
   if (!errorMessage) return null;
 
@@ -22,10 +20,9 @@ export default function FormErrorWithRetry({
         <p className="text-xs wrap-break-word">{errorMessage}</p>
       </div>
       <Button
-        type="button"
+        type="submit"
         className="shrink-0 border-red-200 bg-background text-red-500 shadow-none font-semibold dark:border-red-900 dark:text-red-400 dark:shadow-none hover:text-red-400 hover:bg-background/60"
         variant={"outline"}
-        onClick={onRetry}
       >
         다시 시도
       </Button>
