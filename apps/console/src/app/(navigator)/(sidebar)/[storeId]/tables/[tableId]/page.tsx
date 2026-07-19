@@ -17,7 +17,10 @@ export default function TableDetailPage({ params }: TableDetailPageProps) {
 
   return (
     <ServerPrefetch url={`/stores/v1/${storeId}/tables/${tableId}`}>
-      <NoticeScheduledOpen content="추후 테이블의 상세한 주문 데이터들을 확인할 수 있습니다." title="테이블 상세 정보" />
+      <NoticeScheduledOpen
+        content="추후 테이블의 상세한 주문 데이터들을 확인할 수 있습니다."
+        title="테이블 상세 정보"
+      />
     </ServerPrefetch>
   );
 }
