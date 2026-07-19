@@ -158,6 +158,7 @@ function TabsTrigger({
   ref,
   value,
   asChild = false,
+  onClick,
   ...props
 }: TabsTriggerProps) {
   const { activeValue, handleValueChange, registerTrigger } = useTabs();
@@ -180,9 +181,12 @@ function TabsTrigger({
       ref={localRef}
       data-slot="tabs-trigger"
       role="tab"
-      onClick={() => handleValueChange(value)}
       data-state={activeValue === value ? "active" : "inactive"}
       {...props}
+      onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
+        onClick?.(event);
+        handleValueChange(value);
+      }}
     />
   );
 }
