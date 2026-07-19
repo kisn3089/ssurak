@@ -7,7 +7,8 @@ const WINDOW_SIZE = 5;
 export default function usePagination(dataLength: number) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const page = parseInt(searchParams.get("page") || "1");
+  const parsedPage = parseInt(searchParams.get("page") || "1", 10);
+  const page = isNaN(parsedPage) || parsedPage < 1 ? 1 : parsedPage;
 
   const setPage = (newPage: number) => {
     const params = new URLSearchParams(searchParams);
