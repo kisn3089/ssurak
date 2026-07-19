@@ -12,11 +12,7 @@ export default function CategoryTabList({
   return (
     <TabsList>
       {categories.map((category) => (
-        <TabsTrigger
-          key={category.publicId}
-          value={category.publicId}
-          className="cursor-pointer data-[state=active]:bg-background"
-        >
+        <TabsTrigger key={category.publicId} value={category.publicId}>
           {category.name}
         </TabsTrigger>
       ))}

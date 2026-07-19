@@ -1,21 +1,5 @@
 import z from "zod";
 import { TableSessionStatus } from "../../types/tableSession/tableSession.interface";
-import { commonSchema } from "../common";
-import { storeIdParamsSchema } from "./store.schema";
-
-// 32 bytes base64url encoding = 43 characters
-export const sessionTokenSchema = z.string().length(43);
-export const sessionTokenParamsSchema = z
-  .object({
-    sessionToken: sessionTokenSchema,
-  })
-  .strict();
-
-export const createSessionSchema = z
-  .object({
-    qrCode: commonSchema.cuid2("QRCode"),
-  })
-  .strict();
 
 export const updateReactivateSchema = z
   .object({ status: z.literal("REACTIVATE") })
@@ -63,10 +47,3 @@ export const updateCustomerSessionPayloadSchema = z.discriminatedUnion(
     updateSessionPaymentSchema,
   ]
 );
-
-export const sessionIdSchema = z
-  .object({ sessionId: commonSchema.cuid2("TableSession") })
-  .strict();
-
-export const storeIdAndSessionIdSchema =
-  storeIdParamsSchema.merge(sessionIdSchema);

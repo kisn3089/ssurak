@@ -1,28 +1,15 @@
 import {
-  OrderStatus,
-  OrderWithItemsResponse,
-} from "../../../types/order/order.interface";
-import { OrderItem } from "../../../types/orderItem/orderItem.interface";
+  CreateOrderPayload,
+  UpdateOrderPayload,
+} from "../../../schemas/model/order.schema";
+import { OrderWithItemsResponse } from "../../../types/order/order.interface";
 import { http } from "../../axios/http";
 
 const prefix = "/orders/v1";
 
-type ItemOption = Record<string, string>;
-type OrderItemOption = {
-  requiredOptions?: ItemOption;
-  customOptions?: ItemOption;
-};
-export type CreateOrderByTablePayload = {
-  orderItems: Array<
-    { menuPublicId: string } & Pick<OrderItem, "quantity"> &
-      Partial<OrderItemOption>
-  >;
-  memo?: string;
-};
-
 async function createOrderByTable(
   tableId: string,
-  createOrderPayload: CreateOrderByTablePayload
+  createOrderPayload: CreateOrderPayload
 ): Promise<OrderWithItemsResponse> {
   const response = await http.post<OrderWithItemsResponse>(
     `${prefix}/tables/${tableId}/orders`,
@@ -31,16 +18,9 @@ async function createOrderByTable(
   return response.data;
 }
 
-export type UpdateOrderByTablePayload = Partial<
-  CreateOrderByTablePayload & {
-    status: OrderStatus;
-    cancelledReason: string;
-  }
->;
-
 async function updateOrderByTable(
   orderId: string,
-  updateOrderPayload: UpdateOrderByTablePayload
+  updateOrderPayload: UpdateOrderPayload
 ) {
   const response = await http.patch<OrderWithItemsResponse>(
     `${prefix}/${orderId}`,

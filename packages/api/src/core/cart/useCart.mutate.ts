@@ -1,13 +1,13 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  type AddCartItemPayload,
-  type UpdateCartItemPayload,
-  httpCart,
-} from "./httpCart";
-import { pathToQueryKey } from "../../utils/pathToQueryKey";
+import { httpCart } from "./httpCart";
+import { makeQueryKey } from "../../utils/makeQueryKey";
 import { Cart } from "../../types/cart/cart.interface";
+import {
+  AddCartItemPayload,
+  UpdateCartItemPayload,
+} from "../../schemas/model/cart.schema";
 
-const cartQueryKey = pathToQueryKey("/carts/v1/sessions/carts");
+const cartQueryKey = makeQueryKey("/carts/v1/sessions/carts");
 
 export function useCartMutations() {
   const queryClient = useQueryClient();
@@ -39,10 +39,10 @@ export function useCartMutations() {
         if (!oldCart) return oldCart;
 
         const updatedMenus = oldCart.menus.map((menu) => {
-          if (menu.id === cartItemId) {
-            return { ...menu, quantity: payload.quantity };
+          if (menu.id !== cartItemId) {
+            return menu;
           }
-          return menu;
+          return { ...menu, ...payload };
         });
 
         return { ...oldCart, menus: updatedMenus };

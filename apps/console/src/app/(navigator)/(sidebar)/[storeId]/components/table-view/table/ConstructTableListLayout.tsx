@@ -8,7 +8,7 @@ export default function ConstructTableListLayout({
   body,
 }: ConstructTableListLayoutProps) {
   return (
-    <div className="mt-8 border border-border rounded-sm">
+    <div className="border border-border rounded-sm">
       <table className="w-full table-fixed text-sm">
         <thead>{children}</thead>
         <tbody>{body}</tbody>

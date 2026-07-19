@@ -1,24 +1,24 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  CreateOrderByTablePayload,
-  httpOrder,
-  UpdateOrderByTablePayload,
-} from "./httpOrder";
-import { pathToQueryKey } from "../../../utils/pathToQueryKey";
+import { httpOrder } from "./httpOrder";
+import { makeQueryKey } from "../../../utils/makeQueryKey";
 import { ActiveSessionResponse } from "../../../types/board/board.interface";
 import { mapSessionOrders } from "../sessionCache";
+import {
+  CreateOrderPayload,
+  UpdateOrderPayload,
+} from "../../../schemas/model/order.schema";
 
 function tableOrdersQueryKey(tableId: string) {
-  return pathToQueryKey(`/orders/v1/tables/${tableId}/active-session`);
+  return makeQueryKey(`/orders/v1/tables/${tableId}/active-session`);
 }
 
 type CreateOrderByTable = {
   tableId: string;
-  createOrderPayload: CreateOrderByTablePayload;
+  createOrderPayload: CreateOrderPayload;
 };
 export type UpdateOrderByTable = {
   orderId: string;
-  updateOrderPayload: UpdateOrderByTablePayload;
+  updateOrderPayload: UpdateOrderPayload;
 };
 
 type Params = { tableId: string };

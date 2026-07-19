@@ -3,7 +3,7 @@ const VERSION_PATTERN = /^v\d+$/;
 type QueryParams = Record<string, string | string[]>;
 type QueryKeySegment = string | QueryParams;
 
-export const pathToQueryKey = (path: string): readonly QueryKeySegment[] => {
+export const makeQueryKey = (path: string): readonly QueryKeySegment[] => {
   const [pathname, search] = path.split("?");
   const segments = pathname.split("/").filter(Boolean);
 

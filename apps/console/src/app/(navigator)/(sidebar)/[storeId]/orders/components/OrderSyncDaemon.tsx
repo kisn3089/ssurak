@@ -1,8 +1,8 @@
 "use client";
 
 import { useStoreOrderSyncDaemon } from "@/lib/realtime/useStoreOrderSyncDaemon";
-import { pathToQueryKey } from "@ssurak/api/utils/pathToQueryKey";
 import { OrderSyncEvent } from "@ssurak/api/types/realtime/syncNotice.interface";
+import { makeQueryKey } from "@ssurak/api/utils/makeQueryKey";
 import { useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
@@ -12,7 +12,7 @@ export default function OrderSyncDaemon() {
 
   const synchronize = (event: OrderSyncEvent) => {
     queryClient.invalidateQueries({
-      queryKey: pathToQueryKey(
+      queryKey: makeQueryKey(
         `/orders/v1/tables/${event.tablePublicId}/active-session`
       ),
     });

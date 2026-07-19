@@ -5,14 +5,14 @@ import {
   httpTables,
   UpdateTableParams,
 } from "./httpTable";
-import { pathToQueryKey } from "../../../utils/pathToQueryKey";
+import { makeQueryKey } from "../../../utils/makeQueryKey";
 
 export default function useTableMutation(storeId: string) {
   const queryClient = useQueryClient();
 
   const invalidQueryKeys = [
-    pathToQueryKey(`/stores/v1/${storeId}/tables`),
-    pathToQueryKey(`/orders/v1/stores/${storeId}/board`),
+    makeQueryKey(`/stores/v1/${storeId}/tables`),
+    makeQueryKey(`/orders/v1/stores/${storeId}/board`),
   ];
 
   const invalidateQueries = () => {

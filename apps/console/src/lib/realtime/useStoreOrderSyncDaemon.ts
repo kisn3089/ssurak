@@ -9,7 +9,7 @@ import {
 } from "./socket";
 import { OrderSyncEvent } from "@ssurak/api/types/realtime/syncNotice.interface";
 import { useQueryClient } from "@tanstack/react-query";
-import { pathToQueryKey } from "@ssurak/api/utils/pathToQueryKey";
+import { makeQueryKey } from "@ssurak/api/utils/makeQueryKey";
 
 export type StoreRealtimeHandlers = {
   onCreatedAction?: (event: OrderSyncEvent) => void;
@@ -31,10 +31,10 @@ export const useStoreOrderSyncDaemon = (
 
     const invalidateOrders = () => {
       void queryClient.invalidateQueries({
-        queryKey: pathToQueryKey(`/orders/v1/stores/${storeId}/board`),
+        queryKey: makeQueryKey(`/orders/v1/stores/${storeId}/board`),
       });
       void queryClient.invalidateQueries({
-        queryKey: pathToQueryKey("/orders/v1/tables"),
+        queryKey: makeQueryKey("/orders/v1/tables"),
       });
     };
 

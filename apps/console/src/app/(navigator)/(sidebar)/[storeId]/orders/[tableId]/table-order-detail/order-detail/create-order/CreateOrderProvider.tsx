@@ -1,7 +1,7 @@
 "use client";
 
-import { CreateOrderByTablePayload } from "@ssurak/api/core/order/order/httpOrder";
 import useSuspenseWithAuth from "@ssurak/api/hooks/useSuspenseWithAuth";
+import { CreateOrderPayload } from "@ssurak/api/schemas/model/order.schema";
 import { CategoryWithMenusResponse } from "@ssurak/api/types/category/category.interface";
 import { Menu } from "@ssurak/api/types/menu/menu.interface";
 import { generateFingerprint } from "@utils/fingerprint";
@@ -11,7 +11,7 @@ import { createContext, useContext, useState } from "react";
 type CreateOrderProviderProps = {
   children: React.ReactNode;
 };
-export type SnapshotMenu = CreateOrderByTablePayload["orderItems"][number] &
+export type SnapshotMenu = CreateOrderPayload["orderItems"][number] &
   Pick<Menu, "price"> & { menuName: string };
 type MenuLike = Pick<
   Menu,

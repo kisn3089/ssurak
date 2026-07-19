@@ -5,10 +5,12 @@ import { Plus } from "lucide-react";
 import MainLayout from "../components/MainLayout";
 import { Metadata } from "next";
 import React, { Suspense, use } from "react";
-import TableListHeader from "./components/TableListHeader";
 import ConstructTableList from "./components/ConstructTableList";
-import TableListSkeleton from "./components/TableListSkeleton";
 import ServerPrefetch from "@/app/(navigator)/components/ServerPrefetch";
+import { tableHeaders } from "./components/table-headers";
+import FilterListSkeleton from "../components/table-view/filter/FilterListSkeleton";
+import TableListSkeleton from "../components/table-view/table/TableListSkeleton";
+import TableListHeader from "../components/table-view/table/TableListHeader";
 
 export const metadata: Metadata = {
   title: "테이블 설정 - ssurak",
@@ -30,10 +32,19 @@ export default function SettingTablesPage({
           테이블 추가
         </HeaderLinkButton>
       </PageTitle>
-      <Suspense fallback={<TableListSkeleton />}>
+      <Suspense
+        fallback={
+          <>
+            <FilterListSkeleton />
+            <TableListSkeleton row={6} column={6}>
+              <TableListHeader headers={tableHeaders} />
+            </TableListSkeleton>
+          </>
+        }
+      >
         <ServerPrefetch url={`/stores/v1/${storeId}/tables`}>
           <ConstructTableList>
-            <TableListHeader />
+            <TableListHeader headers={tableHeaders} />
           </ConstructTableList>
         </ServerPrefetch>
       </Suspense>

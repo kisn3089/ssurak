@@ -1,17 +1,6 @@
 import z from "zod";
 import { commonSchema } from "../common";
-import { sessionTokenParamsSchema } from "./tableSession.schema";
-import { storeIdParamsSchema } from "./store.schema";
-
-export const cartItemIdSchema = z
-  .object({ cartItemId: commonSchema.cuid2("CartItem") })
-  .strict();
-
-export const storeIdAndSessionTokenSchema = storeIdParamsSchema.merge(
-  sessionTokenParamsSchema
-);
-
-const optionItemSchema = z.record(z.string(), z.string());
+import { optionItemSchema } from "./orderItem.schema";
 
 export const cartItemSchema = z.object({
   id: z.string(),
@@ -34,6 +23,7 @@ export const cartSchema = z.object({
   updatedAt: z.string(),
 });
 
+export type AddCartItemPayload = z.infer<typeof addCartItemPayloadSchema>;
 export const addCartItemPayloadSchema = z
   .object({
     menuPublicId: commonSchema.cuid2("Menu"),
@@ -45,6 +35,7 @@ export const addCartItemPayloadSchema = z
   })
   .strict();
 
+export type UpdateCartItemPayload = z.infer<typeof updateCartItemPayloadSchema>;
 export const updateCartItemPayloadSchema = addCartItemPayloadSchema
   .omit({ menuPublicId: true, menuName: true, price: true })
   .partial()

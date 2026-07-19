@@ -3,7 +3,7 @@ import {
   UseSuspenseQueryOptions,
 } from "@tanstack/react-query";
 import { http } from "../core/axios/http";
-import { pathToQueryKey } from "../utils/pathToQueryKey";
+import { makeQueryKey } from "../utils/makeQueryKey";
 
 type QueryParams<Data, Error, SelectedData> = {
   queryOptions?: Omit<
@@ -21,7 +21,7 @@ export default function useSuspenseWithSession<
   const { queryOptions, onSuccess } = queryParams ?? {};
 
   return useSuspenseQuery<Data, Error, SelectedData>({
-    queryKey: pathToQueryKey(url),
+    queryKey: makeQueryKey(url),
     queryFn: async () => {
       const result = await http.get(url).then((res) => res.data);
       if (onSuccess) {

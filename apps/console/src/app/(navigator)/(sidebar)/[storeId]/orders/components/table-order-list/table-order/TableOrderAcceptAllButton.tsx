@@ -12,7 +12,7 @@ import { Spinner } from "@ssurak/ui/components/spinner";
 import useOrderByTable, {
   UpdateOrderByTable,
 } from "@ssurak/api/core/order/order/useOrderByTable.mutate";
-import { UpdateOrderByTablePayload } from "@ssurak/api/core/order/order/httpOrder";
+import { UpdateOrderPayload } from "@ssurak/api/schemas/model/order.schema";
 
 type FilteredPendingStatus = Omit<OrderWithItemsResponse, "status"> & {
   status: typeof OrderStatus.PENDING;
@@ -52,7 +52,7 @@ export function TableOrderAcceptAllButton({
 
     const updateOrderItems = pendingOrders.map((order) => {
       const nextStatus = nextStatusMap[order.status];
-      const orderPayload: UpdateOrderByTablePayload = {
+      const orderPayload: UpdateOrderPayload = {
         status: nextStatus,
       };
 
