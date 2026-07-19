@@ -3,11 +3,12 @@ import {
   UseMutationResult,
   useQueryClient,
 } from "@tanstack/react-query";
-import { httpOrderItems, UpdateOrderItemPayload } from "./httpOrderItem";
+import { httpOrderItems } from "./httpOrderItem";
 import { ActiveSessionResponse } from "../../../types/board/board.interface";
 import { OrderItem } from "../../../types/orderItem/orderItem.interface";
 import { makeQueryKey } from "../../../utils/makeQueryKey";
 import { mapSessionOrderItems } from "../sessionCache";
+import { UpdateOrderItemPayload } from "../../../schemas/model/orderItem.schema";
 
 type UseOrderItemReturn = {
   update: UseMutationResult<

@@ -1,4 +1,4 @@
-import { CreateOrderByTablePayload } from "@ssurak/api/core/order/order/httpOrder";
+import { CreateOrderPayload } from "@ssurak/api/schemas/model/order.schema";
 import {
   MenuCustomOption,
   MenuRequiredOption,
@@ -8,12 +8,10 @@ export function syncOptions<
   MenuOption extends {
     requiredOptions: MenuRequiredOption | null;
     customOptions: MenuCustomOption | null;
-  } & Partial<
-    Pick<CreateOrderByTablePayload["orderItems"][number], "quantity">
-  >,
+  } & Partial<Pick<CreateOrderPayload["orderItems"][number], "quantity">>,
 >(
   findMemoizedMenu: MenuOption,
-  menu: CreateOrderByTablePayload["orderItems"][number]
+  menu: CreateOrderPayload["orderItems"][number]
 ): MenuOption {
   const { requiredOptions, customOptions } = menu;
   const copiedMemoizedMenu = structuredClone(findMemoizedMenu);

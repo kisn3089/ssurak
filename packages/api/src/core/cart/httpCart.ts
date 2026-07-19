@@ -1,20 +1,15 @@
 import {
+  AddCartItemPayload,
+  UpdateCartItemPayload,
+} from "../../schemas/model/cart.schema";
+import {
   Cart,
-  CartItem,
   CartWithNoticeResponse,
   CartWithOptionalNoticeResponse,
 } from "../../types/cart/cart.interface";
 import { http } from "../axios/http";
 
 const prefix = "/carts/v1";
-
-export type AddCartItemPayload = Pick<
-  CartItem,
-  "menuPublicId" | "quantity" | "requiredOptions" | "customOptions"
-> &
-  Partial<Pick<CartItem, "menuName">>;
-
-export type UpdateCartItemPayload = Omit<AddCartItemPayload, "menuPublicId">;
 
 async function getCart(): Promise<Cart> {
   const res = await http.get<Cart>(`${prefix}/sessions/carts`);

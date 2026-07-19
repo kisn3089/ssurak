@@ -2,17 +2,14 @@ import z from "zod";
 import type {
   MenuCustomOption,
   MenuCustomOptionValue,
-  MenuOption,
   MenuOptionValue,
   MenuRequiredOptionValue,
   MenuRequiredOption,
 } from "../../types/menu/menuOptions.interface";
 import { commonSchema } from "../common";
-import { storeIdParamsSchema } from "./store.schema";
 
-const menuIdParamsSchema = z
-  .object({ menuId: commonSchema.cuid2("Menu") })
-  .strict();
+export type CreateMenuPayload = z.infer<typeof createMenuPayloadSchema>;
+export type UpdateMenuPayload = z.infer<typeof updateMenuPayloadSchema>;
 
 const optionSchema = z
   .object({
@@ -49,14 +46,6 @@ const customOptionsSchema = z.record(
   customOptionValueSchema
 ) satisfies z.ZodType<MenuCustomOption>;
 
-export const menuOptionsPayloadSchema = z.object({
-  requiredOptions: requiredOptionsSchema.nullable(),
-  customOptions: customOptionsSchema.nullable(),
-}) satisfies z.ZodType<MenuOption>;
-
-export const storeIdAndMenuIdParamsSchema =
-  storeIdParamsSchema.merge(menuIdParamsSchema);
-
 export const createMenuPayloadSchema = z
   .object({
     name: z
@@ -71,11 +60,10 @@ export const createMenuPayloadSchema = z
     imageUrl: z.string().url("유효한 이미지 URL이어야 합니다.").optional(),
     categoryId: commonSchema.cuid2("Category"),
     sortOrder: z.number().min(0, "정렬 순서는 0 이상이어야 합니다.").optional(),
+    isAvailable: z.boolean().optional(),
     requiredOptions: requiredOptionsSchema.optional(),
     customOptions: customOptionsSchema.optional(),
   })
   .strict();
 
-export const updateMenuPayloadSchema = createMenuPayloadSchema
-  .extend({ isAvailable: z.boolean() })
-  .partial();
+export const updateMenuPayloadSchema = createMenuPayloadSchema.partial();

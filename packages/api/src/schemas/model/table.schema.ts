@@ -1,5 +1,4 @@
 import z from "zod";
-import { storeIdParamsSchema } from "./store.schema";
 import { commonSchema } from "../common";
 
 export type CreateTablePayload = z.infer<typeof createTablePayloadSchema>;
@@ -39,9 +38,6 @@ export type UpdateTablePayload = z.infer<typeof updateTablePayloadSchema>;
 export const tableIdParamsSchema = z
   .object({ tableId: commonSchema.cuid2("Table") })
   .strict();
-
-export const storeIdAndTableIdParamsSchema =
-  storeIdParamsSchema.merge(tableIdParamsSchema);
 
 /** -------- Query --------- */
 const booleanStringSchema = z
