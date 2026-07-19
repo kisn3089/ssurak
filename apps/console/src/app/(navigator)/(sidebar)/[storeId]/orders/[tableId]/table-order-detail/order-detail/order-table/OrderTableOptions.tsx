@@ -1,28 +1,25 @@
 import { OptionSnapshotValue } from "@ssurak/api/types/menu/menuOptions.interface";
-import ActivityRender from "@ssurak/ui/components/activity-render/ActivityRender";
 import { TableCell } from "@ssurak/ui/components/table";
 import { OrderItemWithOrder } from "../OrderDetailTable";
-import OptionTags from "../create-order/add-menu-detail/OptionTags";
+import OptionTags from "@ssurak/ui/components/menu/options/OptionTags";
 
 interface OrderTableOptionsProps {
   optionsSnapshot: OrderItemWithOrder["optionsSnapshot"];
 }
 export function OrderTableOptions({ optionsSnapshot }: OrderTableOptionsProps) {
+  if (!optionsSnapshot) return null;
+
   return (
-    <ActivityRender value={optionsSnapshot}>
-      {(optionsSnapshot) => (
-        <TableCell className="flex gap-1 flex-wrap pt-4 px-4 pb-0">
-          <OptionTags
-            options={snapshotToOptionTags(optionsSnapshot.requiredOptions)}
-            variant="destructive"
-          />
-          <OptionTags
-            options={snapshotToOptionTags(optionsSnapshot.customOptions)}
-            variant="secondary"
-          />
-        </TableCell>
-      )}
-    </ActivityRender>
+    <TableCell className="flex gap-1 flex-wrap pt-4 px-4 pb-0">
+      <OptionTags
+        options={snapshotToOptionTags(optionsSnapshot.requiredOptions)}
+        variant="destructive"
+      />
+      <OptionTags
+        options={snapshotToOptionTags(optionsSnapshot.customOptions)}
+        variant="secondary"
+      />
+    </TableCell>
   );
 }
 

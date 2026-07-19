@@ -1,5 +1,5 @@
 import { Tag, X } from "lucide-react";
-import OptionTags from "../OptionTags";
+import OptionTags from "@ssurak/ui/components/menu/options/OptionTags";
 import {
   AddedMenuEntry,
   useCreateOrderContext,
