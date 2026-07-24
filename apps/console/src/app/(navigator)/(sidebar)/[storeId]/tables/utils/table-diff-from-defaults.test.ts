@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { diffFromDefaults } from "./diff-from-defaults";
+import { tableDiffFromDefaults } from "./table-diff-from-defaults";
 import { TableFormValues } from "../types/table-form.type";
 
 const defaults: TableFormValues = {
@@ -12,7 +12,7 @@ const defaults: TableFormValues = {
 
 describe("diffFromDefaults", () => {
   it("변경이 없으면 빈 객체를 반환한다", () => {
-    const result = diffFromDefaults(
+    const result = tableDiffFromDefaults(
       {
         tableNumber: "1-1",
         seats: 4,
@@ -27,7 +27,7 @@ describe("diffFromDefaults", () => {
   });
 
   it("변경된 필드만 포함한다", () => {
-    const result = diffFromDefaults(
+    const result = tableDiffFromDefaults(
       {
         tableNumber: "2-2",
         seats: 4,
@@ -42,7 +42,7 @@ describe("diffFromDefaults", () => {
   });
 
   it("옵셔널 필드를 비우면 값 해제 의미의 null을 보낸다", () => {
-    const result = diffFromDefaults(
+    const result = tableDiffFromDefaults(
       {
         tableNumber: "1-1",
         seats: undefined,
@@ -57,7 +57,7 @@ describe("diffFromDefaults", () => {
   });
 
   it("floor를 0으로 바꾸면 null이 아닌 0을 보낸다", () => {
-    const result = diffFromDefaults(
+    const result = tableDiffFromDefaults(
       {
         tableNumber: "1-1",
         seats: 4,
@@ -74,7 +74,7 @@ describe("diffFromDefaults", () => {
   it("section이 양쪽 모두 비어 있으면(undefined) 변경으로 치지 않는다", () => {
     const emptySection: TableFormValues = { ...defaults, section: undefined };
 
-    const result = diffFromDefaults(
+    const result = tableDiffFromDefaults(
       {
         tableNumber: "1-1",
         seats: 4,
@@ -89,7 +89,7 @@ describe("diffFromDefaults", () => {
   });
 
   it("isActive 토글을 감지한다", () => {
-    const result = diffFromDefaults(
+    const result = tableDiffFromDefaults(
       {
         tableNumber: "1-1",
         seats: 4,

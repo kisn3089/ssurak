@@ -1,7 +1,5 @@
 "use client";
 
-import { Spinner } from "@ssurak/ui/components/spinner";
-import AddTableFields from "../add/components/AddTableFields";
 import { useParams } from "next/navigation";
 import PreviewTable from "../add/components/PreviewTable";
 import SampleTable from "../add/components/SampleTable";
@@ -22,10 +20,14 @@ import { Table } from "@ssurak/api/types/table/table.interface";
 import { staticAddTableFields } from "../add/components/staticAddTableFields";
 import { zodResolver } from "@hookform/resolvers/zod";
 import BackListAfterAdd from "../add/components/BackListAfterAdd";
-import { FormFields } from "../add/components/AddTableFields.type";
+import { DynamicFormFields } from "../../components/form/FormFields.type";
 import Link from "next/link";
 import { TableFormProps } from "../types/table-form.type";
 import { BoardTable } from "@ssurak/ui/components/board-table";
+import FormSubmitContent, {
+  previewSuccessContent,
+} from "../../components/form/FormSubmitContent";
+import FormFields from "../../components/form/FormFields";
 
 const duplicateResolverError = {
   type: "manual",
@@ -79,13 +81,16 @@ export default function TableForm({
     handleSubmit,
     control,
     watch,
-    formState: { errors, isSubmitting, isValid },
+    getFieldState,
+    formState,
     setError,
   } = useForm<CreateTablePayload>({
     resolver,
     mode: "all",
     defaultValues: formDefaultValues,
   });
+
+  const { isSubmitting, isValid } = formState;
 
   const { isSuccess, reset, isPending } = mutation;
 
@@ -112,21 +117,21 @@ export default function TableForm({
     },
     section: {
       ...register("section", {
-        setValueAs: (v) => (v === "" ? undefined : v),
+        setValueAs: (v) => v || undefined,
       }),
     },
   };
 
-  const fields: FormFields<CreateTablePayload>[] = staticAddTableFields.map(
-    (field) =>
+  const fields: DynamicFormFields<CreateTablePayload>[] =
+    staticAddTableFields.map((field) =>
       field.type === "switch"
         ? { ...field, control }
         : {
             ...field,
             registration: inputDynamicFields[field.id],
-            errorMessage: errors[field.id]?.message,
+            errorMessage: getFieldState(field.id, formState).error?.message,
           }
-  );
+    );
 
   const addSetErorrOnSubmit = (payload: CreateTablePayload) => {
     formSubmit(payload, setError);
@@ -138,7 +143,7 @@ export default function TableForm({
     <form className="flex flex-col grow" noValidate onSubmit={onSubmit}>
       <div className="@container">
         <div className="flex gap-6 flex-col @3xl:flex-row pb-10">
-          <AddTableFields fields={fields} />
+          <FormFields fields={fields} />
           <PreviewTable>
             <SampleTable table={tableInfo} isSuccess={isSuccess}>
               <BoardTable.SuccessContent
@@ -156,33 +161,9 @@ export default function TableForm({
           <Button variant={"outline"}>취소</Button>
         </Link>
         <Button type="submit" disabled={!isValid || isLoading}>
-          <TableFormSubmitButtonMessage
-            isLoading={isLoading}
-            buttonText={buttonText}
-          />
+          <FormSubmitContent isLoading={isLoading} buttonText={buttonText} />
         </Button>
       </div>
     </form>
-  );
-}
-
-function previewSuccessContent(buttonText: string) {
-  return `테이블이 ${buttonText}되었습니다.`;
-}
-
-function TableFormSubmitButtonMessage({
-  isLoading,
-  buttonText,
-}: {
-  isLoading: boolean;
-  buttonText: string;
-}) {
-  return isLoading ? (
-    <>
-      <Spinner />
-      {`${buttonText} 중...`}
-    </>
-  ) : (
-    `테이블 ${buttonText}`
   );
 }

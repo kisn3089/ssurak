@@ -4,10 +4,10 @@ import {
 } from "@ssurak/api/schemas/model/table.schema";
 import { TableFormValues } from "../types/table-form.type";
 
-export const diffFromDefaults = (
+export function tableDiffFromDefaults(
   form: CreateTablePayload,
   defaults: TableFormValues
-): UpdateTablePayload => {
+): UpdateTablePayload {
   const changed: UpdateTablePayload = {};
 
   if (form.tableNumber !== defaults.tableNumber) {
@@ -27,9 +27,9 @@ export const diffFromDefaults = (
   }
 
   return changed;
-};
+}
 
-function isFalsy(value: string | undefined): string | undefined {
+export function isFalsy(value: string | null | undefined): string | undefined {
   if (value) return value;
   return undefined;
 }
