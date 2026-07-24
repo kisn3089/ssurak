@@ -26,7 +26,7 @@ import PreviewMenu from "../add/components/PreviewMenu";
 import SortOrderPreview from "../add/components/sort-order-preview/SortOrderPreview";
 import { getNewSortOrder } from "../add/components/sort-order-preview/get-new-sort-order";
 import { DetailMenu } from "@ssurak/ui/components/menu/menu-detail/menu-detail.type";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import SuccessMenuDialog from "./success-create-menu/SuccessMenuDialog";
 
 const duplicateResolverError = {
@@ -114,6 +114,7 @@ export default function MenuForm({
     formState,
     getFieldState,
     setError,
+    setValue,
   } = useForm<CreateMenuPayload>({
     resolver,
     mode: "all",
@@ -160,6 +161,22 @@ export default function MenuForm({
   const menuForSort = (selectedCategory?.menus ?? []).filter(
     (menu) => menu.publicId !== formDefaultValues.publicId
   );
+
+  const previousCategoryId = useRef(categoryId);
+  useEffect(() => {
+    if (previousCategoryId.current === categoryId) return;
+    previousCategoryId.current = categoryId;
+
+    if (previousCategoryId.current === defaultCategoryId) {
+      setValue("sortOrder", defaultSortOrder, {
+        shouldValidate: false,
+      });
+    } else {
+      setValue("sortOrder", menuForSort.at(-1)?.sortOrder, {
+        shouldValidate: false,
+      });
+    }
+  }, [categoryId, setValue, menuForSort, defaultCategoryId, defaultSortOrder]);
 
   const forefront: SelectOption = { label: "맨 앞에 표시", value: 0 };
   const sortOptions: SelectOption[] = [
@@ -227,11 +244,14 @@ export default function MenuForm({
       }
     });
 
-  const addSetErorrOnSubmit = (payload: CreateMenuPayload) => {
+  const addSetErrorOnSubmit = (payload: CreateMenuPayload) => {
+    // 카테고리가 바뀌면 원래 순서(formDefaultValues.sortOrder)는 다른 정렬 공간의 값이라 재사용하면 안 된다.
+    const isCategoryChanged = payload.categoryId !== defaultCategoryId;
+    const isSortOrderChanged =
+      payload.sortOrder !== undefined && payload.sortOrder !== defaultSortOrder;
+
     const sortOrder =
-      selectedCategory &&
-      payload.sortOrder !== undefined &&
-      payload.sortOrder !== defaultSortOrder
+      selectedCategory && (isCategoryChanged || isSortOrderChanged)
         ? getNewSortOrder(selectedCategory.menus, payload.sortOrder)
         : formDefaultValues.sortOrder;
 
@@ -242,7 +262,7 @@ export default function MenuForm({
 
     formSubmit({ ...payload, sortOrder, categoryId }, setError);
   };
-  const onSubmit = handleSubmit(addSetErorrOnSubmit);
+  const onSubmit = handleSubmit(addSetErrorOnSubmit);
 
   const menu: DetailMenu = {
     publicId: "",
