@@ -8,6 +8,8 @@ services:
       context: ../../
       dockerfile: apps/console/Dockerfile
       target: runner
+      args:
+        NEXT_PUBLIC_IMAGE_HOSTNAME: ${NEXT_PUBLIC_IMAGE_HOSTNAME}
     container_name: ssurak-console-frontend-prod
     restart: unless-stopped
     environment:
