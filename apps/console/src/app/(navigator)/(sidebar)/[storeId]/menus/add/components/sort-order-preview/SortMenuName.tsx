@@ -9,7 +9,7 @@ export default function SortMenuName({ name, isNew }: SortMenuNameProps) {
   return (
     <span
       className={cn(
-        "truncate text-sm",
+        "min-w-0 truncate text-sm",
         isNew
           ? "font-bold text-teal-700 dark:text-emerald-400"
           : "font-medium text-foreground"

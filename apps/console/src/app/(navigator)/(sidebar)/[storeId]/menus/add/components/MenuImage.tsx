@@ -68,7 +68,7 @@ function EmptyImage() {
       <ImagePlus className="mb-2" />
       <p className="font-semibold">이미지가 아직 업로드되지 않았습니다.</p>
       <p className="whitespace-pre text-center text-accent-foreground text-sm">
-        {`메뉴 이미지를 업로드하여 \n고객에 어떻게 보일지 미리 확인하세요!`}
+        {`메뉴 이미지를 업로드하여 \n고객에게 어떻게 보일지 미리 확인하세요!`}
       </p>
     </div>
   );

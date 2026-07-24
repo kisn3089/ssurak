@@ -28,14 +28,13 @@ export default function SuccessDialogFooter({
           {children}
         </Button>
       </DialogClose>
-      <Link href={`/${storeId}/menus`}>
-        <Button
-          className={commonButtonClassName}
-          style={{ animationDelay: "0.28s" }}
-        >
-          메뉴 목록으로
-        </Button>
-      </Link>
+      <Button
+        asChild
+        className={commonButtonClassName}
+        style={{ animationDelay: "0.28s" }}
+      >
+        <Link href={`/${storeId}/menus`}>메뉴 목록으로</Link>
+      </Button>
     </DialogFooter>
   );
 }

@@ -57,6 +57,7 @@ export default function ImageUploader({
           type="button"
           onClick={() => inputRef.current?.click()}
           variant={"outline"}
+          disabled={isLoadingOrDisabled}
         >
           {isLoadingOrDisabled ? <Spinner /> : "변경"}
         </Button>
@@ -92,6 +93,8 @@ export default function ImageUploader({
         size={"icon"}
         variant={"secondary"}
         className="bg-gray-100 dark:bg-neutral-800"
+        aria-label="이미지 파일 선택"
+        disabled={isLoadingOrDisabled}
       >
         <ArrowUp className="text-zinc-500 dark:text-gray-300" />
       </Button>
