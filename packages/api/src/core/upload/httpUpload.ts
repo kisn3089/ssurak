@@ -22,8 +22,6 @@ const prefix = `/upload/v1`;
 /**
  * 이미지 업로드 → 백엔드가 sharp로 webp 변환·리사이즈 후 공개 URL을 돌려준다.
  * 반환 url을 공지 썸네일(thumbnailUrl) 또는 본문 <img src>로 그대로 쓴다.
- *
- * preset은 필터가 아니라 생성될 이미지 규격이라 쿼리스트링이 아닌 multipart 필드로 보낸다.
  */
 export async function uploadMedia(file: File): Promise<UploadedMedia> {
   const formData = new FormData();

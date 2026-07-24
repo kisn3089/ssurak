@@ -70,6 +70,7 @@ export const createMenuPayloadSchema = z
         required_error: "이미지는 필수입니다.",
         invalid_type_error: "이미지를 업로드해 주세요.",
       })
+      .min(1, "이미지를 업로드해 주세요.")
       .nullable(),
     isAvailable: z.boolean().optional(),
     requiredOptions: requiredOptionsSchema.optional(),
