@@ -23,7 +23,7 @@ export function tableDiffFromDefaults(
     changed.floor = form.floor ?? null;
   }
   if (isFalsy(form.section) !== isFalsy(defaults.section)) {
-    changed.section = form.section ?? null;
+    changed.section = isFalsy(form.section) ?? null;
   }
 
   return changed;

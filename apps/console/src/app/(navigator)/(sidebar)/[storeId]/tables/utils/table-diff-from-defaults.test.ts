@@ -56,6 +56,21 @@ describe("diffFromDefaults", () => {
     expect(result).toEqual({ seats: null, section: null });
   });
 
+  it("section을 빈 문자열로 지우면 null로 정규화해 보낸다", () => {
+    const result = tableDiffFromDefaults(
+      {
+        tableNumber: "1-1",
+        seats: 4,
+        floor: 1,
+        section: "",
+        isActive: true,
+      },
+      defaults
+    );
+
+    expect(result).toEqual({ section: null });
+  });
+
   it("floor를 0으로 바꾸면 null이 아닌 0을 보낸다", () => {
     const result = tableDiffFromDefaults(
       {

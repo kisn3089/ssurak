@@ -130,6 +130,124 @@ describe("menuDiffFromDefaults", () => {
     expect(result).toEqual({ description: null });
   });
 
+  it("description을 빈 문자열로 지우면 null로 정규화해 보낸다", () => {
+    const result = menuDiffFromDefaults(
+      { ...baseForm, description: "" },
+      defaults
+    );
+
+    expect(result).toEqual({ description: null });
+  });
+
+  it("옵션 내용이 같으면 인스턴스가 달라도 변경으로 치지 않는다", () => {
+    const withOptions: MenuFormValues = {
+      ...defaults,
+      customOptions: {
+        shot: {
+          options: [{ key: "extra", price: 500 }],
+          defaultKey: "extra",
+        },
+      },
+    };
+
+    // 서버 defaults 와 내용은 같지만 새로 만들어진 별개 인스턴스(RHF 클론 상황 재현)
+    const result = menuDiffFromDefaults(
+      {
+        ...baseForm,
+        customOptions: {
+          shot: {
+            options: [{ key: "extra", price: 500 }],
+            defaultKey: "extra",
+          },
+        },
+      },
+      withOptions
+    );
+
+    expect(result).toEqual({});
+  });
+
+  it("record 키 순서만 다르면 변경으로 치지 않는다", () => {
+    const withOptions: MenuFormValues = {
+      ...defaults,
+      customOptions: {
+        shot: { options: [{ key: "extra", price: 500 }], defaultKey: "extra" },
+        size: { options: [{ key: "large", price: 700 }], defaultKey: "large" },
+      },
+    };
+
+    const result = menuDiffFromDefaults(
+      {
+        ...baseForm,
+        customOptions: {
+          size: {
+            options: [{ key: "large", price: 700 }],
+            defaultKey: "large",
+          },
+          shot: {
+            options: [{ key: "extra", price: 500 }],
+            defaultKey: "extra",
+          },
+        },
+      },
+      withOptions
+    );
+
+    expect(result).toEqual({});
+  });
+
+  it("옵션 내용이 실제로 바뀌면 변경으로 감지한다", () => {
+    const withOptions: MenuFormValues = {
+      ...defaults,
+      customOptions: {
+        shot: { options: [{ key: "extra", price: 500 }], defaultKey: "extra" },
+      },
+    };
+
+    const changedOptions: MenuCustomOption = {
+      shot: { options: [{ key: "extra", price: 800 }], defaultKey: "extra" },
+    };
+
+    const result = menuDiffFromDefaults(
+      { ...baseForm, customOptions: changedOptions },
+      withOptions
+    );
+
+    expect(result).toEqual({ customOptions: changedOptions });
+  });
+
+  it("옵션 배열 순서가 바뀌면 변경으로 감지한다", () => {
+    const withOptions: MenuFormValues = {
+      ...defaults,
+      customOptions: {
+        shot: {
+          options: [
+            { key: "extra", price: 500 },
+            { key: "double", price: 900 },
+          ],
+          defaultKey: "extra",
+        },
+      },
+    };
+
+    const reordered: MenuCustomOption = {
+      shot: {
+        options: [
+          { key: "double", price: 900 },
+          { key: "extra", price: 500 },
+        ],
+        defaultKey: "extra",
+      },
+    };
+
+    const result = menuDiffFromDefaults(
+      { ...baseForm, customOptions: reordered },
+      withOptions
+    );
+
+    expect(result).toEqual({ customOptions: reordered });
+  });
+
   it("description이 양쪽 모두 비어 있으면(undefined) 변경으로 치지 않는다", () => {
     const emptyDescription: MenuFormValues = {
       ...defaults,
